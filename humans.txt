@@ -1,15 +1,15 @@
 /* TEAM */
-Developer: Xiao Hanyu
-Contact: xiaohanyu1988 [at] gmail.com
-Github: @xiaohanyu
+Developer: karottc
+Contact: karottc [at] gmail.com
+Github: @karottc
 
-Designer: Xiao Hanyu
-Contact: xiaohanyu1988 [at] gmail.com
-Github: @xiaohanyu
+Designer: karottc
+Contact: karottc [at] gmail.com
+Github: @karottc
 
-Writer: Xiao Hanyu
-Contact: xiaohanyu1988 [at] gmail.com
-Github: @xiaohanyu
+Writer: karottc
+Contact: karottc [at] gmail.com
+Github: @karottc
 
 Maintainer: Xiao Hanyu
 Contact: xiaohanyu1988 [at] gmail.com

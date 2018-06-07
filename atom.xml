@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <id>http://new.karottc.me/</id>
+  <id>http://blog2.karottc.com/</id>
   <title>杂思未济</title>
   <updated>2017-05-25T12:26:17Z</updated>
-  <link rel="alternate" href="http://new.karottc.me/"/>
-  <link rel="self" href="http://new.karottc.me/atom.xml"/>
+  <link rel="alternate" href="http://blog2.karottc.com/"/>
+  <link rel="self" href="http://blog2.karottc.com/atom.xml"/>
   <author>
     <name>karottc</name>
-    <uri>http://new.karottc.me</uri>
+    <uri>http://blog2.karottc.com</uri>
   </author>
   <entry>
-    <id>tag:new.karottc.me,2017-08-25:/posts/2017-08-25-play-king-of-glory-9-months/</id>
+    <id>tag:blog2.karottc.com,2017-08-25:/posts/2017-08-25-play-king-of-glory-9-months/</id>
     <title type="html">我玩王者荣耀这九个月</title>
     <published>2017-08-25T12:26:17Z</published>
     <updated>2017-05-25T12:26:17Z</updated>
-    <link rel="alternate" href="http://new.karottc.me/posts/2017-08-25-play-king-of-glory-9-months/"/>
+    <link rel="alternate" href="http://blog2.karottc.com/posts/2017-08-25-play-king-of-glory-9-months/"/>
     <content type="html">&lt;p&gt;— layout: post title: 我玩王者荣耀这九个月 categories: [游戏, 反思] tags: [游戏, 反思] —&lt;/p&gt;
 &lt;p&gt;从去年12月份（准确的时间是：2016.12.01）开始玩王者荣耀，到现在也差不多9个月了，从最开始的狂热，到现在淡漠。所以今天就来回顾一下，谈谈得失，梳理一下心路历程的变化。&lt;/p&gt;
 &lt;p&gt;![最高段位](/images/2017/20170825&lt;sub&gt;game01&lt;/sub&gt;.JPG)&lt;/p&gt;
