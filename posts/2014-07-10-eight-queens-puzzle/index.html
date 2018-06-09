@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport" />
+    <meta content="物不可以穷也，故受之以未济" name="description" />
+    <meta content="web development, programming, typeface, typography" name="keywords" />
+    <meta content="karottc" name="author" />
+    <link href="/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180" />
+    <link href="/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png" />
+    <link href="/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png" />
+    <link href="/manifest.json" rel="manifest" />
+    <link color="#5bbad5" href="/safari-pinned-tab.svg" rel="mask-icon" />
+    <meta content="#ffffff" name="theme-color" />
+    <title>八皇后问题——Python简单解法</title>
+    <link href="/static/dist/semantic-ui/semantic.min.css" rel="stylesheet" type="text/css" />
+    <link href="/static/dist/fonts.css/fonts.css" rel="stylesheet" type="text/css" />
+    <link href="/static/stylesheet/default.css" rel="stylesheet" type="text/css" />
+    <link href="/static/stylesheet/pandoc-code-highlight.css" rel="stylesheet" type="text/css" />
+    <script src="/static/dist/jquery/jquery.min.js"></script>
+  </head>
+  <body lang="cn">
+    <div data-quotes-cn="[{&quot;content&quot;:[&quot;天上星，亮晶晶，永灿烂，长安宁。&quot;,&quot;湖边竹，盈盈绿，报平安，多喜乐。&quot;],&quot;author&quot;:&quot;金庸&quot;,&quot;from&quot;:&quot;天龙八部&quot;},{&quot;content&quot;:[&quot;死亡是唯一一座永远亮着的灯塔，不管你向哪里航行，最终都得转向它指引的方向。一切都会逝去，只有死神永生。&quot;],&quot;author&quot;:&quot;刘慈欣&quot;,&quot;from&quot;:&quot;地球往事&quot;},{&quot;content&quot;:[&quot;我终于明白了为什么 Einstein 喜爱看守灯塔的职业，因为那样他可以在自己的心灵中建立一片宁静而自由的天空。&quot;],&quot;author&quot;:&quot;卢昌海&quot;,&quot;from&quot;:&quot;&lt;a href=\&quot;http://www.changhai.org\&quot;&gt;http://www.changhai.org&lt;/a&gt;&quot;},{&quot;content&quot;:[&quot;我宁愿游荡在你身边&quot;,&quot;做七天的野鬼&quot;,&quot;跟随你&quot;,&quot;就算落进最黑暗的地方&quot;,&quot;我的爱&quot;,&quot;也不会让我成为永远的孤魂&quot;],&quot;author&quot;:&quot;李安&quot;,&quot;from&quot;:&quot;卧虎藏龙&quot;},{&quot;content&quot;:[&quot;在中国，任何超脱飞扬的思想都会砰然坠地——现实的引力实在是太沉重了。&quot;],&quot;author&quot;:&quot;刘慈欣&quot;,&quot;from&quot;:&quot;地球往事&quot;},{&quot;content&quot;:[&quot;天下唯庸人无咎无誉。&quot;],&quot;author&quot;:&quot;梁启超&quot;,&quot;from&quot;:&quot;李鸿章传&quot;}]" data-quotes-en="[{&quot;content&quot;:[&quot;Pascal is for building pyramids—imposing, breathtaking, static structures built by armies pushing heavy blocks into place. Lisp is for building organisms—imposing, breathtaking, dynamic structures built by squads fitting fluctuating myriads of simpler organisms into place.&quot;],&quot;author&quot;:&quot;Alan J. Perlis&quot;,&quot;from&quot;:&quot;foreword for &lt;a href=\&quot;http://mitpress.mit.edu/sicp/\&quot;&gt;SICP&lt;/a&gt;&quot;},{&quot;content&quot;:[&quot;When you don&#39;t create things, you become defined by your tastes rather than ability. Your tastes only narrow &amp; exclude people. So create.&quot;],&quot;author&quot;:&quot;why the luck stiff&quot;,&quot;from&quot;:&quot;&lt;a href=\&quot;http://whymirror.github.io/\&quot;&gt;http://whymirror.github.io/&lt;/a&gt;&quot;},{&quot;content&quot;:[&quot;In theory, there is no difference between theory and practice. But, in practice, there is.&quot;],&quot;author&quot;:&quot;Jan L. A. van de Snepscheut&quot;,&quot;from&quot;:&quot;&lt;a href=\&quot;http://en.wikiquote.org/wiki/Jan_L._A._van_de_Snepscheut\&quot;&gt;Wikipedia&lt;/a&gt;&quot;},{&quot;content&quot;:[&quot;The future has already arrived. It is just not evenly distributed yet.&quot;],&quot;author&quot;:&quot;William Gibson&quot;,&quot;from&quot;:&quot;&lt;a href=\&quot;https://en.wikiquote.org/wiki/William_Gibson\&quot;&gt;Wikiquote&lt;/a&gt;&quot;},{&quot;content&quot;:[&quot;There are many ways of trying to understand programs. People often rely too much on one way, which is called \&quot;debugging\&quot; and consists of running a partly-understood program to see if it does what you expected. Another way, which ML advocates, is to install some means of understanding in the very programs themselves.&quot;],&quot;author&quot;:&quot;Robin Milner&quot;,&quot;from&quot;:&quot;foreword for &lt;a href=\&quot;http://www.ccs.neu.edu/home/matthias/BTML/\&quot;&gt;The Little MLer&lt;/a&gt;&quot;}]" id="quotes" style="display: none"></div>
+    <div id="content">
+      <nav class="ui borderless menu desktop" lang="en">
+        <div class="ui container">
+          <a class="item" href="/"><img src="/static/image/gravatar-black.svg" /></a><a class="item" href="/archive">Archive</a><a class="item" href="/categories">Categories</a><a class="item" href="/tags">Tags</a><a class="item" href="/about">About</a>
+          <div class="right menu">
+            <div class="item">
+              <form action="https://www.google.com/search" class="ui form" method="get" target="_blank">
+                <input name="q" type="hidden" value="site:blog2.karottc.com" />
+                <div class="ui transparent left icon input">
+                  <input name="q" placeholder="Search..." type="text" /><i class="search icon"></i>
+                </div>
+              </form>
+            </div>
+            <a class="item" href="https://github.com/karottc"><i class="github icon"></i></a><a class="item" href="/atom.xml"><i class="feed icon"></i></a>
+          </div>
+        </div>
+      </nav>
+      <nav class="ui borderless menu mobile" lang="en">
+        <div class="ui container">
+          <a class="item" href="/"><img src="/static/image/gravatar-black.svg" /></a><a class="item" href="/archive">Archive</a><a class="item" href="/about">About</a>
+          <div class="right menu">
+            <a class="item" href="https://github.com/karottc/"><i class="github icon"></i></a>
+          </div>
+        </div>
+      </nav><div class="ui stackable container">
+  <div class="ui very padded segment article">
+    <article class="ui stackable divided grid"><header class="row article-head">
+  <div class="column">
+    <h1 class="ui header">
+      八皇后问题——Python简单解法
+    </h1>
+    <div class="ui divider desktop"></div>
+  </div>
+</header>
+<div class="row article-body">
+  <section class="twelve wide column"><blockquote>
+<p>八皇后问题是一个以国际象棋为背景的问题：如何能够在8×8的国际象棋棋盘上放置八个皇后，使得任何一个皇后都无法直接吃掉其他的皇后？为了达到此目的，任两个皇后都不能处于同一条横行、纵行或斜线上。八皇后问题可以推广为更一般的n皇后摆放问题：这时棋盘的大小变为n×n，而皇后个数也变成n。当且仅当n = 1或n ≥ 4时问题有解。</p>
+</blockquote>
+<p>关于这个问题更详细的描述可以参见维基百科<sup><a href="#fnref:1" name="fnref:1">1</a></sup> ，使用Python的生成器（即含有yield语句的函数）来解这个问题就会变得很简单，15行以内python代码就可以解决这个问题，对于皇后的个数 n &lt; 8 来说还是非常快的，只是当数量上升到很多的时候，这个解法就会非常的慢。不过这里仍然只讨论最简单的解法，后面会顺便提一下更高效的解法，比如<font color="red">16</font>个皇后的情况在我的机器上只需要<font size="5px" color="red">18</font>秒。</p>
+<p>下面是这个解法的完整的代码：</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="kw">def</span> conflict(state, nextX):
+    nextY <span class="op">=</span> <span class="bu">len</span>(state)
+    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(nextY):
+        <span class="cf">if</span> <span class="bu">abs</span>(state[i] <span class="op">-</span> nextX) <span class="kw">in</span> (<span class="dv">0</span>, nextY <span class="op">-</span> i):
+            <span class="cf">return</span> <span class="va">True</span>
+    <span class="cf">return</span> <span class="va">False</span>
+
+<span class="kw">def</span> queens(num<span class="op">=</span><span class="dv">8</span>, state<span class="op">=</span>()):
+    <span class="cf">for</span> pos <span class="kw">in</span> <span class="bu">range</span>(num):
+        <span class="cf">if</span> <span class="kw">not</span> conflict(state, pos):
+            <span class="cf">if</span> <span class="bu">len</span>(state) <span class="op">==</span> num <span class="op">-</span> <span class="dv">1</span> :
+                <span class="cf">yield</span> (pos,)
+            <span class="cf">else</span>:
+                <span class="cf">for</span> result <span class="kw">in</span> queens(num, state<span class="op">+</span>(pos,)):
+                    <span class="cf">yield</span> (pos,) <span class="op">+</span> result</code></pre></div>
+<p>上面这段代码关键点有3个，分别是冲突判断（即放置当前皇后位置的时候不能和已存在的皇后有冲突）、递归（遍历所有的情况要用到的方法）和yield表达式（保存遍历的结果的迭代器）。</p>
+<p>冲突检测函数 <code>conflict</code> 的两个参数分别表示: 已存在的皇后的位置和将要放置的皇后的位置（即下一行中皇后的位置），冲突的条件就是，和已存在的皇后在同一垂直线上( <code>state[i] - nextX == 0</code> )或者在对角线上（ <code>state[i] - nextX == nextY - i</code> ）。</p>
+<p>递归函数是通过回溯法来求的每一种可能的情况，这个递归结束的条件是最后一个皇后能够无冲突的找到位置，然后从最后一个皇后的位置一次递归的向上层返回值，同时加上本层的皇后的位置，返回到最上层的时候即完成一次迭代( <code>next()</code> 函数调用一次)，并且会记住当前的位置，下次继续迭代的时候会接着继续进行（这个其实是yield的特性）。</p>
+<p>yield语句，在这里可以简单但当作储存返回值的一个元组或者列表来理解（实际上是一个迭代器，稍微有点复杂，后面会具体讲到），这里一次完整的递归（从 <code>yield (pos, )</code> 这句返回到最上层调用）生成一种可能的情况（序列），也即迭代器的一项（对应于一种满足要求的所有皇后的摆法），在yield的使用迭代过程中，隐式或显式的调用一次next函数即执行一次完整的递归。<font color="purple">;-)</font></p>
+<h3 id="yield-语句">yield 语句</h3>
+<p>yield的用法单独说一下是因为这个是理解上面的代码的关键，同时也是不好弄清楚的一个东西，<a href="https://github.com/karottc/practice/blob/master/python/generator_20140705.py">这里</a> 是一个关于yield的几行代码的使用例子。</p>
+<p>从概念上说，yield是包含在Python的生成器里面的，相关的概念定义如下： &gt; 生成器是一种用普通的函数语法定义的迭代器。 &gt; &gt; 任何包含yield语句的函数成为生成器<sup><a href="#fnref:2" name="fnref:2">2</a></sup>。</p>
+<p>用下面这段常见的Python来辅助说明：</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="kw">def</span> fab(<span class="bu">max</span>):
+    a,b <span class="op">=</span> <span class="dv">0</span>,<span class="dv">1</span>
+    i <span class="op">=</span> <span class="dv">0</span>
+    <span class="cf">while</span> i <span class="op">&lt;</span> <span class="bu">max</span>:
+        <span class="cf">yield</span> a
+        a,b <span class="op">=</span> b, a<span class="op">+</span>b
+        i <span class="op">+=</span> <span class="dv">1</span>
+f <span class="op">=</span> fab(<span class="dv">5</span>)
+<span class="bu">print</span> f.<span class="bu">next</span>()  <span class="co"># output: 0</span>
+<span class="bu">print</span> f.<span class="bu">next</span>()  <span class="co"># output: 1</span>
+<span class="bu">print</span> f.<span class="bu">next</span>()  <span class="co"># output: 1</span>
+<span class="bu">print</span> f.<span class="bu">next</span>()  <span class="co"># output: 2</span>
+
+<span class="cf">for</span> i <span class="kw">in</span> fab(<span class="dv">10</span>):
+    <span class="bu">print</span> i, <span class="st">&#39;,&#39;</span>,
+<span class="co"># output: 0 , 1 , 1 , 2 , 3 , 5 , 8 , 13 , 21 , 34 ,</span></code></pre></div>
+<p>在上面的代码中，fab函数就是生成器，和普通的函数的区别在于：</p>
+<ol type="1">
+<li>不调用next方法，它不会自动执行；</li>
+<li>每次调用next方法时只执行到yield语句处，然后挂起，等待下一次next的调用；</li>
+<li>下一次调用next方法时，从yield的下一句开始执行，直到执行到yield语句，然后循环2-3的操作。</li>
+</ol>
+<p>上面代码中的输出情况就表明了这样的过程，对于上面的 <code>for</code> 循环来说，<code>for</code> 循环里面的函数是隐式调用了所有的next方法，生成了一个列表(list)，在for循环中的 <code>fab(10)</code> 是和 <code>list(fab(10))</code> 等价的，可以用 <code>print list(fab((10))</code> 看输出结果加以验证。</p>
+<h3 id="debug-上面代码">Debug 上面代码</h3>
+<p>如果觉得上面的代码很难理解，可以用单步执行的方式去跟踪和调试代码，同时使用 <code>print</code> 大法也是很有效果的。关于 step by step 的工具，可以使用 PyCharm 或者 Eclipse + Pydev 这两个IDE，或者也可以使用 pdb 这个工具，pdb和gdb的使用命令没有多大差别，所以如果是常用gdb来调代码的话，用pdb是毫无障碍的，当然，用这些工具的时候可以适时的配合几句 <code>print</code> 来会更好一些，上面三种，我个人还是推荐使用IDE（即PyCharm或者Pydev）,因为有些功能还是那些面向指令集的调试器（比如pdb）没法比的.</p>
+<p>通过单步跟踪之后，对yield的执行过程和上面的代码的递归调用栈应该就比较清楚了。</p>
+<h3 id="高效的八皇后问题解法">高效的八皇后问题解法</h3>
+<p>这段代码是用C语言写的，用了语言特性的位操作等，所以比python的快很多，对于小于等于16个皇后来说，这段C代码的实现比上面15行的Python代码实现快了好几个数据量级。</p>
+<p>具体的代码请查看<a href="https://github.com/karottc/practice/blob/master/python/eight_empress.c">这里</a> : https://github.com/karottc/practice/blob/master/python/eight_empress.c .</p>
+<p>这是在我的机器上的运行时间的截图：</p>
+<figure>
+<img src="/static/images/201406/20140710_runtime.png" alt="runtime" /><figcaption>runtime</figcaption>
+</figure>
+<p>2014.07.10</p>
+<h4 id="footnotes">Footnotes:</h4>
+<p><sup><a href="#fnref:1" name="fnref:1">1</a></sup> 这个问题的两处描述分别是<a href="http://zh.wikipedia.org/wiki/%E5%85%AB%E7%9A%87%E5%90%8E%E9%97%AE%E9%A2%98">中文维基</a> 和 <a href="http://en.wikipedia.org/wiki/Eight_queens_puzzle">英文维基</a>, 推荐看英文的，因为英文的更详尽，中文相比英文版的维基百科的内容太少，对这个问题的描述一半都不到。</p>
+<p><sup><a href="#fnref:2" name="fnref:2">2</a></sup> 引用自<a href="http://book.douban.com/subject/4866934/">《Python基础教程（第二版）》</a>。</p>
+
+    <div class="ui divider"></div>
+    <div class="ui small one item menu">
+      <a class="item" id="show-disqus-comments" onclick="show_disqus_comments()" title="Fuck GFW, disqus.com has been blocked in China.">Show Disqus Comments</a>
+    </div>
+    <div id="disqus_thread"></div>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </section>
+  <aside class="four wide column">
+    <div class="ui small header">
+      License
+    </div>
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img class="cc-license" src="/static/image/cc_byncsa.flat.guokr.svg" /></a>
+    <div class="ui small header">
+      Committed
+    </div>
+    <date>2014-07-10</date>
+    <div class="ui small header">
+      Updated
+    </div>
+    <date>2014-07-10</date>
+    <div class="ui small header">
+      Category
+    </div>
+    <div class="ui list">
+      <div class="item">
+        <a href="/categories#技术">
+          <div class="ui label">
+            技术<sup>2</sup>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="ui small header">
+      Tags
+    </div>
+    <div class="ui list">
+      <div class="item">
+        <a href="/tags#Python">
+          <div class="ui label">
+            Python<sup>1</sup>
+          </div>
+        </a>
+      </div>
+      <div class="item">
+        <a href="/tags#八皇后">
+          <div class="ui label">
+            八皇后<sup>1</sup>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="ui small header">
+      Links
+    </div>
+    <div class="ui small two item menu">
+      <a class="item" title="写在毕业一周年之际" href="/posts/2014-07-01-graduate-one-year/">Prev</a><a class="item" title="习惯的力量——从evernote试用为知笔记" href="/posts/2014-08-31-evernote-wiz/">Next</a>
+    </div>
+  </aside>
+</div>
+    </article>
+  </div>
+</div>
+    </div>
+    <div id="footer">
+      <footer class="ui inverted vertical center aligned footer segment desktop">
+        <div class="ui container">
+          <p>
+            Copyright © 2018–2018 by karottc — Powered by Emacs, Git, Pandoc, Ruby and Nanoc.
+          </p>
+        </div>
+      </footer>
+      <footer class="ui inverted vertical center aligned footer segment mobile">
+        <div class="ui container">
+          <p>
+            Copyright © 2018–2018 by karottc
+          </p>
+        </div>
+      </footer>
+      <script src="/static/dist/semantic-ui/semantic.min.js"></script>
+      <script src="/static/javascript/ga.js"></script>
+      <script src="/static/javascript/default.js"></script>
+    </div>
+  </body>
+</html>
