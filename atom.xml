@@ -36,6 +36,136 @@
 </content>
   </entry>
   <entry>
+    <id>tag:blog2.karottc.com,2015-07-29:/posts/2015-07-29-cpp-reference/</id>
+    <title type="html">C++的引用类型的变量到底占不占用内存空间？</title>
+    <published>2015-07-29T12:26:17Z</published>
+    <updated>2015-07-29T12:26:17Z</updated>
+    <link rel="alternate" href="http://blog2.karottc.com/posts/2015-07-29-cpp-reference/"/>
+    <content type="html">&lt;p&gt;分析一下 &lt;strong&gt;C++&lt;/strong&gt; 里面的引用类型（例如：&lt;code&gt;int &amp;amp;r = a;&lt;/code&gt; ）中的 &lt;code&gt;r&lt;/code&gt; 变量是否占用内存空间呢？是否和 &lt;code&gt;int *p = &amp;amp;a;&lt;/code&gt; 中的 &lt;code&gt;p&lt;/code&gt; 变量一样占用内存空间呢？&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;本文将给出答案。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;直接看一个简单的例子：&lt;br /&gt;&lt;/p&gt;
+&lt;div class="sourceCode"&gt;&lt;pre class="sourceCode cpp"&gt;&lt;code class="sourceCode cpp"&gt;&lt;span class="pp"&gt;#include &lt;/span&gt;&lt;span class="im"&gt;&amp;lt;iostream&amp;gt;&lt;/span&gt;
+
+&lt;span class="kw"&gt;using&lt;/span&gt; &lt;span class="kw"&gt;namespace&lt;/span&gt; std;
+
+&lt;span class="dt"&gt;int&lt;/span&gt; main(&lt;span class="dt"&gt;void&lt;/span&gt;)
+{
+    &lt;span class="dt"&gt;int&lt;/span&gt; a = &lt;span class="dv"&gt;6&lt;/span&gt;;
+    &lt;span class="dt"&gt;int&lt;/span&gt; &amp;amp;r = a;
+    &lt;span class="dt"&gt;int&lt;/span&gt; *p = &amp;amp;a;
+    &lt;span class="dt"&gt;int&lt;/span&gt; x = r;
+    &lt;span class="cf"&gt;return&lt;/span&gt; &lt;span class="dv"&gt;0&lt;/span&gt;;
+}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;接着我们通过 &lt;code&gt;g++ testref.cpp -o testref -g&lt;/code&gt; 来编译之后，用gdb来加载它，看看 &lt;code&gt;a&lt;/code&gt;, &lt;code&gt;r&lt;/code&gt;, &lt;code&gt;p&lt;/code&gt;, &lt;code&gt;x&lt;/code&gt; 的地址分别是多少:&lt;br /&gt; &lt;img src="/static/images/201501/20150729-01-gdb.png" alt="gdb" /&gt; 上图中 &lt;code&gt;a&lt;/code&gt; 的地址为 &lt;code&gt;0x7fffffffe208&lt;/code&gt;，用取地址符去获取 &lt;code&gt;r&lt;/code&gt; 地址，值和 &lt;code&gt;a&lt;/code&gt; 是一样的，其实，用 &lt;code&gt;&amp;amp;&lt;/code&gt; 符号是不能获取到引用类型变量的地址的，因为引用类型的变量本身只是另一个对象的别名，用可感知的方式描述，就是它仅仅是一个名字而已，对它的任何操作都是相当于对另一个对象的操作，所以这个取地址操作也是一样。&lt;/p&gt;
+&lt;p&gt;但是，我们接着往下看，&lt;code&gt;p&lt;/code&gt; 的地址是 &lt;code&gt;0x7fffffffe218&lt;/code&gt;，和 &lt;code&gt;a&lt;/code&gt; 的地址刚刚相差了 &lt;strong&gt;16&lt;/strong&gt; 字节，接着看 &lt;code&gt;x&lt;/code&gt; 的地址是 &lt;code&gt;0x7fffffffe20c&lt;/code&gt;，这个地址正好是 &lt;code&gt;a&lt;/code&gt;的地址 &lt;code&gt;0x7fffffffe208 + 4&lt;/code&gt;, 而 &lt;code&gt;a&lt;/code&gt; 是 &lt;code&gt;int&lt;/code&gt; 型，变量本身占用 4 字节，正常情况下， &lt;code&gt;x&lt;/code&gt; 的地址应该是 &lt;code&gt;p&lt;/code&gt; 的地址 &lt;code&gt;0x7fffffffe218 + 8&lt;/code&gt;，这里 &lt;code&gt;+8&lt;/code&gt; 是因为我的机器是 64 位的机器，所以指针类型占用 8 字节。现在这种情况应该是编译器做了优化，把 &lt;code&gt;x&lt;/code&gt; 的放到了 &lt;code&gt;a&lt;/code&gt; 的后面，同样的，&lt;code&gt;x&lt;/code&gt; 的下一个变量的起始地址应该是 &lt;code&gt;0x7fffffffe20c + 4&lt;/code&gt; = &lt;code&gt;0x7fffffffe210&lt;/code&gt;，这个地址和 &lt;code&gt;p&lt;/code&gt; 之间刚好差了 8 个字节，也就是一个指针变量的地址，所以答案就很明显了。&lt;/p&gt;
+&lt;p&gt;即，我们现在可以猜测，&lt;code&gt;r&lt;/code&gt; &lt;strong&gt;是占用内存空间，并且占用的大小和指针变量相同大小&lt;/strong&gt;。但是我们上面用gdb也看不了 &lt;code&gt;r&lt;/code&gt; 的实际地址，所以这也只能是猜测，只是看似合理的猜测而已。&lt;/p&gt;
+&lt;p&gt;为了证明这个猜测，我们继续把可执行文件反汇编出来看看：&lt;code&gt;objdump -d testref&lt;/code&gt; 得到的结果如下：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;00000000004006cd &amp;lt;main&amp;gt;:
+  4006cd:   55                      push   %rbp
+  4006ce:   48 89 e5                mov    %rsp,%rbp
+  4006d1:   c7 45 e8 06 00 00 00    movl   $0x6,-0x18(%rbp)   # int a = 6; a的地址 0x18
+  4006d8:   48 8d 45 e8             lea    -0x18(%rbp),%rax
+  4006dc:   48 89 45 f0             mov    %rax,-0x10(%rbp)   # int &amp;amp;r = a; r的地址 0x10
+  4006e0:   48 8d 45 e8             lea    -0x18(%rbp),%rax
+  4006e4:   48 89 45 f8             mov    %rax,-0x8(%rbp)    # int *p = &amp;amp;a; p的地址 0x8
+  4006e8:   48 8b 45 f0             mov    -0x10(%rbp),%rax  # 下面两行是为了后面的赋值做准备
+  4006ec:   8b 00                   mov    (%rax),%eax
+  4006ee:   89 45 ec                mov    %eax,-0x14(%rbp)   # int x = r;   x的地址 0x14
+  4006f1:   b8 00 00 00 00          mov    $0x0,%eax
+  4006f6:   5d                      pop    %rbp
+  4006f7:   c3                      retq &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;我把对应处，都写在上面的注释里了。&lt;/p&gt;
+&lt;p&gt;所以，现在可以得到结论：&lt;font color='red'&gt;&lt;strong&gt;引用类型的变量会占用内存空间，占用的内存空间的大小和指针类型的大小是相同的。&lt;/strong&gt;&lt;/font&gt; 从上面的汇编代码可以看出，虽然引用是一个对象的别名，但是在汇编层面，和指针是一样的。&lt;/p&gt;
+&lt;p&gt;2015.07.29&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:blog2.karottc.com,2015-07-26:/posts/2015-07-26-zhihu-sarcasm/</id>
+    <title type="html">抓取知乎每日吐槽</title>
+    <published>2015-07-26T12:26:17Z</published>
+    <updated>2015-07-26T12:26:17Z</updated>
+    <link rel="alternate" href="http://blog2.karottc.com/posts/2015-07-26-zhihu-sarcasm/"/>
+    <content type="html">&lt;p&gt;&lt;strong&gt;知乎日报&lt;/strong&gt; 里面有一节，叫做⎾如何正确的吐槽⏌，里面有很多很有意思而有短小的回答，基本上我我每天都会看一眼。所以我就写了脚本把他们全部抓了下来，放到自己的服务器上，同时每天还在定时去抓取当天新出来的数据，然后用 &lt;em&gt;swift&lt;/em&gt; 写了一个 app 来从自己的服务器获取数据来看。&lt;/p&gt;
+&lt;p&gt;下面记录一下做这件事的过程。&lt;/p&gt;
+&lt;h2 id="抓取数据"&gt;抓取数据&lt;/h2&gt;
+&lt;p&gt;要抓取知乎的吐槽数据，第一步就是要知道它对应的 &lt;em&gt;URL&lt;/em&gt; ，这个获取方法也很简单，直接抓个包就能知道了，具体的形式大概如下这样：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;http://news-at.zhihu.com/api/4/section/2/before/xxxxxx&lt;/code&gt; , 这个是获取整个吐槽的标题列表的url；&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;http://news-at.zhihu.com/api/4/story/xxxxx&lt;/code&gt; ，这个是获取具体某一天的内容的url。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="创建数据库"&gt;创建数据库&lt;/h3&gt;
+&lt;p&gt;这个数据量并不大，我建了两张表，一张存索引，一张存每天具体的内容。如下图：&lt;/p&gt;
+&lt;figure&gt;
+&lt;img src="/static/images/201501/20150726-zhihu-mysql.png" alt="Mysql表" /&gt;&lt;figcaption&gt;Mysql表&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;h3 id="搭建服务器"&gt;搭建服务器&lt;/h3&gt;
+&lt;p&gt;有了数据，下一步就是提供 &lt;em&gt;CGI&lt;/em&gt; 接口给外部调用获取数据，然后显示。&lt;/p&gt;
+&lt;p&gt;然后，我用 &lt;em&gt;nginx&lt;/em&gt; + &lt;em&gt;django&lt;/em&gt; 搭了一个服务器，提供了三个接口，都是返回 &lt;em&gt;JSON&lt;/em&gt; 格式的数据，三个接口具体如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;http://104.128.85.9:8001/api/gethomelist&lt;/code&gt;：获取首屏的数据列表；&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;http://104.128.85.9:8001/api/getnextlist?timestamp=1434666598&lt;/code&gt;：下拉刷新的时候获取新增数据；&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;http://104.128.85.9:8001/api/getstorydetail?id=4827840&lt;/code&gt;：获取某一天具体的内容。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;可以看得出来，我这三个接口都是为了给 app 端调用而设计提供的，所以下一步就是完成一个 app 把这些内容显示出来。&lt;/p&gt;
+&lt;h2 id="app-端显示"&gt;app 端显示&lt;/h2&gt;
+&lt;p&gt;app 端的工作就是：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;通过网络请求获取数据；&lt;/li&gt;
+&lt;li&gt;解析 &lt;em&gt;JSON&lt;/em&gt; 数据然后根据一定的排版显示。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;当然，我也是只实现了一个极其简陋的效果，直接放图好了： &lt;img src="/static/images/201501/20150726-zhihu-app1.png" alt="app图" /&gt;&lt;/p&gt;
+&lt;figure&gt;
+&lt;img src="/static/images/201501/20150726-zhihu-app2.png" alt="App效果图" /&gt;&lt;figcaption&gt;App效果图&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;上面两个图是历史列表和具体某一天内容的截图，下面再放一个应用图标的图： &lt;img src="/static/images/201501/20150726-zhihu-app3.png" /&gt; 上面有个图标乱入了，这个是我学习 &lt;em&gt;swift&lt;/em&gt; 的做的一个练习，具体可以看这篇：&lt;a href="http://www.karottc.com/blog/2015/07/25/swift-2048/"&gt;点我&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;整个过程大概就是这样。&lt;/p&gt;
+&lt;h4 id="附件资料"&gt;附件资料&lt;/h4&gt;
+&lt;p&gt;上面提到的服务和抓去知乎数据的代码在这里：&lt;a href="https://github.com/karottc/crawlzhihu"&gt;点我&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;app 源码在这里：&lt;a href="https://github.com/karottc/zhihudailyapp"&gt;点我&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;2015.07.26&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:blog2.karottc.com,2015-07-25:/posts/2015-07-25-swift-2048/</id>
+    <title type="html">用 Swift 语言实现 2048游戏</title>
+    <published>2015-07-25T12:26:17Z</published>
+    <updated>2015-07-25T12:26:17Z</updated>
+    <link rel="alternate" href="http://blog2.karottc.com/posts/2015-07-25-swift-2048/"/>
+    <content type="html">&lt;p&gt;前段时间粗浅的学习一下 �Swift 这个语言，一个多月前的苹果开发者大会上，Swift已经更新到了 &lt;strong&gt;SWift2.0&lt;/strong&gt; 了，相比1.0有了不少的变化，有些适配的 Swift1.0的库，现在已经不能直接拿来用了，需要稍微改一下，比如sqlite3.0，这个在下文中会讲到。本文主要记录一下用 �Swift 实现2048游戏这个过程。&lt;/p&gt;
+&lt;h3 id="基本功能的设计"&gt;基本功能的设计&lt;/h3&gt;
+&lt;p&gt;游戏在启动之后应该包括两个界面，1. 游戏的主界面；2. 游戏的设置界面，比如可以设置过关的分数，设置维度来控制难易度。&lt;/p&gt;
+&lt;p&gt;这种两个屏用 &lt;em&gt;UINavigationController&lt;/em&gt; 就可以搞定，主界面主要是绘图和分数的展示，设置界面主要是通过 &lt;em&gt;Label&lt;/em&gt; 和 &lt;em&gt;Button&lt;/em&gt; 来展示设置和响应用户设置。&lt;/p&gt;
+&lt;h3 id="游戏界面的实现"&gt;游戏界面的实现&lt;/h3&gt;
+&lt;p&gt;这是主要的工作，分成几步来说明：&lt;/p&gt;
+&lt;h4 id="游戏模型"&gt;游戏模型&lt;/h4&gt;
+&lt;p&gt;游戏模型通过一个 &lt;strong&gt;4 x 4&lt;/strong&gt; 的二维矩阵来实现：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;要保存当前的各个位置的数字；&lt;/li&gt;
+&lt;li&gt;控制新生成的数字；&lt;/li&gt;
+&lt;li&gt;记录当前的最大值；&lt;/li&gt;
+&lt;li&gt;判断当前是否每个位置上都有了数字；&lt;/li&gt;
+&lt;li&gt;滑动时判断相邻两个是否可以合并，生成合并之后的数字。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这个部分是整个游戏的核心，因为所有界面上展示的数据，都是来自于这个游戏模型的当前数值。&lt;/p&gt;
+&lt;h4 id="初始界面"&gt;初始界面&lt;/h4&gt;
+&lt;p&gt;第一步：绘制一个初始的界面，也就是 &lt;strong&gt;4 X 4&lt;/strong&gt; 的一个格子；&lt;/p&gt;
+&lt;p&gt;第二步：初始数字的生成，用随机算法任意生成两个数字，同时控制数字 &lt;strong&gt;2&lt;/strong&gt; 出现的概率是90%，而数字 &lt;strong&gt;4&lt;/strong&gt; 出现的概率是 10%。&lt;/p&gt;
+&lt;p&gt;第三步：合并相邻数字。&lt;/p&gt;
+&lt;h4 id="游戏主体玩法"&gt;游戏主体玩法&lt;/h4&gt;
+&lt;p&gt;第一步：添加新出现数字的动画；&lt;/p&gt;
+&lt;p&gt;第二步：添加两个数字合并的动画；&lt;/p&gt;
+&lt;p&gt;第三步：在主界面增加收拾识别，本游戏中只用支持上下左右四种手势即可；&lt;/p&gt;
+&lt;p&gt;第四步：数字移动的算法，以向下滑动为例：当向下滑动的时候，从第一行依次向下移动一个位置（如果可以移动的话），同时移动了当前的位置的数字，上面位置的数字也有做相应的移动；&lt;/p&gt;
+&lt;p&gt;第五步：相邻数字的合并，移动之后，判断相邻的数字，如果相等，就合并；&lt;/p&gt;
+&lt;p&gt;第六步：合并之后，在剩余的位置上新生成一个数字，然后绘制图形。&lt;/p&gt;
+&lt;h3 id="小细节适配"&gt;小细节适配&lt;/h3&gt;
+&lt;p&gt;剩下要做的就是让游戏的设置生效，同时保存当前的游戏数据，在下一次启动的时候恢复。这里可以用sqlite保存，在github上有一个swift封装好的sqlite库，但是并能直接用到swift2.0上，所以，我做了小小的修改适配。&lt;/p&gt;
+&lt;p&gt;最后，整个游戏的源码，在这里：&lt;a href="https://github.com/karottc/swift-practice/tree/master/game2048"&gt;点我&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;界面太丑了，所以我就不放游戏最后的截图了。等我什么时候心情好了再来美化一下界面。&lt;/p&gt;
+&lt;p&gt;2015.07.25&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
     <id>tag:blog2.karottc.com,2015-06-19:/posts/2015-06-19-push-2M-messages/</id>
     <title type="html">给两百万用户推送消息</title>
     <published>2015-06-19T13:17:17Z</published>
@@ -479,177 +609,6 @@
 &lt;p&gt;话说，对于上次我&lt;a href="http://www.karottc.com/blog/2014/06/15/current-doing/"&gt;开始&lt;/a&gt;坚持每天commit一些东西到github上到现在有80+天了，也没感觉到自己养成了习惯，有些时候还是会忘记：&lt;br /&gt; &lt;img src="/static/images/201406/20140830_github.png" alt="Github" /&gt;&lt;/p&gt;
 &lt;p&gt;一直在努力，希望做到更好！&lt;/p&gt;
 &lt;p&gt;&lt;br /&gt; 2014.08.30&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <id>tag:blog2.karottc.com,2014-07-10:/posts/2014-07-10-eight-queens-puzzle/</id>
-    <title type="html">八皇后问题——Python简单解法</title>
-    <published>2014-07-10T12:26:17Z</published>
-    <updated>2014-07-10T12:26:17Z</updated>
-    <link rel="alternate" href="http://blog2.karottc.com/posts/2014-07-10-eight-queens-puzzle/"/>
-    <content type="html">&lt;blockquote&gt;
-&lt;p&gt;八皇后问题是一个以国际象棋为背景的问题：如何能够在8×8的国际象棋棋盘上放置八个皇后，使得任何一个皇后都无法直接吃掉其他的皇后？为了达到此目的，任两个皇后都不能处于同一条横行、纵行或斜线上。八皇后问题可以推广为更一般的n皇后摆放问题：这时棋盘的大小变为n×n，而皇后个数也变成n。当且仅当n = 1或n ≥ 4时问题有解。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;关于这个问题更详细的描述可以参见维基百科&lt;sup&gt;&lt;a href="#fnref:1" name="fnref:1"&gt;1&lt;/a&gt;&lt;/sup&gt; ，使用Python的生成器（即含有yield语句的函数）来解这个问题就会变得很简单，15行以内python代码就可以解决这个问题，对于皇后的个数 n &amp;lt; 8 来说还是非常快的，只是当数量上升到很多的时候，这个解法就会非常的慢。不过这里仍然只讨论最简单的解法，后面会顺便提一下更高效的解法，比如&lt;font color="red"&gt;16&lt;/font&gt;个皇后的情况在我的机器上只需要&lt;font size="5px" color="red"&gt;18&lt;/font&gt;秒。&lt;/p&gt;
-&lt;p&gt;下面是这个解法的完整的代码：&lt;/p&gt;
-&lt;div class="sourceCode"&gt;&lt;pre class="sourceCode python"&gt;&lt;code class="sourceCode python"&gt;&lt;span class="kw"&gt;def&lt;/span&gt; conflict(state, nextX):
-    nextY &lt;span class="op"&gt;=&lt;/span&gt; &lt;span class="bu"&gt;len&lt;/span&gt;(state)
-    &lt;span class="cf"&gt;for&lt;/span&gt; i &lt;span class="kw"&gt;in&lt;/span&gt; &lt;span class="bu"&gt;range&lt;/span&gt;(nextY):
-        &lt;span class="cf"&gt;if&lt;/span&gt; &lt;span class="bu"&gt;abs&lt;/span&gt;(state[i] &lt;span class="op"&gt;-&lt;/span&gt; nextX) &lt;span class="kw"&gt;in&lt;/span&gt; (&lt;span class="dv"&gt;0&lt;/span&gt;, nextY &lt;span class="op"&gt;-&lt;/span&gt; i):
-            &lt;span class="cf"&gt;return&lt;/span&gt; &lt;span class="va"&gt;True&lt;/span&gt;
-    &lt;span class="cf"&gt;return&lt;/span&gt; &lt;span class="va"&gt;False&lt;/span&gt;
-
-&lt;span class="kw"&gt;def&lt;/span&gt; queens(num&lt;span class="op"&gt;=&lt;/span&gt;&lt;span class="dv"&gt;8&lt;/span&gt;, state&lt;span class="op"&gt;=&lt;/span&gt;()):
-    &lt;span class="cf"&gt;for&lt;/span&gt; pos &lt;span class="kw"&gt;in&lt;/span&gt; &lt;span class="bu"&gt;range&lt;/span&gt;(num):
-        &lt;span class="cf"&gt;if&lt;/span&gt; &lt;span class="kw"&gt;not&lt;/span&gt; conflict(state, pos):
-            &lt;span class="cf"&gt;if&lt;/span&gt; &lt;span class="bu"&gt;len&lt;/span&gt;(state) &lt;span class="op"&gt;==&lt;/span&gt; num &lt;span class="op"&gt;-&lt;/span&gt; &lt;span class="dv"&gt;1&lt;/span&gt; :
-                &lt;span class="cf"&gt;yield&lt;/span&gt; (pos,)
-            &lt;span class="cf"&gt;else&lt;/span&gt;:
-                &lt;span class="cf"&gt;for&lt;/span&gt; result &lt;span class="kw"&gt;in&lt;/span&gt; queens(num, state&lt;span class="op"&gt;+&lt;/span&gt;(pos,)):
-                    &lt;span class="cf"&gt;yield&lt;/span&gt; (pos,) &lt;span class="op"&gt;+&lt;/span&gt; result&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;上面这段代码关键点有3个，分别是冲突判断（即放置当前皇后位置的时候不能和已存在的皇后有冲突）、递归（遍历所有的情况要用到的方法）和yield表达式（保存遍历的结果的迭代器）。&lt;/p&gt;
-&lt;p&gt;冲突检测函数 &lt;code&gt;conflict&lt;/code&gt; 的两个参数分别表示: 已存在的皇后的位置和将要放置的皇后的位置（即下一行中皇后的位置），冲突的条件就是，和已存在的皇后在同一垂直线上( &lt;code&gt;state[i] - nextX == 0&lt;/code&gt; )或者在对角线上（ &lt;code&gt;state[i] - nextX == nextY - i&lt;/code&gt; ）。&lt;/p&gt;
-&lt;p&gt;递归函数是通过回溯法来求的每一种可能的情况，这个递归结束的条件是最后一个皇后能够无冲突的找到位置，然后从最后一个皇后的位置一次递归的向上层返回值，同时加上本层的皇后的位置，返回到最上层的时候即完成一次迭代( &lt;code&gt;next()&lt;/code&gt; 函数调用一次)，并且会记住当前的位置，下次继续迭代的时候会接着继续进行（这个其实是yield的特性）。&lt;/p&gt;
-&lt;p&gt;yield语句，在这里可以简单但当作储存返回值的一个元组或者列表来理解（实际上是一个迭代器，稍微有点复杂，后面会具体讲到），这里一次完整的递归（从 &lt;code&gt;yield (pos, )&lt;/code&gt; 这句返回到最上层调用）生成一种可能的情况（序列），也即迭代器的一项（对应于一种满足要求的所有皇后的摆法），在yield的使用迭代过程中，隐式或显式的调用一次next函数即执行一次完整的递归。&lt;font color="purple"&gt;;-)&lt;/font&gt;&lt;/p&gt;
-&lt;h3 id="yield-语句"&gt;yield 语句&lt;/h3&gt;
-&lt;p&gt;yield的用法单独说一下是因为这个是理解上面的代码的关键，同时也是不好弄清楚的一个东西，&lt;a href="https://github.com/karottc/practice/blob/master/python/generator_20140705.py"&gt;这里&lt;/a&gt; 是一个关于yield的几行代码的使用例子。&lt;/p&gt;
-&lt;p&gt;从概念上说，yield是包含在Python的生成器里面的，相关的概念定义如下： &amp;gt; 生成器是一种用普通的函数语法定义的迭代器。 &amp;gt; &amp;gt; 任何包含yield语句的函数成为生成器&lt;sup&gt;&lt;a href="#fnref:2" name="fnref:2"&gt;2&lt;/a&gt;&lt;/sup&gt;。&lt;/p&gt;
-&lt;p&gt;用下面这段常见的Python来辅助说明：&lt;/p&gt;
-&lt;div class="sourceCode"&gt;&lt;pre class="sourceCode python"&gt;&lt;code class="sourceCode python"&gt;&lt;span class="kw"&gt;def&lt;/span&gt; fab(&lt;span class="bu"&gt;max&lt;/span&gt;):
-    a,b &lt;span class="op"&gt;=&lt;/span&gt; &lt;span class="dv"&gt;0&lt;/span&gt;,&lt;span class="dv"&gt;1&lt;/span&gt;
-    i &lt;span class="op"&gt;=&lt;/span&gt; &lt;span class="dv"&gt;0&lt;/span&gt;
-    &lt;span class="cf"&gt;while&lt;/span&gt; i &lt;span class="op"&gt;&amp;lt;&lt;/span&gt; &lt;span class="bu"&gt;max&lt;/span&gt;:
-        &lt;span class="cf"&gt;yield&lt;/span&gt; a
-        a,b &lt;span class="op"&gt;=&lt;/span&gt; b, a&lt;span class="op"&gt;+&lt;/span&gt;b
-        i &lt;span class="op"&gt;+=&lt;/span&gt; &lt;span class="dv"&gt;1&lt;/span&gt;
-f &lt;span class="op"&gt;=&lt;/span&gt; fab(&lt;span class="dv"&gt;5&lt;/span&gt;)
-&lt;span class="bu"&gt;print&lt;/span&gt; f.&lt;span class="bu"&gt;next&lt;/span&gt;()  &lt;span class="co"&gt;# output: 0&lt;/span&gt;
-&lt;span class="bu"&gt;print&lt;/span&gt; f.&lt;span class="bu"&gt;next&lt;/span&gt;()  &lt;span class="co"&gt;# output: 1&lt;/span&gt;
-&lt;span class="bu"&gt;print&lt;/span&gt; f.&lt;span class="bu"&gt;next&lt;/span&gt;()  &lt;span class="co"&gt;# output: 1&lt;/span&gt;
-&lt;span class="bu"&gt;print&lt;/span&gt; f.&lt;span class="bu"&gt;next&lt;/span&gt;()  &lt;span class="co"&gt;# output: 2&lt;/span&gt;
-
-&lt;span class="cf"&gt;for&lt;/span&gt; i &lt;span class="kw"&gt;in&lt;/span&gt; fab(&lt;span class="dv"&gt;10&lt;/span&gt;):
-    &lt;span class="bu"&gt;print&lt;/span&gt; i, &lt;span class="st"&gt;&amp;#39;,&amp;#39;&lt;/span&gt;,
-&lt;span class="co"&gt;# output: 0 , 1 , 1 , 2 , 3 , 5 , 8 , 13 , 21 , 34 ,&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;在上面的代码中，fab函数就是生成器，和普通的函数的区别在于：&lt;/p&gt;
-&lt;ol type="1"&gt;
-&lt;li&gt;不调用next方法，它不会自动执行；&lt;/li&gt;
-&lt;li&gt;每次调用next方法时只执行到yield语句处，然后挂起，等待下一次next的调用；&lt;/li&gt;
-&lt;li&gt;下一次调用next方法时，从yield的下一句开始执行，直到执行到yield语句，然后循环2-3的操作。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;上面代码中的输出情况就表明了这样的过程，对于上面的 &lt;code&gt;for&lt;/code&gt; 循环来说，&lt;code&gt;for&lt;/code&gt; 循环里面的函数是隐式调用了所有的next方法，生成了一个列表(list)，在for循环中的 &lt;code&gt;fab(10)&lt;/code&gt; 是和 &lt;code&gt;list(fab(10))&lt;/code&gt; 等价的，可以用 &lt;code&gt;print list(fab((10))&lt;/code&gt; 看输出结果加以验证。&lt;/p&gt;
-&lt;h3 id="debug-上面代码"&gt;Debug 上面代码&lt;/h3&gt;
-&lt;p&gt;如果觉得上面的代码很难理解，可以用单步执行的方式去跟踪和调试代码，同时使用 &lt;code&gt;print&lt;/code&gt; 大法也是很有效果的。关于 step by step 的工具，可以使用 PyCharm 或者 Eclipse + Pydev 这两个IDE，或者也可以使用 pdb 这个工具，pdb和gdb的使用命令没有多大差别，所以如果是常用gdb来调代码的话，用pdb是毫无障碍的，当然，用这些工具的时候可以适时的配合几句 &lt;code&gt;print&lt;/code&gt; 来会更好一些，上面三种，我个人还是推荐使用IDE（即PyCharm或者Pydev）,因为有些功能还是那些面向指令集的调试器（比如pdb）没法比的.&lt;/p&gt;
-&lt;p&gt;通过单步跟踪之后，对yield的执行过程和上面的代码的递归调用栈应该就比较清楚了。&lt;/p&gt;
-&lt;h3 id="高效的八皇后问题解法"&gt;高效的八皇后问题解法&lt;/h3&gt;
-&lt;p&gt;这段代码是用C语言写的，用了语言特性的位操作等，所以比python的快很多，对于小于等于16个皇后来说，这段C代码的实现比上面15行的Python代码实现快了好几个数据量级。&lt;/p&gt;
-&lt;p&gt;具体的代码请查看&lt;a href="https://github.com/karottc/practice/blob/master/python/eight_empress.c"&gt;这里&lt;/a&gt; : https://github.com/karottc/practice/blob/master/python/eight_empress.c .&lt;/p&gt;
-&lt;p&gt;这是在我的机器上的运行时间的截图：&lt;/p&gt;
-&lt;figure&gt;
-&lt;img src="/static/images/201406/20140710_runtime.png" alt="runtime" /&gt;&lt;figcaption&gt;runtime&lt;/figcaption&gt;
-&lt;/figure&gt;
-&lt;p&gt;2014.07.10&lt;/p&gt;
-&lt;h4 id="footnotes"&gt;Footnotes:&lt;/h4&gt;
-&lt;p&gt;&lt;sup&gt;&lt;a href="#fnref:1" name="fnref:1"&gt;1&lt;/a&gt;&lt;/sup&gt; 这个问题的两处描述分别是&lt;a href="http://zh.wikipedia.org/wiki/%E5%85%AB%E7%9A%87%E5%90%8E%E9%97%AE%E9%A2%98"&gt;中文维基&lt;/a&gt; 和 &lt;a href="http://en.wikipedia.org/wiki/Eight_queens_puzzle"&gt;英文维基&lt;/a&gt;, 推荐看英文的，因为英文的更详尽，中文相比英文版的维基百科的内容太少，对这个问题的描述一半都不到。&lt;/p&gt;
-&lt;p&gt;&lt;sup&gt;&lt;a href="#fnref:2" name="fnref:2"&gt;2&lt;/a&gt;&lt;/sup&gt; 引用自&lt;a href="http://book.douban.com/subject/4866934/"&gt;《Python基础教程（第二版）》&lt;/a&gt;。&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <id>tag:blog2.karottc.com,2014-07-01:/posts/2014-07-01-graduate-one-year/</id>
-    <title type="html">写在毕业一周年之际</title>
-    <published>2014-07-01T12:26:17Z</published>
-    <updated>2014-07-01T12:26:17Z</updated>
-    <link rel="alternate" href="http://blog2.karottc.com/posts/2014-07-01-graduate-one-year/"/>
-    <content type="html">&lt;p&gt;今天是2014年7月1号，从毕业到正式工作刚刚一整年&lt;sup&gt;&lt;a href="#fnref:1" name="fnref:1"&gt;1&lt;/a&gt;&lt;/sup&gt;，这期间发生的事儿不多，可也不算少，或许值得写下来纪念一下。（ &lt;em&gt;未曾经历的感觉都值得记忆吧&lt;/em&gt; ）照例，还是先上图一张： &lt;img src="/static/images/201406/20140630_1_oneyear.png" alt="time one year" /&gt;&lt;/p&gt;
-&lt;p&gt;毕业之后和以前最大的不同，可能算是经济独立了吧，虽然在大学的后半段因为实习的原因，经济也相对独立了，但是和毕业后还是有些不一样的。相对这个而言，独自一个人初到一个陌生的城市的孤独、落寞的五味成杂的感觉，这次却是一点没有，因为一年前的实习早就在另一个城市体验过了，有相对明确的目标+无惧于突然情况，这样就可以搞定大部分的不适和不安。&lt;/p&gt;
-&lt;h3 id="工作"&gt;工作&lt;/h3&gt;
-&lt;p&gt;工作上的事感觉没有太多要说的，就只能说说感觉了，现在的工作算是通信的，和以前是完全的不同体验，在学校的时候体验过传统企业系统的开发、android的pad和手机app开发、也在互联网的公司体验了一把。工作的时候去来搞了路由器相关的东西，这是和以前完全不同的体验，以前做的网站以及app之类的都是很上层的东西，而现在做的相对下层一点&lt;sup&gt;&lt;a href="#fnref:2" name="fnref:2"&gt;2&lt;/a&gt;&lt;/sup&gt;。所以这样还是学了一些新的东西，同时有些当年在《计算机网络》这个课上忽略和不懂的东西，现在也懂了一些，因为有实际的应用场景，所以这部分的知识接受程度比在学校高，同时在公司身边也有人可以实时的请教和交流，自然更加方便。&lt;/p&gt;
-&lt;p&gt;此外还有一个绕不开的内容就是搭环境，我以为在这里就不用搞什么环境了，原来还是要弄的，只是不同的，以前是弄的LAMP的环境&lt;sup&gt;&lt;a href="#fnref:3" name="fnref:3"&gt;3&lt;/a&gt;&lt;/sup&gt;，现在搭的是硬件需要的调试和测试环境而已，不过这个体验还是不错的，因为我现在可以很熟练的做cable线头、网线头、电话线头和他们之间的对接以及他们和串口线的对接等等……这些现在看来很简单的东西，当时也是公司的前辈在实验室手把手教的，不过比较奇怪的是网线的线序，我在学校背了好几次都没怎么记住，老是忘记，在这里的时候给我讲了两遍，我就从此再没忘记过—— &lt;em&gt;好神奇的样子&lt;/em&gt; 。&lt;/p&gt;
-&lt;p&gt;关于具体的技术，这不是本文的主题，不在这里扯淡。在公司我的RP值依然不高——从在公司年会上1/8的中奖率，我还是啥都没中。虽然是在意料之中，但还是有点微微失望，不过这么些年也习惯RP值不高的情况了，记得在中学的时候为了应对可能路上的突发情况(比如自行车出了啥问题)，我都会比正常的出门时间提前半个小时走(直接结果就是每天到学校都很早吖，给人感觉就是我很勤奋，虽然我真的是很勤奋，但不是体现在这里啦)，做计划时候也都会有plan B——运气之差，可见一斑。&lt;/p&gt;
-&lt;h3 id="生活"&gt;生活&lt;/h3&gt;
-&lt;p&gt;虽然是在一个陌生的城市，但是饮食没有啥不习惯的，找房子也挺顺利，所以在这些物质基础方面基本没有啥问题，而一起合租的都是大学的同班同学，都完全不用磨合，利用很多个周末的时间，把附近的餐馆都吃的差不多了(以住的地方的地铁站为中心，上下各延伸一个地铁站的距离)。不过生活总是充满变数，年轻的我们又如何能安于现状，在回家过年后有个兄弟就决定要去追求他想要的生活，最后在三月底踏上了西安的土地，也许在那里他能找到一些属于他的答案。这种离别的时候怎能没有装B的情怀，所以我当时附上了东拼西凑的小词一首：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;一杯别酒，踌躇满志，肆言妄笑天下陋。纵知前途千万险，轻别离，未来风雨绸缪。想多少年后，沉浮事久，夜思少年愁，将叹有月如钩。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;在工作一个多月以后，我决定去学吉他，当时的想法就是，玩音乐可以释放压抑的情绪，同时也很羡慕和向往那种背着吉他去流浪的生活，只是让我选的话，我可能还是不会选择背着几天去流浪的生活，趁着刚好9月份深大开学了，所以就去深大的一个自发的吉他社团混了半年，学了点基本东西，剩下的就是不停的反复练习和反复琢磨了，重点还是要坚持练习，顺便附上一张当时的照片： &lt;img src="/static/images/201406/20140630_2_guitar.png" alt="guitar" /&gt; 虽然通过这个事我发现我确实没有什么音乐细胞，不过还是会抽空拿出来玩一玩，我也能切实感觉到对我情绪的调节作用，哈哈！&lt;/p&gt;
-&lt;p&gt;在去年10.1的时候去广州、佛山转了一圈，一共花了5天时间，也可以算是一场说走就走的旅行，因为是9月30号晚上临时决定明天去这样转一圈，不过因为从来没有一个人出去旅行玩过，而且这么临时的决定和匆忙，所以慢慢有点胆怯了，就不想去了，晚上在和大学同寝室的哥们说到这个事儿的时候，在他的刺激和说服之下，我还是决心明天出去的计划不变，因为有些事总需要去经历、去体验。当然这个过程和结果都是相当不错的，不过我又有点担心会慢慢喜欢上一个人的感觉…(￣◇￣;),同时在广州的时候也顺便见了一个特地从上海来广州看他媳妇儿的大学的哥们，生活就是如此美好吖。&lt;/p&gt;
-&lt;p&gt;在刚来深圳的那段时间，我还买了文房四宝，准备练习书法来着，写了一个月的样子，后面在我学习吉他以后就把书法放弃了，因为我更愿意把练习书法的时间也用来练习吉他。前两个月，我在公司找了一个师傅教我打乒乓球，不过我想更多的是算亦师亦友的关系，想来生活中还是藏着好些美好的事物。&lt;/p&gt;
-&lt;h3 id="看书"&gt;看书&lt;/h3&gt;
-&lt;p&gt;这一年虽然看书不多，但也还是在坚持看书。下面按时间顺序说一下看的书&lt;sup&gt;&lt;a href="#fnref:4" name="fnref:4"&gt;4&lt;/a&gt;&lt;/sup&gt;，从毕业之后，终于把搁置了很久的《黑客与画家》看了，看这本书就用了2个月，后面还会再看一遍，因为通过这本书，我也更新了我的一些认识，比如对语言的偏见和数学对编程人员的重要性以及掌握程度的认识，这些东西一直困扰我，在这本书里面，我都找到了答案。之后用了一个月的时间看了《专业主义》，这也是一本更新了我知识体系和内容的书。&lt;/p&gt;
-&lt;ol type="1"&gt;
-&lt;li&gt;《下班后的黄金8小时》：这本属于畅销书，看着玩的，有些收获，但并不是很适合我；&lt;/li&gt;
-&lt;li&gt;《看见》：柴静的这本，看看还可以吧，我是在国庆节旅行途中看的这本，没看完，后面回来之后又接着看了半个月。&lt;/li&gt;
-&lt;li&gt;《计算机网络》：这本是专业书，因为工作的需要，算是复习一下大学中的计算机网络的课程相关内容；&lt;/li&gt;
-&lt;li&gt;《TCP/IP详解·卷一》：这个看一遍可以在脑袋里面建立一个索引和一些概念，在以后用到时候再来查阅；&lt;/li&gt;
-&lt;li&gt;《失控》：这本书我花了两个月时间看完，但是却很多消化不了，还是需要再来一遍；&lt;/li&gt;
-&lt;li&gt;《千万别学英语》、《你还在学英语吗》、《人人都能用英语》、《把你的英语用起来》、《考拉小巫的英语学习日记》：这些都是学英语方法论的书，不能让英语成为障碍，所以要把英语水平提高一些，这些书，感觉有价值的是人人都能用英语》、《把你的英语用起来》这两本；&lt;/li&gt;
-&lt;li&gt;《武侠，从牛A到牛C》：这本书是用来调节脑袋的，花了2天时间看完，分析那些金庸小说的人物还是挺有意思的，看着玩还是可以的；&lt;/li&gt;
-&lt;li&gt;《思考，快与慢》：思维类的畅销书；&lt;/li&gt;
-&lt;li&gt;《一键下单》：亚马逊的传记；&lt;/li&gt;
-&lt;li&gt;《Big Data：大数据时代》、《大数据云图》、《大连接：社会网络是如何形成的以及对人类现实行为的影响》、《数据之美》：当时思维处于波动时期，在想要不要大数据分析类的工作，所以看了一些；&lt;/li&gt;
-&lt;li&gt;《深入浅出数据分析》、《谁说菜鸟不会数据分析 _入门篇》：跟上面同样的理由，后面这本书倒是让我学会了一些excel的用法；&lt;/li&gt;
-&lt;li&gt;《谁的青春不迷茫》：同样是在上面的迷茫时期看的书；&lt;/li&gt;
-&lt;li&gt;《MacTalk·人生元编程》：类似于blog合集，没多少有用的东西；&lt;/li&gt;
-&lt;li&gt;《易中天中华史·总序+祖先》：易中天还是比较喜欢的历史学家，虽然书里面的内容有些部分有些牵强，但还是可以看看；&lt;/li&gt;
-&lt;li&gt;《代码的未来》：这本书看着玩就好了；&lt;/li&gt;
-&lt;li&gt;《码农：1-12》：图灵社区出的杂志，就当作杂志看好了，我比较关注每期的人物专访部分。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;毕业这一年好像发生了挺多事的，仔细回忆一下，好像也没有多少，这里就算竹子的一小节吧！因为很多时候不知前路要怎么走，但依然需要向前走，因为，已不能回头。&lt;/p&gt;
-&lt;p&gt;2014.07.01&lt;/p&gt;
-&lt;h4 id="footnotes"&gt;Footnotes:&lt;/h4&gt;
-&lt;p&gt;&lt;sup&gt;&lt;a href="#fnref:1" name="fnref:1"&gt;1&lt;/a&gt;&lt;/sup&gt; 2013年7月1号正式开始上班，还记得当时选择7月1号是因为刚刚那天是星期1，我一看正好吖，于是就定了这个时间,提前两天来到深圳，1号正式开始工作。&lt;/p&gt;
-&lt;p&gt;&lt;sup&gt;&lt;a href="#fnref:2" name="fnref:2"&gt;2&lt;/a&gt;&lt;/sup&gt; 从5层网络模型来说，现在做的最高也只到三层，有时也搞二层(链路层)的东西。&lt;/p&gt;
-&lt;p&gt;&lt;sup&gt;&lt;a href="#fnref:3" name="fnref:3"&gt;3&lt;/a&gt;&lt;/sup&gt; LAMP环境的搭建，可以参见&lt;a href="http://www.cnblogs.com/karotte/archive/2012/08/12/install_lamp.html"&gt;这篇blog&lt;/a&gt;: http://www.cnblogs.com/karotte/archive/2012/08/12/install_lamp.html 。&lt;/p&gt;
-&lt;p&gt;&lt;sup&gt;&lt;a href="#fnref:4" name="fnref:4"&gt;4&lt;/a&gt;&lt;/sup&gt; 我看过的都会在豆瓣上列出来，具体可以看&lt;a href="http://book.douban.com/people/karottc/collect"&gt;这里&lt;/a&gt;: http://book.douban.com/people/karottc/collect 。&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <id>tag:blog2.karottc.com,2014-06-15:/posts/2014-06-15-current-doing/</id>
-    <title type="html">开启GitHub模式，now!</title>
-    <published>2014-06-15T12:26:17Z</published>
-    <updated>2014-06-15T12:26:17Z</updated>
-    <link rel="alternate" href="http://blog2.karottc.com/posts/2014-06-15-current-doing/"/>
-    <content type="html">&lt;p&gt;最近看到了一篇&lt;a href="http://ryanseys.com/blog/177-days-of-github/"&gt;文章&lt;/a&gt;,该文章的作者将自己连续177天在github上commit东西的经历和经验分享了出来，我觉得这样挺有意思，所以我也准备做一个尝试，看看自己能坚持不间断的在github上commit新的东西多少天。正如作者所说，坚持这样做一次，总能发现和学到一些前所未有的东西。所以我在IM上问了下这货–&lt;a href="https://github.com/cocal"&gt;cocal&lt;/a&gt;，他立即表示这很好，所以决定 &lt;strong&gt;Challenge Accept!&lt;/strong&gt; 看情况，他这两天正好可以搞定他买的VPS，所从今天开始算做第一天。&lt;/p&gt;
-&lt;p&gt;这个对于我们两个来说都是一件有挑战的事儿，为了让这个事变的更有意义和公平一点，我们约定了以下几个简单的规则：&lt;/p&gt;
-&lt;ol type="1"&gt;
-&lt;li&gt;仅仅是对README文件的编辑的commit不算有效的更新；&lt;/li&gt;
-&lt;li&gt;禁止使用脚本自动编辑，所有的提交的更新都必须是自己手动完成；&lt;/li&gt;
-&lt;li&gt;禁止提交搞笑的无关程序逻辑之类的更新。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;在此之前，我在github的连续天数是两天，当然，也没有什么有意义的代码，好像都是垃圾。所以现在开始尽量让垃圾少一些，做多些有意义的和有用的commit，也可以算作是一个网络备份和备忘吧。:-).&lt;/p&gt;
-&lt;h3 id="linux-0.11-注释"&gt;linux-0.11 注释&lt;/h3&gt;
-&lt;p&gt;目前我正在给Linux-0.11版本的内核增加注释，项目在&lt;a href="https://github.com/karottc/linux-0.11"&gt;这里&lt;/a&gt;。我对整个Linux内核有兴趣的部分是kernel、网络(TCP/IP协议栈，linux-0.11版本还没有网络功能)、内存管理、文件系统、进程调度。驱动部分现在还暂时不会去涉及它。&lt;/p&gt;
-&lt;figure&gt;
-&lt;img src="/static/images/201406/20140615_1_linux11.png" alt="linux-0.11注释项目" /&gt;&lt;figcaption&gt;linux-0.11注释项目&lt;/figcaption&gt;
-&lt;/figure&gt;
-&lt;p&gt;现在市面上最新(3.x的版本)的和最流行的(2.6.x版本)几种版本的代码都是非常大的，一开始直接看会显得力不从心，虽然有很多讲内核解释的书，但总没有linux最原始的版本看着容易理解。我最初以为把书上的注释搬运到代码中一件挺快的事，结果做到现在发现，一点也不轻松，还是相当耗精力的(难道是我太认真了？？..[偷笑]..)。干这件事好像可以在没有新想法和项目来写的时候继续往github上commit东西。尽管如此，我还是想尽快把这个搞定，人总得逼自己一把！&lt;/p&gt;
-&lt;h3 id="工具"&gt;工具&lt;/h3&gt;
-&lt;p&gt;目前我用的shell和编辑器是zsh + VIM 组合，这两个东西配置网上已经不计其数了，这里不再赘述。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;我的shell是&lt;a href="https://github.com/karottc/oh-my-zsh"&gt;这个&lt;/a&gt;，同样是来源于那个厉害的 &lt;a href="https://github.com/robbyrussell/oh-my-zsh"&gt;oh-my-zsh&lt;/a&gt;,我fork过来以后做了一点根据自己习惯的小小的调整。&lt;/li&gt;
-&lt;li&gt;我的VIM的配置在&lt;a href="https://github.com/karottc/vim-configure"&gt;这里&lt;/a&gt;，从最初的东拼西凑到现在差不多已经有了自己的习惯，然后逐步的扩展，或许以后满足不了的时候就自己动手写VIM的插件(&lt;em&gt;This is a goal!&lt;/em&gt;)。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;还有一些GUI的工具，就不在这里列出来了。&lt;/p&gt;
-&lt;h3 id="github-pages"&gt;Github pages&lt;/h3&gt;
-&lt;p&gt;这里还要提一下用 Github pages 建立blog和绑定域名的事儿，当然这类东西网上的手把手的教程已经非常多了，这里不详述了，主要记录一点我碰到的觉得有用的东西。&lt;/p&gt;
-&lt;p&gt;原来自己这么久一直搞错了一个概念，我一直以为 &lt;em&gt;www.xxx.com&lt;/em&gt; 就算顶级域名了，结果它应该算二级域名，而 &lt;em&gt;xxx.com&lt;/em&gt; 才算是顶级域名，这一点在购买域名商那里配置DNS的时候是可以发现。然后用 &lt;code&gt;dig&lt;/code&gt; 这个命令也可以看出来：&lt;/p&gt;
-&lt;figure&gt;
-&lt;img src="/static/images/201406/20140615_2_domain.png" alt="karott.com" /&gt;&lt;figcaption&gt;karott.com&lt;/figcaption&gt;
-&lt;/figure&gt;
-&lt;figure&gt;
-&lt;img src="/static/images/201406/20140615_3_domain.png" alt="www.karott.com" /&gt;&lt;figcaption&gt;www.karott.com&lt;/figcaption&gt;
-&lt;/figure&gt;
-&lt;p&gt;上面是以我自己的域名 &lt;em&gt;karottc.com&lt;/em&gt; 做的一个例子即可看到。&lt;/p&gt;
-&lt;p&gt;下面说一下我在搞 github pages 碰到的一个问题:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;问题描述：我在 commit 和 push 一个初始版本之后，通过 username.github.com.io/blogs 也能访问。然后我又继续添加文章，并做了一些小的页面布局、配置这类的调整，然后再 push 到 github 上，这是再通过 username.github.com.io/blogs 去访问还是第一次的样子，新加的东西完全没有？&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;碰到这个问题当时非常抓狂吖，无论怎么修改然后 push ，新加的东西就是不出现在页面上。最后经过排查(我也不知道为啥当时突然就注意到了)，文件编写的有问题，jekyll 不能 build 成功，所以就一直沿用的第一次的样子，这种问题是会报错的，出错信息在项目的设置里面(不知道这点根本发现不了吖)，build失败的出错信息显示的位置比较隐晦，可以这样进入，如图： &lt;img src="/static/images/201406/20140615_4_github.png" alt="Github" /&gt; 点击红色部分的 &lt;em&gt;setting&lt;/em&gt;，然后进入如图： &lt;img src="/static/images/201406/20140615_5_github.png" alt="warning" /&gt; build 出错的信息会出现上图红色部分，图中是没有错误的情况下的正确显示。&lt;/p&gt;
-&lt;p&gt;这个问题真是调了很久，让人很抓狂啊，当时新建了好多个 github pages 专门来测试这个，不过现在再来建 github pages 已经驾轻就熟了，哈哈——花时间总是有收获的！！ &lt;strong&gt;Good luck !&lt;/strong&gt;&lt;/p&gt;
-&lt;h3 id="背景"&gt;背景&lt;/h3&gt;
-&lt;p&gt;我差不多一年都没有写过 blog 了，也就是从去年毕业以后就到现在都没有写，不知道是因为太安逸(生活上)了还是因为太不确定(思想上)了，又或者兼而有之，感觉过的浑浑噩噩，准确的说更像是一种温水煮青蛙的感觉吧，所以这样下去怎么行，我可是有理想有追求的好少年，必须要从温水里跳出来，让以前的事(好的、坏的、得瑟的、悲伤的)随&lt;a href="http://www.karottc.com/blog/2014/06/14/former-life/"&gt;前世档案&lt;/a&gt;一起尘封，然后清空自己，重新开始 —— &lt;em&gt;stay hungry, stay foolish!&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;好吧，其实的情况是，这么些时间想通了一些问题，在自己的路上坚持走下去(保持思想上的稳定性真是非常重要吖)。从毕业到现在虽然没写东西，但是还是在坚持看书,&lt;a href="http://book.douban.com/people/karottc/collect"&gt;这里是&lt;/a&gt;我看过的书的不完全书单，刚刚扫了一眼，那个list里面好像有营养的书很少(..[汗]..) (￣◇￣;)。就把这些书当作看专业书之余的甜点好了。&lt;/p&gt;
-&lt;p&gt;2014.06.15&lt;/p&gt;
 </content>
   </entry>
 </feed>

@@ -78,6 +78,62 @@
           </div>
           <div class="ui vertical segment">
             <h2 class="ui header">
+              <a href="/posts/2015-07-29-cpp-reference/">C++的引用类型的变量到底占不占用内存空间？</a>
+              <div class="sub header">
+                2015-07-29
+              </div>
+            </h2><p>分析一下 <strong>C++</strong> 里面的引用类型（例如：<code>int &amp;r = a;</code> ）中的 <code>r</code> 变量是否占用内存空间呢？是否和 <code>int *p = &amp;a;</code> 中的 <code>p</code> 变量一样占用内存空间呢？</p>
+<p><strong>本文将给出答案。</strong></p>
+<p>直接看一个简单的例子：<br /></p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span>
+
+<span class="kw">using</span> <span class="kw">namespace</span> std;
+
+<span class="dt">int</span> main(<span class="dt">void</span>)
+{
+    <span class="dt">int</span> a = <span class="dv">6</span>;
+    <span class="dt">int</span> &amp;r = a;
+    <span class="dt">int</span> *p = &amp;a;
+    <span class="dt">int</span> x = r;
+    <span class="cf">return</span> <span class="dv">0</span>;
+}</code></pre></div>
+
+            <div class="ui small basic button">
+              <a href="/posts/2015-07-29-cpp-reference/">Read More…</a>
+            </div>
+          </div>
+          <div class="ui vertical segment">
+            <h2 class="ui header">
+              <a href="/posts/2015-07-26-zhihu-sarcasm/">抓取知乎每日吐槽</a>
+              <div class="sub header">
+                2015-07-26
+              </div>
+            </h2>
+            <p><strong>知乎日报</strong> 里面有一节，叫做⎾如何正确的吐槽⏌，里面有很多很有意思而有短小的回答，基本上我我每天都会看一眼。所以我就写了脚本把他们全部抓了下来，放到自己的服务器上，同时每天还在定时去抓取当天新出来的数据，然后用 <em>swift</em> 写了一个 app 来从自己的服务器获取数据来看。</p>
+            <p>下面记录一下做这件事的过程。</p>
+            <p>要抓取知乎的吐槽数据，第一步就是要知道它对应的 <em>URL</em> ，这个获取方法也很简单，直接抓个包就能知道了，具体的形式大概如下这样：</p>
+            
+            <div class="ui small basic button">
+              <a href="/posts/2015-07-26-zhihu-sarcasm/">Read More…</a>
+            </div>
+          </div>
+          <div class="ui vertical segment">
+            <h2 class="ui header">
+              <a href="/posts/2015-07-25-swift-2048/">用 Swift 语言实现 2048游戏</a>
+              <div class="sub header">
+                2015-07-25
+              </div>
+            </h2>
+            <p>前段时间粗浅的学习一下 Swift 这个语言，一个多月前的苹果开发者大会上，Swift已经更新到了 <strong>SWift2.0</strong> 了，相比1.0有了不少的变化，有些适配的 Swift1.0的库，现在已经不能直接拿来用了，需要稍微改一下，比如sqlite3.0，这个在下文中会讲到。本文主要记录一下用 Swift 实现2048游戏这个过程。</p>
+            <p>游戏在启动之后应该包括两个界面，1. 游戏的主界面；2. 游戏的设置界面，比如可以设置过关的分数，设置维度来控制难易度。</p>
+            <p>这种两个屏用 <em>UINavigationController</em> 就可以搞定，主界面主要是绘图和分数的展示，设置界面主要是通过 <em>Label</em> 和 <em>Button</em> 来展示设置和响应用户设置。</p>
+            
+            <div class="ui small basic button">
+              <a href="/posts/2015-07-25-swift-2048/">Read More…</a>
+            </div>
+          </div>
+          <div class="ui vertical segment">
+            <h2 class="ui header">
               <a href="/posts/2015-06-19-push-2M-messages/">给两百万用户推送消息</a>
               <div class="sub header">
                 2015-06-19
@@ -153,67 +209,6 @@
             
             <div class="ui small basic button">
               <a href="/posts/2014-09-07-maximum-consecutive-subsequence/">Read More…</a>
-            </div>
-          </div>
-          <div class="ui vertical segment">
-            <h2 class="ui header">
-              <a href="/posts/2014-09-03-life-meaning/">【解惑】人生有何意义</a>
-              <div class="sub header">
-                2014-09-03
-              </div>
-            </h2>
-            <p>这几天看胡适的书，其中有一篇写到在民国八年的时候，胡适当年的同学朱子平问了他一个问题：“人生在世，究竟是为什么的？” 胡适当时的回答就是：“这个问题是没有答案的…….”</p>
-            <p>然而在民国十七年一月二十七日，胡适又写了一篇，清楚的回答了这个问题： &gt; “人生有何意义？” &gt; &gt; 其实这个问题是容易解答的。人生的意义全是各人自己寻出来，造出来的：高尚，卑劣，清贵，污浊，有用，无用，……全靠自己的作为。生命本身不过是一件生物学的事实，有什么意义可说？生一个人与一只猫，一只狗，有什么分别？人生的意义不在于何以有生，而在于自己怎样生活。你若情愿把这六尺之躯葬送在白昼作梦之上，那就是你这一生的意义。你若发愤振作起来，决心去寻求生命的意义，去创造自己的生命的意义，那么，你活一日便有一日的意义，作一事便添一事的意义，生命无穷，生命的意义也无穷了。 &gt; &gt; 总之，生命本没有意义，你要能给他什么意义，他就有什么意义。与其终日冥想人生有何意义，不如试用此生作点有意义的事。……</p>
-            <p>这个问题我也思考过，始终没有一个好的答案，今日读到此篇，感到万分惭愧，九十年前的人就已经给出了这个很好的答案了。</p>
-            
-            <div class="ui small basic button">
-              <a href="/posts/2014-09-03-life-meaning/">Read More…</a>
-            </div>
-          </div>
-          <div class="ui vertical segment">
-            <h2 class="ui header">
-              <a href="/posts/2014-08-31-evernote-wiz/">习惯的力量——从evernote试用为知笔记</a>
-              <div class="sub header">
-                2014-08-31
-              </div>
-            </h2>
-            <p>从开始用<a href="http://wiz.cn/" title="为知笔记主页">为知笔记</a>这个程序到现在，有一周+的时间了，在此之前，我一直用的<a href="https://evernote.com/" title="evernote国际版主页，还有国内版!">evernote</a>，可以说我的生活中evernote已经变得非常重要，其重要的程度甚至使我从Linux转向了使用mac os，就因为mac os平台有evernote的客户端。去用为知笔记的起因是源于同学的推荐，了解了一下以后就装了一个来用，最吸引我一点是相比于evernote的免费用户，它的月流量是evernote的10倍，并且而已在移动设备上离线查看笔记，这些都是evernote的收费功能。</p>
-            <p>为了深度的使用它，我首先导入了一小部分以前evernote的笔记，并且在有需求的时候我的第一解决方案都是优先考虑使用为知笔记，可以使用了这么久了，还是有很多不满意的地方，当然这些都是细节的地方，也许不是它做的不好，而是我用了几年的evernote已经习惯了而已，所以用其他的就会有对比，<strong>这就是习惯的力量，习惯的东西会化成生活中的不知不觉的一部分，让人无法抗拒，自然而然的会提高效率</strong>。</p>
-            <p>虽然这界面初看上去不会有太大的差别，下面这是为知笔记的一个截图：<br /> <img src="/static/images/201406/20140829_wiz.png" alt="Wiz" /> 然后这是evernote的一个截图：<br /> <img src="/static/images/201406/20140829_evernote.png" alt="Evernote" /> 关键还是在体验和细节上，因为具体使用的时候就是一些琐碎操作，不然搜索、编辑、查看、响应鼠标的滚动速度、以及对网页剪辑的还原度等等。这是说一个我不习惯的地方：为知笔记的里面的超链接，鼠标点击后是在为知笔记自己的程序中打开网页，而evernote是调用系统的浏览器来打开网页，明显我更喜欢或者说更习惯与evernote这种方式。</p>
-            
-            <div class="ui small basic button">
-              <a href="/posts/2014-08-31-evernote-wiz/">Read More…</a>
-            </div>
-          </div>
-          <div class="ui vertical segment">
-            <h2 class="ui header">
-              <a href="/posts/2014-07-10-eight-queens-puzzle/">八皇后问题——Python简单解法</a>
-              <div class="sub header">
-                2014-07-10
-              </div>
-            </h2><blockquote>
-<p>八皇后问题是一个以国际象棋为背景的问题：如何能够在8×8的国际象棋棋盘上放置八个皇后，使得任何一个皇后都无法直接吃掉其他的皇后？为了达到此目的，任两个皇后都不能处于同一条横行、纵行或斜线上。八皇后问题可以推广为更一般的n皇后摆放问题：这时棋盘的大小变为n×n，而皇后个数也变成n。当且仅当n = 1或n ≥ 4时问题有解。</p>
-</blockquote>
-<p>关于这个问题更详细的描述可以参见维基百科<sup><a href="#fnref:1" name="fnref:1">1</a></sup> ，使用Python的生成器（即含有yield语句的函数）来解这个问题就会变得很简单，15行以内python代码就可以解决这个问题，对于皇后的个数 n &lt; 8 来说还是非常快的，只是当数量上升到很多的时候，这个解法就会非常的慢。不过这里仍然只讨论最简单的解法，后面会顺便提一下更高效的解法，比如<font color="red">16</font>个皇后的情况在我的机器上只需要<font size="5px" color="red">18</font>秒。</p>
-<p>下面是这个解法的完整的代码：</p>
-<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="kw">def</span> conflict(state, nextX):
-    nextY <span class="op">=</span> <span class="bu">len</span>(state)
-    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(nextY):
-        <span class="cf">if</span> <span class="bu">abs</span>(state[i] <span class="op">-</span> nextX) <span class="kw">in</span> (<span class="dv">0</span>, nextY <span class="op">-</span> i):
-            <span class="cf">return</span> <span class="va">True</span>
-    <span class="cf">return</span> <span class="va">False</span>
-
-<span class="kw">def</span> queens(num<span class="op">=</span><span class="dv">8</span>, state<span class="op">=</span>()):
-    <span class="cf">for</span> pos <span class="kw">in</span> <span class="bu">range</span>(num):
-        <span class="cf">if</span> <span class="kw">not</span> conflict(state, pos):
-            <span class="cf">if</span> <span class="bu">len</span>(state) <span class="op">==</span> num <span class="op">-</span> <span class="dv">1</span> :
-                <span class="cf">yield</span> (pos,)
-            <span class="cf">else</span>:
-                <span class="cf">for</span> result <span class="kw">in</span> queens(num, state<span class="op">+</span>(pos,)):
-                    <span class="cf">yield</span> (pos,) <span class="op">+</span> result</code></pre></div>
-
-            <div class="ui small basic button">
-              <a href="/posts/2014-07-10-eight-queens-puzzle/">Read More…</a>
             </div>
           </div>
           <div class="ui one item menu">

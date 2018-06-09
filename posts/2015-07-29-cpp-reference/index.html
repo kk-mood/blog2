@@ -13,14 +13,14 @@
     <link href="/manifest.json" rel="manifest" />
     <link color="#5bbad5" href="/safari-pinned-tab.svg" rel="mask-icon" />
     <meta content="#ffffff" name="theme-color" />
-    <title>Categories</title>
+    <title>C++的引用类型的变量到底占不占用内存空间？</title>
     <link href="/static/dist/semantic-ui/semantic.min.css" rel="stylesheet" type="text/css" />
     <link href="/static/dist/fonts.css/fonts.css" rel="stylesheet" type="text/css" />
     <link href="/static/stylesheet/default.css" rel="stylesheet" type="text/css" />
     <link href="/static/stylesheet/pandoc-code-highlight.css" rel="stylesheet" type="text/css" />
     <script src="/static/dist/jquery/jquery.min.js"></script>
   </head>
-  <body lang="en">
+  <body lang="cn">
     <div data-quotes-cn="[{&quot;content&quot;:[&quot;天上星，亮晶晶，永灿烂，长安宁。&quot;,&quot;湖边竹，盈盈绿，报平安，多喜乐。&quot;],&quot;author&quot;:&quot;金庸&quot;,&quot;from&quot;:&quot;天龙八部&quot;},{&quot;content&quot;:[&quot;死亡是唯一一座永远亮着的灯塔，不管你向哪里航行，最终都得转向它指引的方向。一切都会逝去，只有死神永生。&quot;],&quot;author&quot;:&quot;刘慈欣&quot;,&quot;from&quot;:&quot;地球往事&quot;},{&quot;content&quot;:[&quot;我终于明白了为什么 Einstein 喜爱看守灯塔的职业，因为那样他可以在自己的心灵中建立一片宁静而自由的天空。&quot;],&quot;author&quot;:&quot;卢昌海&quot;,&quot;from&quot;:&quot;&lt;a href=\&quot;http://www.changhai.org\&quot;&gt;http://www.changhai.org&lt;/a&gt;&quot;},{&quot;content&quot;:[&quot;我宁愿游荡在你身边&quot;,&quot;做七天的野鬼&quot;,&quot;跟随你&quot;,&quot;就算落进最黑暗的地方&quot;,&quot;我的爱&quot;,&quot;也不会让我成为永远的孤魂&quot;],&quot;author&quot;:&quot;李安&quot;,&quot;from&quot;:&quot;卧虎藏龙&quot;},{&quot;content&quot;:[&quot;在中国，任何超脱飞扬的思想都会砰然坠地——现实的引力实在是太沉重了。&quot;],&quot;author&quot;:&quot;刘慈欣&quot;,&quot;from&quot;:&quot;地球往事&quot;},{&quot;content&quot;:[&quot;天下唯庸人无咎无誉。&quot;],&quot;author&quot;:&quot;梁启超&quot;,&quot;from&quot;:&quot;李鸿章传&quot;}]" data-quotes-en="[{&quot;content&quot;:[&quot;Pascal is for building pyramids—imposing, breathtaking, static structures built by armies pushing heavy blocks into place. Lisp is for building organisms—imposing, breathtaking, dynamic structures built by squads fitting fluctuating myriads of simpler organisms into place.&quot;],&quot;author&quot;:&quot;Alan J. Perlis&quot;,&quot;from&quot;:&quot;foreword for &lt;a href=\&quot;http://mitpress.mit.edu/sicp/\&quot;&gt;SICP&lt;/a&gt;&quot;},{&quot;content&quot;:[&quot;When you don&#39;t create things, you become defined by your tastes rather than ability. Your tastes only narrow &amp; exclude people. So create.&quot;],&quot;author&quot;:&quot;why the luck stiff&quot;,&quot;from&quot;:&quot;&lt;a href=\&quot;http://whymirror.github.io/\&quot;&gt;http://whymirror.github.io/&lt;/a&gt;&quot;},{&quot;content&quot;:[&quot;In theory, there is no difference between theory and practice. But, in practice, there is.&quot;],&quot;author&quot;:&quot;Jan L. A. van de Snepscheut&quot;,&quot;from&quot;:&quot;&lt;a href=\&quot;http://en.wikiquote.org/wiki/Jan_L._A._van_de_Snepscheut\&quot;&gt;Wikipedia&lt;/a&gt;&quot;},{&quot;content&quot;:[&quot;The future has already arrived. It is just not evenly distributed yet.&quot;],&quot;author&quot;:&quot;William Gibson&quot;,&quot;from&quot;:&quot;&lt;a href=\&quot;https://en.wikiquote.org/wiki/William_Gibson\&quot;&gt;Wikiquote&lt;/a&gt;&quot;},{&quot;content&quot;:[&quot;There are many ways of trying to understand programs. People often rely too much on one way, which is called \&quot;debugging\&quot; and consists of running a partly-understood program to see if it does what you expected. Another way, which ML advocates, is to install some means of understanding in the very programs themselves.&quot;],&quot;author&quot;:&quot;Robin Milner&quot;,&quot;from&quot;:&quot;foreword for &lt;a href=\&quot;http://www.ccs.neu.edu/home/matthias/BTML/\&quot;&gt;The Little MLer&lt;/a&gt;&quot;}]" id="quotes" style="display: none"></div>
     <div id="content">
       <nav class="ui borderless menu desktop" lang="en">
@@ -47,155 +47,108 @@
           </div>
         </div>
       </nav><div class="ui stackable container">
-        <div class="ui very padded segment article">
-          <article class="ui stackable divided grid">
-            <header class="row article-head">
-              <div class="column">
-                <h1 class="ui header">
-                  Categories
-                </h1>
-                <div class="ui divider desktop"></div>
-              </div>
-            </header>
-            <div class="row article-body">
-              <section class="twelve wide column">
-                <h2 class="ui header" id="Algorithm" lang="en">
-                  Algorithm<sup>1</sup>
-                </h2>
-                <div class="ui bulleted list">
-                  <li class="item">
-                    <div class="content">
-                      <div class="title font-kai">
-                        <a href="/posts/2014-09-07-maximum-consecutive-subsequence/">归纳法求解最大连续子序列</a>
-                      </div>
-                    </div>
-                  </li>
-                </div>
-                <h2 class="ui header" id="Book" lang="en">
-                  Book<sup>1</sup>
-                </h2>
-                <div class="ui bulleted list">
-                  <li class="item">
-                    <div class="content">
-                      <div class="title font-kai">
-                        <a href="/posts/2014-09-19-two-world-edge/">【书摘】站在两个世界的边缘</a>
-                      </div>
-                    </div>
-                  </li>
-                </div>
-                <h2 class="ui header" id="Plan" lang="en">
-                  Plan<sup>1</sup>
-                </h2>
-                <div class="ui bulleted list">
-                  <li class="item">
-                    <div class="content">
-                      <div class="title font-kai">
-                        <a href="/posts/2014-06-15-current-doing/">开启GitHub模式，now!</a>
-                      </div>
-                    </div>
-                  </li>
-                </div>
-                <h2 class="ui header" id="技术" lang="en">
-                  技术<sup>6</sup>
-                </h2>
-                <div class="ui bulleted list">
-                  <li class="item">
-                    <div class="content">
-                      <div class="title font-kai">
-                        <a href="/posts/2015-07-29-cpp-reference/">C++的引用类型的变量到底占不占用内存空间？</a>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="item">
-                    <div class="content">
-                      <div class="title font-kai">
-                        <a href="/posts/2015-07-26-zhihu-sarcasm/">抓取知乎每日吐槽</a>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="item">
-                    <div class="content">
-                      <div class="title font-kai">
-                        <a href="/posts/2015-07-25-swift-2048/">用 Swift 语言实现 2048游戏</a>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="item">
-                    <div class="content">
-                      <div class="title font-kai">
-                        <a href="/posts/2015-06-19-push-2M-messages/">给两百万用户推送消息</a>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="item">
-                    <div class="content">
-                      <div class="title font-kai">
-                        <a href="/posts/2014-11-30-prevent-douban-ad/">去除豆瓣广告</a>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="item">
-                    <div class="content">
-                      <div class="title font-kai">
-                        <a href="/posts/2014-07-10-eight-queens-puzzle/">八皇后问题——Python简单解法</a>
-                      </div>
-                    </div>
-                  </li>
-                </div>
-                <h2 class="ui header" id="生活" lang="en">
-                  生活<sup>5</sup>
-                </h2>
-                <div class="ui bulleted list">
-                  <li class="item">
-                    <div class="content">
-                      <div class="title font-kai">
-                        <a href="/posts/2017-08-25-play-king-of-glory-9-months/">我玩王者荣耀这九个月</a>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="item">
-                    <div class="content">
-                      <div class="title font-kai">
-                        <a href="/posts/2014-09-03-life-meaning/">【解惑】人生有何意义</a>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="item">
-                    <div class="content">
-                      <div class="title font-kai">
-                        <a href="/posts/2014-08-31-evernote-wiz/">习惯的力量——从evernote试用为知笔记</a>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="item">
-                    <div class="content">
-                      <div class="title font-kai">
-                        <a href="/posts/2014-07-01-graduate-one-year/">写在毕业一周年之际</a>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="item">
-                    <div class="content">
-                      <div class="title font-kai">
-                        <a href="/posts/2014-06-14-former-life/">前世档案 | karottc的blog</a>
-                      </div>
-                    </div>
-                  </li>
-                </div>
-              </section>
-              <aside class="four wide column" lang="en">
-                <div class="ui small vertical fluid sticky menu">
-                  <a class="item" href="/categories/#Algorithm">Algorithm<sup>1</sup></a>
-                  <a class="item" href="/categories/#Book">Book<sup>1</sup></a>
-                  <a class="item" href="/categories/#Plan">Plan<sup>1</sup></a>
-                  <a class="item" href="/categories/#技术">技术<sup>6</sup></a>
-                  <a class="item" href="/categories/#生活">生活<sup>5</sup></a>
-                </div>
-              </aside>
-            </div>
-          </article>
-        </div>
+  <div class="ui very padded segment article">
+    <article class="ui stackable divided grid"><header class="row article-head">
+  <div class="column">
+    <h1 class="ui header">
+      C++的引用类型的变量到底占不占用内存空间？
+    </h1>
+    <div class="ui divider desktop"></div>
+  </div>
+</header>
+<div class="row article-body">
+  <section class="twelve wide column"><p>分析一下 <strong>C++</strong> 里面的引用类型（例如：<code>int &amp;r = a;</code> ）中的 <code>r</code> 变量是否占用内存空间呢？是否和 <code>int *p = &amp;a;</code> 中的 <code>p</code> 变量一样占用内存空间呢？</p>
+<p><strong>本文将给出答案。</strong></p>
+<p>直接看一个简单的例子：<br /></p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span>
+
+<span class="kw">using</span> <span class="kw">namespace</span> std;
+
+<span class="dt">int</span> main(<span class="dt">void</span>)
+{
+    <span class="dt">int</span> a = <span class="dv">6</span>;
+    <span class="dt">int</span> &amp;r = a;
+    <span class="dt">int</span> *p = &amp;a;
+    <span class="dt">int</span> x = r;
+    <span class="cf">return</span> <span class="dv">0</span>;
+}</code></pre></div>
+<p>接着我们通过 <code>g++ testref.cpp -o testref -g</code> 来编译之后，用gdb来加载它，看看 <code>a</code>, <code>r</code>, <code>p</code>, <code>x</code> 的地址分别是多少:<br /> <img src="/static/images/201501/20150729-01-gdb.png" alt="gdb" /> 上图中 <code>a</code> 的地址为 <code>0x7fffffffe208</code>，用取地址符去获取 <code>r</code> 地址，值和 <code>a</code> 是一样的，其实，用 <code>&amp;</code> 符号是不能获取到引用类型变量的地址的，因为引用类型的变量本身只是另一个对象的别名，用可感知的方式描述，就是它仅仅是一个名字而已，对它的任何操作都是相当于对另一个对象的操作，所以这个取地址操作也是一样。</p>
+<p>但是，我们接着往下看，<code>p</code> 的地址是 <code>0x7fffffffe218</code>，和 <code>a</code> 的地址刚刚相差了 <strong>16</strong> 字节，接着看 <code>x</code> 的地址是 <code>0x7fffffffe20c</code>，这个地址正好是 <code>a</code>的地址 <code>0x7fffffffe208 + 4</code>, 而 <code>a</code> 是 <code>int</code> 型，变量本身占用 4 字节，正常情况下， <code>x</code> 的地址应该是 <code>p</code> 的地址 <code>0x7fffffffe218 + 8</code>，这里 <code>+8</code> 是因为我的机器是 64 位的机器，所以指针类型占用 8 字节。现在这种情况应该是编译器做了优化，把 <code>x</code> 的放到了 <code>a</code> 的后面，同样的，<code>x</code> 的下一个变量的起始地址应该是 <code>0x7fffffffe20c + 4</code> = <code>0x7fffffffe210</code>，这个地址和 <code>p</code> 之间刚好差了 8 个字节，也就是一个指针变量的地址，所以答案就很明显了。</p>
+<p>即，我们现在可以猜测，<code>r</code> <strong>是占用内存空间，并且占用的大小和指针变量相同大小</strong>。但是我们上面用gdb也看不了 <code>r</code> 的实际地址，所以这也只能是猜测，只是看似合理的猜测而已。</p>
+<p>为了证明这个猜测，我们继续把可执行文件反汇编出来看看：<code>objdump -d testref</code> 得到的结果如下：</p>
+<pre><code>00000000004006cd &lt;main&gt;:
+  4006cd:   55                      push   %rbp
+  4006ce:   48 89 e5                mov    %rsp,%rbp
+  4006d1:   c7 45 e8 06 00 00 00    movl   $0x6,-0x18(%rbp)   # int a = 6; a的地址 0x18
+  4006d8:   48 8d 45 e8             lea    -0x18(%rbp),%rax
+  4006dc:   48 89 45 f0             mov    %rax,-0x10(%rbp)   # int &amp;r = a; r的地址 0x10
+  4006e0:   48 8d 45 e8             lea    -0x18(%rbp),%rax
+  4006e4:   48 89 45 f8             mov    %rax,-0x8(%rbp)    # int *p = &amp;a; p的地址 0x8
+  4006e8:   48 8b 45 f0             mov    -0x10(%rbp),%rax  # 下面两行是为了后面的赋值做准备
+  4006ec:   8b 00                   mov    (%rax),%eax
+  4006ee:   89 45 ec                mov    %eax,-0x14(%rbp)   # int x = r;   x的地址 0x14
+  4006f1:   b8 00 00 00 00          mov    $0x0,%eax
+  4006f6:   5d                      pop    %rbp
+  4006f7:   c3                      retq </code></pre>
+<p>我把对应处，都写在上面的注释里了。</p>
+<p>所以，现在可以得到结论：<font color='red'><strong>引用类型的变量会占用内存空间，占用的内存空间的大小和指针类型的大小是相同的。</strong></font> 从上面的汇编代码可以看出，虽然引用是一个对象的别名，但是在汇编层面，和指针是一样的。</p>
+<p>2015.07.29</p>
+
+    <div class="ui divider"></div>
+    <div class="ui small one item menu">
+      <a class="item" id="show-disqus-comments" onclick="show_disqus_comments()" title="Fuck GFW, disqus.com has been blocked in China.">Show Disqus Comments</a>
+    </div>
+    <div id="disqus_thread"></div>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </section>
+  <aside class="four wide column">
+    <div class="ui small header">
+      License
+    </div>
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img class="cc-license" src="/static/image/cc_byncsa.flat.guokr.svg" /></a>
+    <div class="ui small header">
+      Committed
+    </div>
+    <date>2015-07-29</date>
+    <div class="ui small header">
+      Updated
+    </div>
+    <date>2015-07-29</date>
+    <div class="ui small header">
+      Category
+    </div>
+    <div class="ui list">
+      <div class="item">
+        <a href="/categories#技术">
+          <div class="ui label">
+            技术<sup>6</sup>
+          </div>
+        </a>
       </div>
+    </div>
+    <div class="ui small header">
+      Tags
+    </div>
+    <div class="ui list">
+      <div class="item">
+        <a href="/tags#C++">
+          <div class="ui label">
+            C++<sup>1</sup>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="ui small header">
+      Links
+    </div>
+    <div class="ui small two item menu">
+      <a class="item" title="抓取知乎每日吐槽" href="/posts/2015-07-26-zhihu-sarcasm/">Prev</a><a class="item" title="我玩王者荣耀这九个月" href="/posts/2017-08-25-play-king-of-glory-9-months/">Next</a>
+    </div>
+  </aside>
+</div>
+    </article>
+  </div>
+</div>
     </div>
     <div id="footer">
       <footer class="ui inverted vertical center aligned footer segment desktop">

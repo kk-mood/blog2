@@ -13,14 +13,14 @@
     <link href="/manifest.json" rel="manifest" />
     <link color="#5bbad5" href="/safari-pinned-tab.svg" rel="mask-icon" />
     <meta content="#ffffff" name="theme-color" />
-    <title>Categories</title>
+    <title>用 Swift 语言实现 2048游戏</title>
     <link href="/static/dist/semantic-ui/semantic.min.css" rel="stylesheet" type="text/css" />
     <link href="/static/dist/fonts.css/fonts.css" rel="stylesheet" type="text/css" />
     <link href="/static/stylesheet/default.css" rel="stylesheet" type="text/css" />
     <link href="/static/stylesheet/pandoc-code-highlight.css" rel="stylesheet" type="text/css" />
     <script src="/static/dist/jquery/jquery.min.js"></script>
   </head>
-  <body lang="en">
+  <body lang="cn">
     <div data-quotes-cn="[{&quot;content&quot;:[&quot;天上星，亮晶晶，永灿烂，长安宁。&quot;,&quot;湖边竹，盈盈绿，报平安，多喜乐。&quot;],&quot;author&quot;:&quot;金庸&quot;,&quot;from&quot;:&quot;天龙八部&quot;},{&quot;content&quot;:[&quot;死亡是唯一一座永远亮着的灯塔，不管你向哪里航行，最终都得转向它指引的方向。一切都会逝去，只有死神永生。&quot;],&quot;author&quot;:&quot;刘慈欣&quot;,&quot;from&quot;:&quot;地球往事&quot;},{&quot;content&quot;:[&quot;我终于明白了为什么 Einstein 喜爱看守灯塔的职业，因为那样他可以在自己的心灵中建立一片宁静而自由的天空。&quot;],&quot;author&quot;:&quot;卢昌海&quot;,&quot;from&quot;:&quot;&lt;a href=\&quot;http://www.changhai.org\&quot;&gt;http://www.changhai.org&lt;/a&gt;&quot;},{&quot;content&quot;:[&quot;我宁愿游荡在你身边&quot;,&quot;做七天的野鬼&quot;,&quot;跟随你&quot;,&quot;就算落进最黑暗的地方&quot;,&quot;我的爱&quot;,&quot;也不会让我成为永远的孤魂&quot;],&quot;author&quot;:&quot;李安&quot;,&quot;from&quot;:&quot;卧虎藏龙&quot;},{&quot;content&quot;:[&quot;在中国，任何超脱飞扬的思想都会砰然坠地——现实的引力实在是太沉重了。&quot;],&quot;author&quot;:&quot;刘慈欣&quot;,&quot;from&quot;:&quot;地球往事&quot;},{&quot;content&quot;:[&quot;天下唯庸人无咎无誉。&quot;],&quot;author&quot;:&quot;梁启超&quot;,&quot;from&quot;:&quot;李鸿章传&quot;}]" data-quotes-en="[{&quot;content&quot;:[&quot;Pascal is for building pyramids—imposing, breathtaking, static structures built by armies pushing heavy blocks into place. Lisp is for building organisms—imposing, breathtaking, dynamic structures built by squads fitting fluctuating myriads of simpler organisms into place.&quot;],&quot;author&quot;:&quot;Alan J. Perlis&quot;,&quot;from&quot;:&quot;foreword for &lt;a href=\&quot;http://mitpress.mit.edu/sicp/\&quot;&gt;SICP&lt;/a&gt;&quot;},{&quot;content&quot;:[&quot;When you don&#39;t create things, you become defined by your tastes rather than ability. Your tastes only narrow &amp; exclude people. So create.&quot;],&quot;author&quot;:&quot;why the luck stiff&quot;,&quot;from&quot;:&quot;&lt;a href=\&quot;http://whymirror.github.io/\&quot;&gt;http://whymirror.github.io/&lt;/a&gt;&quot;},{&quot;content&quot;:[&quot;In theory, there is no difference between theory and practice. But, in practice, there is.&quot;],&quot;author&quot;:&quot;Jan L. A. van de Snepscheut&quot;,&quot;from&quot;:&quot;&lt;a href=\&quot;http://en.wikiquote.org/wiki/Jan_L._A._van_de_Snepscheut\&quot;&gt;Wikipedia&lt;/a&gt;&quot;},{&quot;content&quot;:[&quot;The future has already arrived. It is just not evenly distributed yet.&quot;],&quot;author&quot;:&quot;William Gibson&quot;,&quot;from&quot;:&quot;&lt;a href=\&quot;https://en.wikiquote.org/wiki/William_Gibson\&quot;&gt;Wikiquote&lt;/a&gt;&quot;},{&quot;content&quot;:[&quot;There are many ways of trying to understand programs. People often rely too much on one way, which is called \&quot;debugging\&quot; and consists of running a partly-understood program to see if it does what you expected. Another way, which ML advocates, is to install some means of understanding in the very programs themselves.&quot;],&quot;author&quot;:&quot;Robin Milner&quot;,&quot;from&quot;:&quot;foreword for &lt;a href=\&quot;http://www.ccs.neu.edu/home/matthias/BTML/\&quot;&gt;The Little MLer&lt;/a&gt;&quot;}]" id="quotes" style="display: none"></div>
     <div id="content">
       <nav class="ui borderless menu desktop" lang="en">
@@ -52,144 +52,109 @@
             <header class="row article-head">
               <div class="column">
                 <h1 class="ui header">
-                  Categories
+                  用 Swift 语言实现 2048游戏
                 </h1>
                 <div class="ui divider desktop"></div>
               </div>
             </header>
             <div class="row article-body">
               <section class="twelve wide column">
-                <h2 class="ui header" id="Algorithm" lang="en">
-                  Algorithm<sup>1</sup>
-                </h2>
-                <div class="ui bulleted list">
-                  <li class="item">
-                    <div class="content">
-                      <div class="title font-kai">
-                        <a href="/posts/2014-09-07-maximum-consecutive-subsequence/">归纳法求解最大连续子序列</a>
-                      </div>
-                    </div>
-                  </li>
+                <p>前段时间粗浅的学习一下 Swift 这个语言，一个多月前的苹果开发者大会上，Swift已经更新到了 <strong>SWift2.0</strong> 了，相比1.0有了不少的变化，有些适配的 Swift1.0的库，现在已经不能直接拿来用了，需要稍微改一下，比如sqlite3.0，这个在下文中会讲到。本文主要记录一下用 Swift 实现2048游戏这个过程。</p>
+                <h3 id="基本功能的设计">基本功能的设计</h3>
+                <p>游戏在启动之后应该包括两个界面，1. 游戏的主界面；2. 游戏的设置界面，比如可以设置过关的分数，设置维度来控制难易度。</p>
+                <p>这种两个屏用 <em>UINavigationController</em> 就可以搞定，主界面主要是绘图和分数的展示，设置界面主要是通过 <em>Label</em> 和 <em>Button</em> 来展示设置和响应用户设置。</p>
+                <h3 id="游戏界面的实现">游戏界面的实现</h3>
+                <p>这是主要的工作，分成几步来说明：</p>
+                <h4 id="游戏模型">游戏模型</h4>
+                <p>游戏模型通过一个 <strong>4 x 4</strong> 的二维矩阵来实现：</p>
+                <ul>
+                <li>要保存当前的各个位置的数字；</li>
+                <li>控制新生成的数字；</li>
+                <li>记录当前的最大值；</li>
+                <li>判断当前是否每个位置上都有了数字；</li>
+                <li>滑动时判断相邻两个是否可以合并，生成合并之后的数字。</li>
+                </ul>
+                <p>这个部分是整个游戏的核心，因为所有界面上展示的数据，都是来自于这个游戏模型的当前数值。</p>
+                <h4 id="初始界面">初始界面</h4>
+                <p>第一步：绘制一个初始的界面，也就是 <strong>4 X 4</strong> 的一个格子；</p>
+                <p>第二步：初始数字的生成，用随机算法任意生成两个数字，同时控制数字 <strong>2</strong> 出现的概率是90%，而数字 <strong>4</strong> 出现的概率是 10%。</p>
+                <p>第三步：合并相邻数字。</p>
+                <h4 id="游戏主体玩法">游戏主体玩法</h4>
+                <p>第一步：添加新出现数字的动画；</p>
+                <p>第二步：添加两个数字合并的动画；</p>
+                <p>第三步：在主界面增加收拾识别，本游戏中只用支持上下左右四种手势即可；</p>
+                <p>第四步：数字移动的算法，以向下滑动为例：当向下滑动的时候，从第一行依次向下移动一个位置（如果可以移动的话），同时移动了当前的位置的数字，上面位置的数字也有做相应的移动；</p>
+                <p>第五步：相邻数字的合并，移动之后，判断相邻的数字，如果相等，就合并；</p>
+                <p>第六步：合并之后，在剩余的位置上新生成一个数字，然后绘制图形。</p>
+                <h3 id="小细节适配">小细节适配</h3>
+                <p>剩下要做的就是让游戏的设置生效，同时保存当前的游戏数据，在下一次启动的时候恢复。这里可以用sqlite保存，在github上有一个swift封装好的sqlite库，但是并能直接用到swift2.0上，所以，我做了小小的修改适配。</p>
+                <p>最后，整个游戏的源码，在这里：<a href="https://github.com/karottc/swift-practice/tree/master/game2048">点我</a>。</p>
+                <p>界面太丑了，所以我就不放游戏最后的截图了。等我什么时候心情好了再来美化一下界面。</p>
+                <p>2015.07.25</p>
+                
+                <div class="ui divider"></div>
+                <div class="ui small one item menu">
+                  <a class="item" id="show-disqus-comments" onclick="show_disqus_comments()" title="Fuck GFW, disqus.com has been blocked in China.">Show Disqus Comments</a>
                 </div>
-                <h2 class="ui header" id="Book" lang="en">
-                  Book<sup>1</sup>
-                </h2>
-                <div class="ui bulleted list">
-                  <li class="item">
-                    <div class="content">
-                      <div class="title font-kai">
-                        <a href="/posts/2014-09-19-two-world-edge/">【书摘】站在两个世界的边缘</a>
-                      </div>
-                    </div>
-                  </li>
-                </div>
-                <h2 class="ui header" id="Plan" lang="en">
-                  Plan<sup>1</sup>
-                </h2>
-                <div class="ui bulleted list">
-                  <li class="item">
-                    <div class="content">
-                      <div class="title font-kai">
-                        <a href="/posts/2014-06-15-current-doing/">开启GitHub模式，now!</a>
-                      </div>
-                    </div>
-                  </li>
-                </div>
-                <h2 class="ui header" id="技术" lang="en">
-                  技术<sup>6</sup>
-                </h2>
-                <div class="ui bulleted list">
-                  <li class="item">
-                    <div class="content">
-                      <div class="title font-kai">
-                        <a href="/posts/2015-07-29-cpp-reference/">C++的引用类型的变量到底占不占用内存空间？</a>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="item">
-                    <div class="content">
-                      <div class="title font-kai">
-                        <a href="/posts/2015-07-26-zhihu-sarcasm/">抓取知乎每日吐槽</a>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="item">
-                    <div class="content">
-                      <div class="title font-kai">
-                        <a href="/posts/2015-07-25-swift-2048/">用 Swift 语言实现 2048游戏</a>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="item">
-                    <div class="content">
-                      <div class="title font-kai">
-                        <a href="/posts/2015-06-19-push-2M-messages/">给两百万用户推送消息</a>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="item">
-                    <div class="content">
-                      <div class="title font-kai">
-                        <a href="/posts/2014-11-30-prevent-douban-ad/">去除豆瓣广告</a>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="item">
-                    <div class="content">
-                      <div class="title font-kai">
-                        <a href="/posts/2014-07-10-eight-queens-puzzle/">八皇后问题——Python简单解法</a>
-                      </div>
-                    </div>
-                  </li>
-                </div>
-                <h2 class="ui header" id="生活" lang="en">
-                  生活<sup>5</sup>
-                </h2>
-                <div class="ui bulleted list">
-                  <li class="item">
-                    <div class="content">
-                      <div class="title font-kai">
-                        <a href="/posts/2017-08-25-play-king-of-glory-9-months/">我玩王者荣耀这九个月</a>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="item">
-                    <div class="content">
-                      <div class="title font-kai">
-                        <a href="/posts/2014-09-03-life-meaning/">【解惑】人生有何意义</a>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="item">
-                    <div class="content">
-                      <div class="title font-kai">
-                        <a href="/posts/2014-08-31-evernote-wiz/">习惯的力量——从evernote试用为知笔记</a>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="item">
-                    <div class="content">
-                      <div class="title font-kai">
-                        <a href="/posts/2014-07-01-graduate-one-year/">写在毕业一周年之际</a>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="item">
-                    <div class="content">
-                      <div class="title font-kai">
-                        <a href="/posts/2014-06-14-former-life/">前世档案 | karottc的blog</a>
-                      </div>
-                    </div>
-                  </li>
-                </div>
+                <div id="disqus_thread"></div>
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
               </section>
-              <aside class="four wide column" lang="en">
-                <div class="ui small vertical fluid sticky menu">
-                  <a class="item" href="/categories/#Algorithm">Algorithm<sup>1</sup></a>
-                  <a class="item" href="/categories/#Book">Book<sup>1</sup></a>
-                  <a class="item" href="/categories/#Plan">Plan<sup>1</sup></a>
-                  <a class="item" href="/categories/#技术">技术<sup>6</sup></a>
-                  <a class="item" href="/categories/#生活">生活<sup>5</sup></a>
+              <aside class="four wide column">
+                <div class="ui small header">
+                  License
+                </div>
+                <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img class="cc-license" src="/static/image/cc_byncsa.flat.guokr.svg" /></a>
+                <div class="ui small header">
+                  Committed
+                </div>
+                <date>2015-07-25</date>
+                <div class="ui small header">
+                  Updated
+                </div>
+                <date>2015-07-25</date>
+                <div class="ui small header">
+                  Category
+                </div>
+                <div class="ui list">
+                  <div class="item">
+                    <a href="/categories#技术">
+                      <div class="ui label">
+                        技术<sup>6</sup>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="ui small header">
+                  Tags
+                </div>
+                <div class="ui list">
+                  <div class="item">
+                    <a href="/tags#Swift">
+                      <div class="ui label">
+                        Swift<sup>1</sup>
+                      </div>
+                    </a>
+                  </div>
+                  <div class="item">
+                    <a href="/tags#2048game">
+                      <div class="ui label">
+                        2048game<sup>1</sup>
+                      </div>
+                    </a>
+                  </div>
+                  <div class="item">
+                    <a href="/tags#游戏">
+                      <div class="ui label">
+                        游戏<sup>2</sup>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                <div class="ui small header">
+                  Links
+                </div>
+                <div class="ui small two item menu">
+                  <a class="item" title="给两百万用户推送消息" href="/posts/2015-06-19-push-2M-messages/">Prev</a><a class="item" title="抓取知乎每日吐槽" href="/posts/2015-07-26-zhihu-sarcasm/">Next</a>
                 </div>
               </aside>
             </div>
