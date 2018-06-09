@@ -78,6 +78,54 @@
           </div>
           <div class="ui vertical segment">
             <h2 class="ui header">
+              <a href="/posts/2016-11-26-socket-read-function/">Linux网络中的read函数</a>
+              <div class="sub header">
+                2016-11-26
+              </div>
+            </h2>
+            <p>这是一篇查漏补缺的文章，探究一下linux网络编程中read函数的几种返回值，以及分别在什么情况下发生的，当然也会顺带提及 <em>TCP</em> 的一点点知识（毕竟谈到网络是离不开TCP的）。</p>
+            <p>为了验证，写了一个 client 和 server 来测试相关的东西。</p>
+            <p>是的，你没看错，是三次挥手，而不是四次。一般情况下，TCP在建立连接是需要三次握手，在断开连接时需要四次挥手，但是有时只需要三次挥手就够了，下图是我用tcpdump的抓包情况：</p>
+            
+            <div class="ui small basic button">
+              <a href="/posts/2016-11-26-socket-read-function/">Read More…</a>
+            </div>
+          </div>
+          <div class="ui vertical segment">
+            <h2 class="ui header">
+              <a href="/posts/2016-11-19-tcp/">一张图了解TCP</a>
+              <div class="sub header">
+                2016-11-19
+              </div>
+            </h2>
+            <p>从下面一张图了解TCP：</p>
+            <figure>
+            <img src="/images/2016/TCP.svg" alt="TCP" /><figcaption>TCP</figcaption>
+            </figure>
+            
+            <div class="ui small basic button">
+              <a href="/posts/2016-11-19-tcp/">Read More…</a>
+            </div>
+          </div>
+          <div class="ui vertical segment">
+            <h2 class="ui header">
+              <a href="/posts/2016-11-05-data-mining-and-its-application/">据挖掘及其应用 —— 杨强讲座</a>
+              <div class="sub header">
+                2016-11-05
+              </div>
+            </h2>
+            <figure>
+            <img src="/static/images/2016/yangqiang.jpg" alt="杨强教授简介" /><figcaption>杨强教授简介</figcaption>
+            </figure>
+            <p>今天（2016.11.04）公司请了 <strong><a href="https://zh.wikipedia.org/wiki/%E6%9D%A8%E5%BC%BA">杨强教授</a></strong> 来分享数据挖掘及其应用相关的东西，下面记录一下整个内容。</p>
+            <p>首先 <a href="http://baike.baidu.com/item/%E6%9B%BE%E5%AE%87/12003748">曾宇</a> 上去为杨强讲授的讲话做了铺垫，观点如下：</p>
+            
+            <div class="ui small basic button">
+              <a href="/posts/2016-11-05-data-mining-and-its-application/">Read More…</a>
+            </div>
+          </div>
+          <div class="ui vertical segment">
+            <h2 class="ui header">
               <a href="/posts/2015-07-29-cpp-reference/">C++的引用类型的变量到底占不占用内存空间？</a>
               <div class="sub header">
                 2015-07-29
@@ -146,69 +194,6 @@
             
             <div class="ui small basic button">
               <a href="/posts/2015-06-19-push-2M-messages/">Read More…</a>
-            </div>
-          </div>
-          <div class="ui vertical segment">
-            <h2 class="ui header">
-              <a href="/posts/2014-11-30-prevent-douban-ad/">去除豆瓣广告</a>
-              <div class="sub header">
-                2014-11-30
-              </div>
-            </h2><p>偶然发现一个可以去除豆瓣广告的方法，下面先看豆瓣主页的两处广告：<br /> <img src="/static/images/201406/20141130_douban1.png" alt="豆瓣广告" /> <img src="/static/images/201406/20141130_douban2.png" /></p>
-<p>把鼠标放在广告上的时候，浏览器下面就能看到链接的地址信息，同时，如果点看网页的源码，也可以更明显看到广告加载的信息，如下图<br/></p>
-<figure>
-<img src="/static/images/201406/20141130_douban3.png" alt="豆瓣广告源码" /><figcaption>豆瓣广告源码</figcaption>
-</figure>
-<p>上面的图中都有一个 <code>http://erebor.douban.com/</code> 的网址，所以去除广告的方法就很简单了，只要把 <code>erebor.douban.com</code> 这个域名重定向到本地（即 <code>127.0.0.1</code>）就搞定<sup><a href="#fn:1" name="fnref:1">1</a></sup>。</p>
-
-            <div class="ui small basic button">
-              <a href="/posts/2014-11-30-prevent-douban-ad/">Read More…</a>
-            </div>
-          </div>
-          <div class="ui vertical segment">
-            <h2 class="ui header">
-              <a href="/posts/2014-09-19-two-world-edge/">【书摘】站在两个世界的边缘</a>
-              <div class="sub header">
-                2014-09-19
-              </div>
-            </h2>
-            <figure>
-            <img src="/static/images/201406/20140919_world_edge.png" alt="站在两个世界的边缘" /><figcaption>站在两个世界的边缘</figcaption>
-            </figure>
-            <p>本文是<a href="http://book.douban.com/subject/25735727/">《站在两个世界的边缘》</a><sup><a href="#fn:1" name="fnref:1">1</a></sup>的一些书摘： &gt; 纵然你是一代天骄，坐拥天下，到头来不过化作一抔黄土； &gt; &gt; 纵然你是绝代佳人，艳冠群芳，到头来不过是一具白骨。 &gt; &gt; 但是，难道因为死亡是人生的终点，我们就要放弃生命的过程吗？ &gt; &gt; ——程浩</p>
-            <blockquote>
-            <p>在其诸多散杂的文字中，有一份2013的年度计划清单：</p>
-            <p>1、阅读10部关于西方哲学的著作</p>
-            <p>2、阅读儒、墨、道、法等学派的主要著作</p>
-            <p>3、阅读各类畅销书50部</p>
-            <p>4、学习新概念英语全四册</p>
-            <p>5、学习英语500小时（共1000小时）</p>
-            <p>6、写下50份读书笔记+思维导图</p>
-            <p>7、写下50部短篇小说</p>
-            <p>8、写下一部长篇小说</p>
-            <p>……</p>
-            <p>他让我们感受到生命的力量。</p>
-            </blockquote>
-            
-            <div class="ui small basic button">
-              <a href="/posts/2014-09-19-two-world-edge/">Read More…</a>
-            </div>
-          </div>
-          <div class="ui vertical segment">
-            <h2 class="ui header">
-              <a href="/posts/2014-09-07-maximum-consecutive-subsequence/">归纳法求解最大连续子序列</a>
-              <div class="sub header">
-                2014-09-07
-              </div>
-            </h2>
-            <p>求最大连续子序列的问题描述如下：</p>
-            <blockquote>
-            <p>给定一个实数序列 x<sub>1</sub>, x<sub>2</sub>, … , x<sub>n</sub>（不必是正数），寻找一个（连续的）子序列 x<sub>i</sub>, x<sub>i+1</sub>, … , x<sub>j</sub>，使得其数值之和在所有连续子序列数值之和中是最大的。</p>
-            </blockquote>
-            <p>这个问题就是最大子序列问题，所求的的这个序列就叫做——<em>最大子序列</em>。下面通过数学归纳法来分析和解决这个问题，解决这个问题的最好目标是： <strong>一个算法，能够只扫描此序列一次就得到最大子序列</strong>。</p>
-            
-            <div class="ui small basic button">
-              <a href="/posts/2014-09-07-maximum-consecutive-subsequence/">Read More…</a>
             </div>
           </div>
           <div class="ui one item menu">

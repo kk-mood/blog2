@@ -36,6 +36,175 @@
 </content>
   </entry>
   <entry>
+    <id>tag:blog2.karottc.com,2016-11-26:/posts/2016-11-26-socket-read-function/</id>
+    <title type="html">Linux网络中的read函数</title>
+    <published>2016-11-26T12:26:17Z</published>
+    <updated>2016-11-26T12:26:17Z</updated>
+    <link rel="alternate" href="http://blog2.karottc.com/posts/2016-11-26-socket-read-function/"/>
+    <content type="html">&lt;p&gt;这是一篇查漏补缺的文章，探究一下linux网络编程中read函数的几种返回值，以及分别在什么情况下发生的，当然也会顺带提及 &lt;em&gt;TCP&lt;/em&gt; 的一点点知识（毕竟谈到网络是离不开TCP的）。&lt;/p&gt;
+&lt;p&gt;为了验证，写了一个 client 和 server 来测试相关的东西。&lt;/p&gt;
+&lt;h2 id="tcp的三次握手和三次挥手"&gt;TCP的三次握手和三次挥手&lt;/h2&gt;
+&lt;p&gt;是的，你没看错，是三次挥手，而不是四次。一般情况下，TCP在建立连接是需要三次握手，在断开连接时需要四次挥手，但是有时只需要三次挥手就够了，下图是我用tcpdump的抓包情况：&lt;/p&gt;
+&lt;figure&gt;
+&lt;img src="/static/images/2016/20161126_read_01.png" alt="tcp连接过程" /&gt;&lt;figcaption&gt;tcp连接过程&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;上图可以分为三个部分：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;建立连接，三次握手，红色部分；&lt;/li&gt;
+&lt;li&gt;数据传输，蓝色部分；&lt;/li&gt;
+&lt;li&gt;关闭连接，三次挥手，紫色部分。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;对应TCP的传输过程如下：&lt;/p&gt;
+&lt;figure&gt;
+&lt;img src="/static/images/2016/20161126_read_02.png" alt="tcp传输过程" /&gt;&lt;figcaption&gt;tcp传输过程&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;出现三次挥手的原因是因为，被动关闭连接的一端（本图中的 server 端）缓冲区内没有需要发送的数据，所以将ACK 和 FIN 合并发送给了 Client 端。如果 server 端收到 FIN 时缓冲区内还有未发送的数据，那么 server 端会先回 ACK，等到数据发送完成，再发送 FIN，这样就是通常我们看到的四次挥手了。&lt;/p&gt;
+&lt;h2 id="阻塞模式下对-readwrite-的测试"&gt;阻塞模式下对 read/write 的测试&lt;/h2&gt;
+&lt;h3 id="测试1"&gt;测试1&lt;/h3&gt;
+&lt;p&gt;流程如下：&lt;/p&gt;
+&lt;figure&gt;
+&lt;img src="/static/images/2016/20161126_read_03.png" alt="测试1" /&gt;&lt;figcaption&gt;测试1&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;结果：&lt;/p&gt;
+&lt;p&gt;当缓冲区还有未读取的数据时，调用 close 函数关闭 socket，会触发 TCP 发送 RST，此时对方等到数据接收，调用 read 函数，会得到 &lt;strong&gt;-1&lt;/strong&gt; 的返回值，&lt;strong&gt;errno&lt;/strong&gt; 被设置为104 (&lt;em&gt;Connection reset by peer&lt;/em&gt;)，如果在收到 RST 之后仍然继续调用 write 函数，会触发系统的 SIGPIPE 信号，导致程序退出（如果未处理该信号的话）。&lt;/p&gt;
+&lt;figure&gt;
+&lt;img src="/static/images/2016/20161126_read_04.png" alt="sigpipe信号" /&gt;&lt;figcaption&gt;sigpipe信号&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;h3 id="测试2"&gt;测试2&lt;/h3&gt;
+&lt;p&gt;流程如下：&lt;/p&gt;
+&lt;figure&gt;
+&lt;img src="/static/images/2016/20161126_read_05.png" alt="测试2" /&gt;&lt;figcaption&gt;测试2&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;结果：&lt;/p&gt;
+&lt;p&gt;当对方已经关闭连接时（即对方发送了 FIN），此时再调用 write 写数据，会触发对方发送一个 RST，如果忽略 SIGPIPE 信号，继续 write 数据，得到的返回值是 &lt;strong&gt;-1&lt;/strong&gt;，&lt;strong&gt;errno&lt;/strong&gt;被设置为32(&lt;em&gt;Broken pipe&lt;/em&gt;)。&lt;/p&gt;
+&lt;h3 id="测试3"&gt;测试3&lt;/h3&gt;
+&lt;p&gt;流程如下：&lt;/p&gt;
+&lt;figure&gt;
+&lt;img src="/static/images/2016/20161126_read_06.png" alt="测试3" /&gt;&lt;figcaption&gt;测试3&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;结果：&lt;/p&gt;
+&lt;p&gt;调用 &lt;em&gt;setsockopt&lt;/em&gt; 给read设置一个超时时间(&lt;code&gt;setsockopt(sockfd, SOL_SOCKET,SO_RCVTIMEO, &amp;amp;ti, sizeof(ti));&lt;/code&gt; )，超时之后，read函数返回&lt;strong&gt;-1&lt;/strong&gt;，&lt;strong&gt;errno&lt;/strong&gt;被设置为11(&lt;em&gt;Resource temporarily unavailable&lt;/em&gt;)。&lt;/p&gt;
+&lt;h2 id="非阻塞模式下对read的测试"&gt;非阻塞模式下对read的测试&lt;/h2&gt;
+&lt;p&gt;使用 &lt;em&gt;fcntl&lt;/em&gt; 设置socket为非阻塞模式，调用 read 的结果是会立刻返回 &lt;strong&gt;-1&lt;/strong&gt;，然后&lt;strong&gt;errno&lt;/strong&gt;被设置为了11。&lt;/p&gt;
+&lt;h2 id="结论"&gt;结论&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;read&lt;/strong&gt; 函数返回值：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;大于0：成功读取的数据长度（Byte）；&lt;/li&gt;
+&lt;li&gt;等于0：该 socket 已经关闭；&lt;/li&gt;
+&lt;li&gt;等于-1：异常发生，包括但不限于以下几种：&lt;/li&gt;
+&lt;li&gt;超时,errno=11；&lt;/li&gt;
+&lt;li&gt;连接异常关闭（RST）,errno=104；&lt;/li&gt;
+&lt;li&gt;主动关闭socket后再去 read,errno=9；&lt;/li&gt;
+&lt;li&gt;非阻塞模式下的没有数据时，errno=11。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;write&lt;/strong&gt; 函数返回值：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;大于0：成功写入的数据长度（Byte）；&lt;/li&gt;
+&lt;li&gt;等于0：写入长度为0；&lt;/li&gt;
+&lt;li&gt;小于0：异常发生，包括但不限于以下几种：&lt;/li&gt;
+&lt;li&gt;主动关闭再写数据,errno=9；&lt;/li&gt;
+&lt;li&gt;连接异常关闭（RST）之后再写数据,errno=32。&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:blog2.karottc.com,2016-11-19:/posts/2016-11-19-tcp/</id>
+    <title type="html">一张图了解TCP</title>
+    <published>2016-11-19T12:26:17Z</published>
+    <updated>2016-11-19T12:26:17Z</updated>
+    <link rel="alternate" href="http://blog2.karottc.com/posts/2016-11-19-tcp/"/>
+    <content type="html">&lt;p&gt;从下面一张图了解TCP：&lt;/p&gt;
+&lt;figure&gt;
+&lt;img src="/images/2016/TCP.svg" alt="TCP" /&gt;&lt;figcaption&gt;TCP&lt;/figcaption&gt;
+&lt;/figure&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:blog2.karottc.com,2016-11-05:/posts/2016-11-05-data-mining-and-its-application/</id>
+    <title type="html">据挖掘及其应用 —— 杨强讲座</title>
+    <published>2016-11-05T12:26:17Z</published>
+    <updated>2016-11-05T12:26:17Z</updated>
+    <link rel="alternate" href="http://blog2.karottc.com/posts/2016-11-05-data-mining-and-its-application/"/>
+    <content type="html">&lt;figure&gt;
+&lt;img src="/static/images/2016/yangqiang.jpg" alt="杨强教授简介" /&gt;&lt;figcaption&gt;杨强教授简介&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;今天（2016.11.04）公司请了 &lt;strong&gt;&lt;a href="https://zh.wikipedia.org/wiki/%E6%9D%A8%E5%BC%BA"&gt;杨强教授&lt;/a&gt;&lt;/strong&gt; 来分享数据挖掘及其应用相关的东西，下面记录一下整个内容。&lt;/p&gt;
+&lt;h2 id="引子"&gt;引子&lt;/h2&gt;
+&lt;p&gt;首先 &lt;a href="http://baike.baidu.com/item/%E6%9B%BE%E5%AE%87/12003748"&gt;曾宇&lt;/a&gt; 上去为杨强讲授的讲话做了铺垫，观点如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;应该拥抱变化，顺应技术趋势的发展；&lt;/li&gt;
+&lt;li&gt;了解这些技术能做什么、不能做什么；&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;所以请了杨教授来分享一些心得，和解答大家的疑惑。&lt;/p&gt;
+&lt;h2 id="分享内容"&gt;分享内容&lt;/h2&gt;
+&lt;p&gt;今天跟大家的分享的内容是数据挖掘及其应用，数据挖掘和现在讲的人工智能还是有些区别的，区别是什么，下面会讲到。&lt;/p&gt;
+&lt;h3 id="案例分享"&gt;案例分享&lt;/h3&gt;
+&lt;h4 id="百合网"&gt;百合网&lt;/h4&gt;
+&lt;p&gt;一张图，两个人聊天的时候从哪儿（一个地方）到哪儿（另一个地方的）图形。&lt;/p&gt;
+&lt;p&gt;什么是数据挖掘：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;总结过去；&lt;/li&gt;
+&lt;li&gt;预测未来；&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;数据挖掘首先是根据已有数据进行总结，然后还可以建立模型预测未来，预测未来更多的是人工智能做的事。比如根据百合网这个可以问的问题是：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;都是哪些人在网上找对象；&lt;/li&gt;
+&lt;li&gt;他们的教育水平如何；&lt;/li&gt;
+&lt;li&gt;男女比例如何；&lt;/li&gt;
+&lt;li&gt;交谈的时间（比如男生很快就会对一个女生不感兴趣，然后转变一个聊天的对象）；&lt;/li&gt;
+&lt;li&gt;钱有多重要（对男生来说，对方的工资水平没有多重要，女生对对方的要求一直是上升趋势）；&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;数据挖掘是离不开人的，要成为数据挖掘的专家，首先一点是离不开直觉，这个直觉是找到&lt;strong&gt;特征&lt;/strong&gt;的直觉。所以特征工程和特征工程师是数据挖掘的未来，是数据挖掘必不可少的一部分。但是对于百合网这样的网站，特征工程并不那么重要，原因是大家关注的特征就那么很少的几个。&lt;/p&gt;
+&lt;h4 id="coursera教学数据"&gt;Coursera教学数据&lt;/h4&gt;
+&lt;p&gt;香港科技大学在coursera的教学数据，通过对视频的观看数据，可以找到：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;来分析比较作业A和B，哪个更难，比如，大部分学生反复的回看，说明这里比较难和重要，当然也有可能是期末考试和期中考试。&lt;/li&gt;
+&lt;li&gt;可以观察不同地域学生的学习方式的差异，比如，美国学生喜欢从一个概念出发，然后在视频中找到那个概念看，（比较有跳跃性），而中国学生，往往是从头看到尾。&lt;/li&gt;
+&lt;li&gt;爱讨论的学生是不是成绩也比较好。&lt;/li&gt;
+&lt;li&gt;好学生和差学生的社交网络图。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这两个例子，第一个百合网的例子是所有的行为都在网上进行——即足迹电子化，第二个也有这个特点，因为是在网上教学。但是我们身边的工作和生活并不是这样，我们所有的行为，大部分数据都没有电子化，都丢失了。&lt;/p&gt;
+&lt;p&gt;所以数据挖掘第一步是找到这些数据，把各种不同的数据整合起来，使不同的数据之间有关系。第二个是特征工程。第三个是样本缺乏，要做预测就需要高质量的样本。&lt;/p&gt;
+&lt;h4 id="推荐系统"&gt;推荐系统&lt;/h4&gt;
+&lt;p&gt;人工智能的语音、图像的成功，在这两个成功之前的成功就是推荐系统，比如淘宝、亚马逊。推荐系统的数据可以用一个图模型来表示，一个点表示一个产品或者用户。补齐矩阵中缺失的值。�&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;数据整合很重要；&lt;/li&gt;
+&lt;li&gt;特征工程是关键；&lt;/li&gt;
+&lt;li&gt;样本缺乏是一个很头疼的问题；&lt;/li&gt;
+&lt;li&gt;训练数据和测试数据可能有很大不同。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="移动领域-学术界的工作"&gt;移动领域-学术界的工作&lt;/h3&gt;
+&lt;p&gt;以诺基亚做的实验开始，现在通过一个手机，基本可以知道一个人的性别、收入等等很多数据。&lt;/p&gt;
+&lt;p&gt;另一个实验，收集couple 在房间生活的所有数据，然后用了一个模型迁移，来判断当一个人在某一个区域的时候，就能知道他在做什么。&lt;/p&gt;
+&lt;p&gt;在移动领域，数据来源两个：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;随身携带的设备；&lt;/li&gt;
+&lt;li&gt;网络上，知识图谱，网络关系等；&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;由于样本缺乏，所以迁移模型就很可贵。&lt;/p&gt;
+&lt;h3 id="舆情分析"&gt;舆情分析&lt;/h3&gt;
+&lt;p&gt;舆情分析是一个有监督学习的特例。每个领域舆情的词有一定关联。迁移学习，整合数据，把一个领域的模型迁移到另一个领域。把虚拟世界和物理世界联系起来。&lt;/p&gt;
+&lt;p&gt;例子一：对人人网的垃圾用户建模：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;用户的周边人；&lt;/li&gt;
+&lt;li&gt;标注用户正常、异常；&lt;/li&gt;
+&lt;li&gt;用户行为，比如晚上发邮件，发给陌生人；&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;例子2：伯克利大学基于深度学习的迁移学习，在一个图片领域，要学一个比较好的图片的话，需要上千万的图片，很长的时间才能做到，但是，如果学习任务变了，又不希望用那么多图片来重新训练，怎么办呢，可以把其中一些影视层固定住，把一些高层的东西来重新学习，这样发现这个办法是非常好的，这两者有一个自然的结合。&lt;/p&gt;
+&lt;h3 id="对话系统"&gt;对话系统&lt;/h3&gt;
+&lt;p&gt;研究拿一些真实的用户对话数据来训练对话系统，这个系统重要特点是以完成一个任务为主的，比如他最后要下一个订单：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;自动对话功能，回答比较靠谱；—— 深度学习&lt;/li&gt;
+&lt;li&gt;真能完成一个任务，每次回答都能知道现在到哪儿了，距离目的还有多远；——强化学习&lt;/li&gt;
+&lt;li&gt;可以个性化，每个人的回答不一样，知道一些喜好，跳过一些繁琐的问答。——迁移学习&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这三个一起是强化迁移学习，公司的订餐系统。这个模型是一个通用性的模型，把这个框架用在阅读上，让机器读完一本书，然后来问一下特定的场景和段落，比如XXX的情人是谁，XXX和XXX有过什么交流。&lt;/p&gt;
+&lt;p&gt;以上就是全部分享内容。&lt;/p&gt;
+&lt;h2 id="其他"&gt;其他&lt;/h2&gt;
+&lt;p&gt;目前人工智能的成功，还需要在一个特定的场景。&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
     <id>tag:blog2.karottc.com,2015-07-29:/posts/2015-07-29-cpp-reference/</id>
     <title type="html">C++的引用类型的变量到底占不占用内存空间？</title>
     <published>2015-07-29T12:26:17Z</published>
@@ -456,159 +625,6 @@
 &lt;p&gt;2014.09.19&lt;/p&gt;
 &lt;h4 id="footnotes"&gt;Footnotes:&lt;/h4&gt;
 &lt;p&gt;&lt;sup&gt;&lt;a href="#fnref:1" name="fn:1"&gt;1&lt;/a&gt;&lt;/sup&gt; 这是程浩的文字集,二十年间，他没有下地走过路，疾病已成为生活的一部分，是真正向死而生的人。自称“职业病人”的他，坦然接受命运的不公，微笑面对人生的愁苦，他说道：“人消除痛苦的唯一办法就是找到自己的救赎之路。”而他那些充当救赎之路的文字，有着踏过痛苦后贴近大地的力量。他对生的渴望和对命运的包容，震撼了无数网友。这本书即是他的生命之作。——来自豆瓣。&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <id>tag:blog2.karottc.com,2014-09-07:/posts/2014-09-07-maximum-consecutive-subsequence/</id>
-    <title type="html">归纳法求解最大连续子序列</title>
-    <published>2014-09-07T12:26:17Z</published>
-    <updated>2014-09-07T12:26:17Z</updated>
-    <link rel="alternate" href="http://blog2.karottc.com/posts/2014-09-07-maximum-consecutive-subsequence/"/>
-    <content type="html">&lt;h3 id="问题"&gt;问题&lt;/h3&gt;
-&lt;p&gt;求最大连续子序列的问题描述如下：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;给定一个实数序列 x&lt;sub&gt;1&lt;/sub&gt;, x&lt;sub&gt;2&lt;/sub&gt;, … , x&lt;sub&gt;n&lt;/sub&gt;（不必是正数），寻找一个（连续的）子序列 x&lt;sub&gt;i&lt;/sub&gt;, x&lt;sub&gt;i+1&lt;/sub&gt;, … , x&lt;sub&gt;j&lt;/sub&gt;，使得其数值之和在所有连续子序列数值之和中是最大的。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;这个问题就是最大子序列问题，所求的的这个序列就叫做——&lt;em&gt;最大子序列&lt;/em&gt;。下面通过数学归纳法来分析和解决这个问题，解决这个问题的最好目标是： &lt;strong&gt;一个算法，能够只扫描此序列一次就得到最大子序列&lt;/strong&gt;。&lt;/p&gt;
-&lt;h3 id="归纳分析"&gt;归纳分析&lt;/h3&gt;
-&lt;p&gt;根据上面的问题可以直接得到一般的归纳假设：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;&lt;font color="red"&gt;归纳假设：&lt;/font&gt;&lt;/strong&gt; 已知如何找到规模小于 n 的序列的最大子序列。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;下面假定一些变量：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;给定序列 &lt;em&gt;S(n)&lt;/em&gt;=(x&lt;sub&gt;1&lt;/sub&gt;, x&lt;sub&gt;2&lt;/sub&gt;, … , x&lt;sub&gt;n&lt;/sub&gt;).&lt;/li&gt;
-&lt;li&gt;序列 &lt;em&gt;S(n)&lt;/em&gt; 的子序列为 &lt;em&gt;S&lt;sup&gt;’&lt;/sup&gt;(n)&lt;/em&gt; .&lt;/li&gt;
-&lt;li&gt;序列 &lt;em&gt;S(n)&lt;/em&gt; 的最大子序列为 &lt;em&gt;S&lt;sup&gt;’&lt;/sup&gt;&lt;sub&gt;M&lt;/sub&gt;(n)&lt;/em&gt;=(x&lt;sub&gt;i&lt;/sub&gt;, x&lt;sub&gt;i+1&lt;/sub&gt;, … , x&lt;sub&gt;j&lt;/sub&gt;).&lt;/li&gt;
-&lt;li&gt;序列 &lt;em&gt;S(n)&lt;/em&gt; 的最大后缀子序列为 &lt;em&gt;S&lt;sup&gt;’&lt;/sup&gt;&lt;sub&gt;E&lt;/sub&gt;(n)&lt;/em&gt;=(x&lt;sub&gt;k&lt;/sub&gt;, x&lt;sub&gt;k+1&lt;/sub&gt;, … , x&lt;sub&gt;n&lt;/sub&gt;). �&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;现在开始用数学归纳法来证明：&lt;/p&gt;
-&lt;ol type="1"&gt;
-&lt;li&gt;当 n ＝ 1 时， &lt;em&gt;S(1)&lt;/em&gt;=x&lt;sub&gt;1&lt;/sub&gt;，如果 x&lt;sub&gt;1&lt;/sub&gt;&amp;lt;0，则 &lt;em&gt;S&lt;sup&gt;’&lt;/sup&gt;&lt;sub&gt;M&lt;/sub&gt;(1)&lt;/em&gt;＝NULL；否则 &lt;em&gt;S&lt;sup&gt;’&lt;/sup&gt;&lt;sub&gt;M&lt;/sub&gt;(1)&lt;/em&gt;＝x&lt;sub&gt;1&lt;/sub&gt; .&lt;/li&gt;
-&lt;li&gt;当 n = n-1 时，&lt;em&gt;S(n-1)&lt;/em&gt;=(x&lt;sub&gt;1&lt;/sub&gt;, x&lt;sub&gt;2&lt;/sub&gt;, … , x&lt;sub&gt;n-1&lt;/sub&gt;)，假设 &lt;em&gt;S&lt;sup&gt;’&lt;/sup&gt;&lt;sub&gt;M&lt;/sub&gt;(n-1)&lt;/em&gt;=(x&lt;sub&gt;i&lt;/sub&gt;, x&lt;sub&gt;i+1&lt;/sub&gt;, … , x&lt;sub&gt;j&lt;/sub&gt;).&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;当 n = n 时，&lt;em&gt;S(n)&lt;/em&gt;=(x&lt;sub&gt;1&lt;/sub&gt;, x&lt;sub&gt;2&lt;/sub&gt;, … , x&lt;sub&gt;n&lt;/sub&gt;)=( &lt;em&gt;S(n-1)&lt;/em&gt;, x&lt;sub&gt;n&lt;/sub&gt;)，然后由 &lt;em&gt;S&lt;sup&gt;’&lt;/sup&gt;&lt;sub&gt;M&lt;/sub&gt;(n-1)&lt;/em&gt; 推导出 &lt;em&gt;S&lt;sup&gt;’&lt;/sup&gt;&lt;sub&gt;M&lt;/sub&gt;(n)&lt;/em&gt;，共有下面3种情况：&lt;/p&gt;
-&lt;ol type="1"&gt;
-&lt;li&gt;&lt;em&gt;S&lt;sup&gt;‘&lt;/sup&gt;&lt;sub&gt;M&lt;/sub&gt;(n-1)&lt;em&gt;=(x&lt;sub&gt;i&lt;/sub&gt;, x&lt;sub&gt;i+1&lt;/sub&gt;, … , x&lt;sub&gt;j&lt;/sub&gt;) ＝ NULL，如果 x&lt;sub&gt;n&lt;/sub&gt;&amp;lt;0，则 &lt;em&gt;S&lt;sup&gt;’&lt;/sup&gt;&lt;sub&gt;M&lt;/sub&gt;(n)&lt;/em&gt;＝NULL；否则 &lt;/em&gt;S&lt;sup&gt;’&lt;/sup&gt;&lt;sub&gt;M&lt;/sub&gt;(n)&lt;/em&gt;＝x&lt;sub&gt;n&lt;/sub&gt; .&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;S&lt;sup&gt;‘&lt;/sup&gt;&lt;sub&gt;M&lt;/sub&gt;(n-1)&lt;em&gt;=(x&lt;sub&gt;i&lt;/sub&gt;, x&lt;sub&gt;i+1&lt;/sub&gt;, … , x&lt;sub&gt;j&lt;/sub&gt;) &amp;amp;&amp;amp; j = n-1，此时 &lt;/em&gt;S&lt;sup&gt;’&lt;/sup&gt;&lt;sub&gt;M&lt;/sub&gt;(n-1)&lt;/em&gt; ＝ &lt;em&gt;S&lt;sup&gt;‘&lt;/sup&gt;&lt;sub&gt;E&lt;/sub&gt;(n-1)&lt;em&gt;，如果 x&lt;sub&gt;n&lt;/sub&gt; &amp;gt; 0，&lt;/em&gt;S&lt;sup&gt;’&lt;/sup&gt;&lt;sub&gt;M&lt;/sub&gt;(n)&lt;/em&gt;＝ &lt;em&gt;S&lt;sup&gt;’&lt;/sup&gt;&lt;sub&gt;M&lt;/sub&gt;(n-1)&lt;/em&gt; + x&lt;sub&gt;n&lt;/sub&gt; ＝ (x&lt;sub&gt;i&lt;/sub&gt;, x&lt;sub&gt;i+1&lt;/sub&gt;, … , x&lt;sub&gt;j&lt;/sub&gt;) + x&lt;sub&gt;n&lt;/sub&gt;，否则 &lt;em&gt;S&lt;sup&gt;‘&lt;/sup&gt;&lt;sub&gt;M&lt;/sub&gt;(n)&lt;em&gt;＝ &lt;/em&gt;S&lt;sup&gt;’&lt;/sup&gt;&lt;sub&gt;M&lt;/sub&gt;(n-1)&lt;/em&gt;=(x&lt;sub&gt;i&lt;/sub&gt;, x&lt;sub&gt;i+1&lt;/sub&gt;, … , x&lt;sub&gt;j&lt;/sub&gt;) .&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;S&lt;sup&gt;‘&lt;/sup&gt;&lt;sub&gt;M&lt;/sub&gt;(n-1)&lt;em&gt;=(x&lt;sub&gt;i&lt;/sub&gt;, x&lt;sub&gt;i+1&lt;/sub&gt;, … , x&lt;sub&gt;j&lt;/sub&gt;) &amp;amp;&amp;amp; j &amp;lt; n-1，此时 &lt;/em&gt;S&lt;sup&gt;’&lt;/sup&gt;&lt;sub&gt;M&lt;/sub&gt;(n-1)&lt;/em&gt; &amp;gt; &lt;em&gt;S&lt;sup&gt;‘&lt;/sup&gt;&lt;sub&gt;E&lt;/sub&gt;(n-1)&lt;em&gt;，则可得到 &lt;/em&gt;S&lt;sup&gt;’&lt;/sup&gt;&lt;sub&gt;M&lt;/sub&gt;(n)&lt;/em&gt;＝&lt;em&gt;S&lt;sup&gt;’&lt;/sup&gt;&lt;sub&gt;M&lt;/sub&gt;(n-1)&lt;/em&gt; 或者 &lt;em&gt;S&lt;sup&gt;‘&lt;/sup&gt;&lt;sub&gt;M&lt;/sub&gt;(n)&lt;em&gt;＝&lt;/em&gt;S&lt;sup&gt;’&lt;/sup&gt;&lt;sub&gt;E&lt;/sub&gt;(n-1)&lt;/em&gt; + x&lt;sub&gt;n&lt;/sub&gt; .&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;即上述可得证：能够求出 &lt;em&gt;S(n)&lt;/em&gt;=(x&lt;sub&gt;1&lt;/sub&gt;, x&lt;sub&gt;2&lt;/sub&gt;, … , x&lt;sub&gt;n&lt;/sub&gt;) 的最大连续子序列，不过上述的证明过程中用了&lt;strong&gt;增强归纳假设&lt;/strong&gt;，这个也是这个证明的关键：&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;&lt;font color="red"&gt;更强的归纳假设：&lt;/font&gt;&lt;/strong&gt; 已知如何找到规模小于 n 的序列的最大子序列，以及作为后缀的最大子序列。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;我们知道了 &lt;em&gt;S&lt;sup&gt;’&lt;/sup&gt;&lt;sub&gt;M&lt;/sub&gt;(n)&lt;/em&gt; 和 &lt;em&gt;S&lt;sup&gt;’&lt;/sup&gt;&lt;sub&gt;E&lt;/sub&gt;(n)&lt;/em&gt; 这两个序列，算法也就明确了。我们把 x&lt;sub&gt;n&lt;/sub&gt; 加入到最大后缀子序列中，如果它的和大于原来的最大子序列，则得到一个新的最大子序列（同样也是一个后缀），否则，保留以前的最大子序列。但求解过程还没有结束，我们还需要寻找新的最大后缀子序列，因为不能只是简单的把 x&lt;sub&gt;n&lt;/sub&gt; 加到以前的最大后缀中，有可能以 x&lt;sub&gt;n&lt;/sub&gt; 结束的最大后缀的和是负数，在这种情况下，我们就需要把NULL（空集）作为最大后缀（以及把随后的 x&lt;sub&gt;n+1&lt;/sub&gt; 也考虑进去）。&lt;/p&gt;
-&lt;h3 id="具体算法实现"&gt;具体算法实现&lt;/h3&gt;
-&lt;p&gt;根据上面的分析过程，下面贴上具体的C++代码：&lt;/p&gt;
-&lt;div class="sourceCode"&gt;&lt;pre class="sourceCode cpp"&gt;&lt;code class="sourceCode cpp"&gt;&lt;span class="dt"&gt;int&lt;/span&gt; Maximum_Consecutive_Subsequence(&lt;span class="dt"&gt;int&lt;/span&gt; *x, &lt;span class="dt"&gt;int&lt;/span&gt; n)                                 
-{                                                                                  
-    &lt;span class="dt"&gt;int&lt;/span&gt; global_Max = &lt;span class="dv"&gt;0&lt;/span&gt;;   &lt;span class="co"&gt;// 最大子序列的和                                        &lt;/span&gt;
-    &lt;span class="dt"&gt;int&lt;/span&gt; suffix_Max = &lt;span class="dv"&gt;0&lt;/span&gt;;   &lt;span class="co"&gt;// 最大后缀子序列的和，每次迭代都会更新                  &lt;/span&gt;
-    &lt;span class="dt"&gt;int&lt;/span&gt; i = &lt;span class="dv"&gt;0&lt;/span&gt;;                                                                     
-    &lt;span class="cf"&gt;for&lt;/span&gt; (i = &lt;span class="dv"&gt;0&lt;/span&gt;; i &amp;lt; n; i++)                                                        
-    {                                                                              
-        &lt;span class="cf"&gt;if&lt;/span&gt; (x[i] + suffix_Max &amp;gt; global_Max)                                                                  
-        {                                                                          
-            suffix_Max = suffix_Max + x[i];                                        
-            global_Max = suffix_Max;                                               
-        }                                                                          
-        &lt;span class="cf"&gt;else&lt;/span&gt; &lt;span class="cf"&gt;if&lt;/span&gt; (x[i] + suffix_Max &amp;gt; &lt;span class="dv"&gt;0&lt;/span&gt;)                                            
-        {                                                                          
-            suffix_Max = suffix_Max + x[i];                                        
-        }                                                                          
-        &lt;span class="cf"&gt;else&lt;/span&gt;                                                                       
-        {                                                                          
-            suffix_Max = &lt;span class="dv"&gt;0&lt;/span&gt;;                                                        
-        }                                                                          
-    }                                                                              
-    &lt;span class="cf"&gt;return&lt;/span&gt; global_Max;                                                             
-}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;更详细的代码可以戳&lt;a href="https://github.com/karottc/practice/blob/master/algorithm/maximum_subsequences.cc"&gt;这里&lt;/a&gt;. &lt;br /&gt;&lt;/p&gt;
-&lt;p&gt;2014.09.07&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <id>tag:blog2.karottc.com,2014-09-03:/posts/2014-09-03-life-meaning/</id>
-    <title type="html">【解惑】人生有何意义</title>
-    <published>2014-09-03T12:26:17Z</published>
-    <updated>2014-09-03T12:26:17Z</updated>
-    <link rel="alternate" href="http://blog2.karottc.com/posts/2014-09-03-life-meaning/"/>
-    <content type="html">&lt;p&gt;这几天看胡适的书，其中有一篇写到在民国八年的时候，胡适当年的同学朱子平问了他一个问题：“人生在世，究竟是为什么的？” 胡适当时的回答就是：“这个问题是没有答案的…….”&lt;/p&gt;
-&lt;h3 id="人生的意义"&gt;人生的意义&lt;/h3&gt;
-&lt;p&gt;然而在民国十七年一月二十七日，胡适又写了一篇，清楚的回答了这个问题： &amp;gt; “人生有何意义？” &amp;gt; &amp;gt; 其实这个问题是容易解答的。人生的意义全是各人自己寻出来，造出来的：高尚，卑劣，清贵，污浊，有用，无用，……全靠自己的作为。生命本身不过是一件生物学的事实，有什么意义可说？生一个人与一只猫，一只狗，有什么分别？人生的意义不在于何以有生，而在于自己怎样生活。你若情愿把这六尺之躯葬送在白昼作梦之上，那就是你这一生的意义。你若发愤振作起来，决心去寻求生命的意义，去创造自己的生命的意义，那么，你活一日便有一日的意义，作一事便添一事的意义，生命无穷，生命的意义也无穷了。 &amp;gt; &amp;gt; 总之，生命本没有意义，你要能给他什么意义，他就有什么意义。与其终日冥想人生有何意义，不如试用此生作点有意义的事。……&lt;/p&gt;
-&lt;p&gt;这个问题我也思考过，始终没有一个好的答案，今日读到此篇，感到万分惭愧，九十年前的人就已经给出了这个很好的答案了。&lt;/p&gt;
-&lt;p&gt;&lt;font color="red"&gt;&lt;strong&gt;人生本无意义，我们要做的就是努力的去让自己的人生过的有意义！&lt;/strong&gt; &lt;/font&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src="/static/images/201406/20140903_life_meaning.png" alt="人生的意义" /&gt; &lt;br /&gt;&lt;/p&gt;
-&lt;hr /&gt;
-&lt;p&gt;Update:&lt;/p&gt;
-&lt;p&gt;上面的东西也只能算一个结论，思考出这个结论的过程，比结论本身更有趣。下面来剖析过程，要说明这个问题，首先的要说清楚什么是人生和人生观。&lt;/p&gt;
-&lt;h3 id="人生及人生观的定义"&gt;人生及人生观的定义&lt;/h3&gt;
-&lt;blockquote&gt;
-&lt;p&gt;人是哺乳动物中的有二手二足用脑的动物。&lt;/p&gt;
-&lt;p&gt;人生即是这种动物所演的戏剧，这种动物在演时，就有 &lt;strong&gt;人生&lt;/strong&gt;；停演时就没 &lt;strong&gt;人生&lt;/strong&gt;。&lt;/p&gt;
-&lt;p&gt;所谓人生观，就是演时对于所演之态度，譬如：有的喜唱花面，有的喜唱老生，有的喜唱小生，有的喜摇旗呐喊；凡此种种两脚两手在演戏的态度，就是 &lt;strong&gt;人生观&lt;/strong&gt; &lt;sup&gt;&lt;a href="#fn:1" name="fnref:1"&gt;1&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;虽然是如此，但对人生的思考和研究好像历来都是一个哲学问题，所以这里还有必要给哲学一个定义：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;哲学&lt;/strong&gt;是研究人生切要的问题，从意义上着想，去找一个比较可普遍适用的意义&lt;sup&gt;&lt;a href="#fn:2" name="fnref:2"&gt;2&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;所以哲学的起点就是由于人生切要问题，而哲学的结果就是要对人生适用（虽然不一定能完全解决人生的所有问题和困惑）。人生离开哲学，就是无意义的人生；哲学离开了人生，就变成了想入非非的哲学。所以有很多哲学家只是凭空臆说，离人生问题太远，真是上穷碧落，越闹越糟。&lt;/p&gt;
-&lt;h3 id="生活的意思"&gt;生活的意思&lt;/h3&gt;
-&lt;p&gt;胡适当时给《新生活》杂志第一期做的一篇文章也解释了一下生活的意思：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;诸位，凡是自己说不出“为什么这样做”的事，都是没有意思的生活。&lt;/p&gt;
-&lt;p&gt;反过来说，凡是自己说得出“为什么这样做”的事，都可以说是有意思的生活。&lt;/p&gt;
-&lt;p&gt;生活的“为什么”，就是生活的意思。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;这句话我感觉跟现代的一个互联网天才 &lt;em&gt;Aaron Swartz&lt;/em&gt; 曾经说过的话有点同感：&lt;font color="red"&gt;&lt;strong&gt;相信你应该真的每时每刻都问自己，现在的世界有什么重要的是我能参与去做的？如果你没做那重要的是，又是为什么？&lt;/strong&gt; &lt;/font&gt;.&lt;/p&gt;
-&lt;h3 id="为什么读书"&gt;为什么读书&lt;/h3&gt;
-&lt;p&gt;下面同样摘录一段胡适的演讲词： &amp;gt; 从前有一位大哲学家做了一篇《读书乐》，说到读书的好处，他说：“书中自有千钟粟，书中自有黄金屋，书中自有颜如玉。”这意思就是说，读了书可以做大官，获厚禄，可以不至于住茅草房子，可以娶得年轻的漂亮太太（台下哄笑）。诸位听了笑起来，足见诸位对于这位哲学家所说的话不十分满意。现在我就讲所以要读书的别的原因。&lt;/p&gt;
-&lt;p&gt;不过这里我想，大家笑的原因不是不满意，而是同意，并且有人这么直白的说出来，所以发笑。可见就算胡适这样的大家，为了把话题继续下去也要曲解大家的意思。&lt;/p&gt;
-&lt;p&gt;当然还有明确的说明为什么要读书：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;为什么要读书？&lt;/p&gt;
-&lt;p&gt;有三点可以讲：第一，因为书是过去已经知道的智识学问和经验的一种记录，我们读书便是要接受这人类的遗产；第二，为要读书而读书，读了书便可以多读书；第三，读书可以帮助我们解决困难，应付环境，并可获得思想材料的来源&lt;sup&gt;&lt;a href="#fn:3" name="fnref:3"&gt;3&lt;/a&gt;&lt;/sup&gt;。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;到后面自然是书读的越多，越能将所有的知识融会贯通，更能知道知识无涯，会让人变得谦卑——见过真正的高山才能有的谦卑！&lt;/p&gt;
-&lt;h3 id="自古忠孝不能两全"&gt;自古忠孝不能两全&lt;/h3&gt;
-&lt;p&gt;从古代的封建社会开始，我们接受的教育就是要建功立业，所以由此引发的矛盾就是忠孝不能两全——要忠君爱国、建功立业就没法照顾年老的父母以尽孝道。这是自古的矛盾，而在现代以及今天这个时代，“忠”字换成了事业，即事业和孝道也做不到兼顾。&lt;/p&gt;
-&lt;p&gt;胡适在追忆他母亲的描述：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;先母所生，只适一人，徒以爱子故，幼岁即令远出游学；十五年中，侍膝下仅四五月耳。生未能侍，病未能侍，毕世劬劳未能丝毫分任，生死永决乃亦未能面。平生惨痛，何以加此！伏念先母一生行实，虽纤细琐屑不出于家庭闾里之间，而其至性至诚，有宜永存而不朽者，故粗叙梗概，随讣上闻，伏乞矜鉴&lt;sup&gt;&lt;a href="#fn:4" name="fnref:4"&gt;4&lt;/a&gt;&lt;/sup&gt;。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;还有一些胡适的自述：&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;我在新公学解散之后，得了两三百元的欠薪，前途茫茫，毫无把握，那敢回家去？只好寄居在上海，想寻一件可以吃饭养家的事。在那个忧愁烦闷的时候，又遇着一班浪漫的朋友，我就跟着他们堕落了。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;如果身前未能尽到孝道，身后再怎么追忆、悔恨又有个屁用。无数的前人用他们的事实表明都是放弃了尽孝而追求事业，事后又写很多无比悔恨的文字。我历来是看不起、看不惯这种人，但现在却尝试去理解他们了。&lt;/p&gt;
-&lt;p&gt;因为在事业上成功了，所以不孝这个事实就被人们淡化了，如果在事业上没成功，那就只剩下了这个不孝的事实。难道世俗意义上的成功是人人都可以做到的吗？虽然自古已有 &lt;font color="red"&gt;&lt;em&gt;子欲养而亲不在&lt;/em&gt;&lt;/font&gt; 这样的名句，但是谁又把它当回事儿了，依然都是义无反顾的去追求事业，在意的人反而会被说成软弱无能。&lt;/p&gt;
-&lt;p&gt;这种矛盾在知乎上还是有很多的讨论：&lt;a href="http://www.zhihu.com/question/25148298/answer/30210220"&gt;那些在北上广深国外打拼的年轻人们，你们的父母怎么办？&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;愿你我共勉！&lt;br /&gt;&lt;/p&gt;
-&lt;p&gt;2014.09.03&lt;/p&gt;
-&lt;h4 id="footnotes"&gt;Footnotes:&lt;/h4&gt;
-&lt;p&gt;&lt;sup&gt;&lt;a href="#fnref:1" name="fn:1"&gt;1&lt;/a&gt;&lt;/sup&gt; 这个是民国新文化运动时期吴稚晖先生在《太平洋杂志》上发表的一篇《一个新信仰的宇宙观及人生观》中给人生下的一个定义。&lt;/p&gt;
-&lt;p&gt;&lt;sup&gt;&lt;a href="#fnref:2" name="fn:2"&gt;2&lt;/a&gt;&lt;/sup&gt; 这是胡适先生在《中国哲学史大纲》（上卷）中给哲学的一个定义。&lt;/p&gt;
-&lt;p&gt;&lt;sup&gt;&lt;a href="#fnref:3" name="fn:3"&gt;3&lt;/a&gt;&lt;/sup&gt; 出自胡适在1930年11月下旬在上海青年会演讲词。&lt;/p&gt;
-&lt;p&gt;&lt;sup&gt;&lt;a href="#fnref:4" name="fn:4"&gt;4&lt;/a&gt;&lt;/sup&gt; 这是胡适在民国十年六月二十五日的《先母行述》中的一段，这里只是一笔带过。关于他和他目前的详细文字在他的《四十自述》中有更详细的记载。&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <id>tag:blog2.karottc.com,2014-08-31:/posts/2014-08-31-evernote-wiz/</id>
-    <title type="html">习惯的力量——从evernote试用为知笔记</title>
-    <published>2014-08-31T12:26:17Z</published>
-    <updated>2014-08-31T12:26:17Z</updated>
-    <link rel="alternate" href="http://blog2.karottc.com/posts/2014-08-31-evernote-wiz/"/>
-    <content type="html">&lt;h3 id="evernote和为知笔记"&gt;evernote和为知笔记&lt;/h3&gt;
-&lt;p&gt;从开始用&lt;a href="http://wiz.cn/" title="为知笔记主页"&gt;为知笔记&lt;/a&gt;这个程序到现在，有一周+的时间了，在此之前，我一直用的&lt;a href="https://evernote.com/" title="evernote国际版主页，还有国内版!"&gt;evernote&lt;/a&gt;，可以说我的生活中evernote已经变得非常重要，其重要的程度甚至使我从Linux转向了使用mac os，就因为mac os平台有evernote的客户端。去用为知笔记的起因是源于同学的推荐，了解了一下以后就装了一个来用，最吸引我一点是相比于evernote的免费用户，它的月流量是evernote的10倍，并且而已在移动设备上离线查看笔记，这些都是evernote的收费功能。&lt;/p&gt;
-&lt;p&gt;为了深度的使用它，我首先导入了一小部分以前evernote的笔记，并且在有需求的时候我的第一解决方案都是优先考虑使用为知笔记，可以使用了这么久了，还是有很多不满意的地方，当然这些都是细节的地方，也许不是它做的不好，而是我用了几年的evernote已经习惯了而已，所以用其他的就会有对比，&lt;strong&gt;这就是习惯的力量，习惯的东西会化成生活中的不知不觉的一部分，让人无法抗拒，自然而然的会提高效率&lt;/strong&gt;。&lt;/p&gt;
-&lt;p&gt;虽然这界面初看上去不会有太大的差别，下面这是为知笔记的一个截图：&lt;br /&gt; &lt;img src="/static/images/201406/20140829_wiz.png" alt="Wiz" /&gt; 然后这是evernote的一个截图：&lt;br /&gt; &lt;img src="/static/images/201406/20140829_evernote.png" alt="Evernote" /&gt; 关键还是在体验和细节上，因为具体使用的时候就是一些琐碎操作，不然搜索、编辑、查看、响应鼠标的滚动速度、以及对网页剪辑的还原度等等。这是说一个我不习惯的地方：为知笔记的里面的超链接，鼠标点击后是在为知笔记自己的程序中打开网页，而evernote是调用系统的浏览器来打开网页，明显我更喜欢或者说更习惯与evernote这种方式。&lt;/p&gt;
-&lt;p&gt;所以最后还是决定用evernote作为主要的笔记本，为知笔记为辅助使用，因为它的大流量和离线功能还是挺有用的，只是我不是一直需要，在有需求的时候就来辅助一下，工具本是为了提高效率的，在上面花太多时间就是本末倒置了。&lt;/p&gt;
-&lt;h3 id="习惯"&gt;习惯&lt;/h3&gt;
-&lt;p&gt;网上讲习惯好处的段子一堆一堆的，我就不在这里说了，只说我的经历。其实习惯的力量的强大时常都能体会到，这次evernote的事就顺便记录了下来而已。从这点看，长辈或者说前辈以及父辈经常告诉我们说，好习惯可以改变一个人，成就一个人，想来也不无道理。&lt;/p&gt;
-&lt;p&gt;还记得当年高三的时候，我们学校请了一个川大心理学的老师格桑泽仁来给我们讲考试的心态变化，他其中提到，我们坚持每天早上闹钟一响就起床，不要赖床，坚持21天就能形成一种习惯。不过根据我的尝试，21天这个时间，应该是根据不同的习惯而有不同的时长。&lt;/p&gt;
-&lt;p&gt;话说，对于上次我&lt;a href="http://www.karottc.com/blog/2014/06/15/current-doing/"&gt;开始&lt;/a&gt;坚持每天commit一些东西到github上到现在有80+天了，也没感觉到自己养成了习惯，有些时候还是会忘记：&lt;br /&gt; &lt;img src="/static/images/201406/20140830_github.png" alt="Github" /&gt;&lt;/p&gt;
-&lt;p&gt;一直在努力，希望做到更好！&lt;/p&gt;
-&lt;p&gt;&lt;br /&gt; 2014.08.30&lt;/p&gt;
 </content>
   </entry>
 </feed>

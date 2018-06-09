@@ -13,7 +13,7 @@
     <link href="/manifest.json" rel="manifest" />
     <link color="#5bbad5" href="/safari-pinned-tab.svg" rel="mask-icon" />
     <meta content="#ffffff" name="theme-color" />
-    <title>C++的引用类型的变量到底占不占用内存空间？</title>
+    <title>Linux网络中的read函数</title>
     <link href="/static/dist/semantic-ui/semantic.min.css" rel="stylesheet" type="text/css" />
     <link href="/static/dist/fonts.css/fonts.css" rel="stylesheet" type="text/css" />
     <link href="/static/stylesheet/default.css" rel="stylesheet" type="text/css" />
@@ -51,48 +51,76 @@
     <article class="ui stackable divided grid"><header class="row article-head">
   <div class="column">
     <h1 class="ui header">
-      C++的引用类型的变量到底占不占用内存空间？
+      Linux网络中的read函数
     </h1>
     <div class="ui divider desktop"></div>
   </div>
 </header>
 <div class="row article-body">
-  <section class="twelve wide column"><p>分析一下 <strong>C++</strong> 里面的引用类型（例如：<code>int &amp;r = a;</code> ）中的 <code>r</code> 变量是否占用内存空间呢？是否和 <code>int *p = &amp;a;</code> 中的 <code>p</code> 变量一样占用内存空间呢？</p>
-<p><strong>本文将给出答案。</strong></p>
-<p>直接看一个简单的例子：<br /></p>
-<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="pp">#include </span><span class="im">&lt;iostream&gt;</span>
-
-<span class="kw">using</span> <span class="kw">namespace</span> std;
-
-<span class="dt">int</span> main(<span class="dt">void</span>)
-{
-    <span class="dt">int</span> a = <span class="dv">6</span>;
-    <span class="dt">int</span> &amp;r = a;
-    <span class="dt">int</span> *p = &amp;a;
-    <span class="dt">int</span> x = r;
-    <span class="cf">return</span> <span class="dv">0</span>;
-}</code></pre></div>
-<p>接着我们通过 <code>g++ testref.cpp -o testref -g</code> 来编译之后，用gdb来加载它，看看 <code>a</code>, <code>r</code>, <code>p</code>, <code>x</code> 的地址分别是多少:<br /> <img src="/static/images/201501/20150729-01-gdb.png" alt="gdb" /> 上图中 <code>a</code> 的地址为 <code>0x7fffffffe208</code>，用取地址符去获取 <code>r</code> 地址，值和 <code>a</code> 是一样的，其实，用 <code>&amp;</code> 符号是不能获取到引用类型变量的地址的，因为引用类型的变量本身只是另一个对象的别名，用可感知的方式描述，就是它仅仅是一个名字而已，对它的任何操作都是相当于对另一个对象的操作，所以这个取地址操作也是一样。</p>
-<p>但是，我们接着往下看，<code>p</code> 的地址是 <code>0x7fffffffe218</code>，和 <code>a</code> 的地址刚刚相差了 <strong>16</strong> 字节，接着看 <code>x</code> 的地址是 <code>0x7fffffffe20c</code>，这个地址正好是 <code>a</code>的地址 <code>0x7fffffffe208 + 4</code>, 而 <code>a</code> 是 <code>int</code> 型，变量本身占用 4 字节，正常情况下， <code>x</code> 的地址应该是 <code>p</code> 的地址 <code>0x7fffffffe218 + 8</code>，这里 <code>+8</code> 是因为我的机器是 64 位的机器，所以指针类型占用 8 字节。现在这种情况应该是编译器做了优化，把 <code>x</code> 的放到了 <code>a</code> 的后面，同样的，<code>x</code> 的下一个变量的起始地址应该是 <code>0x7fffffffe20c + 4</code> = <code>0x7fffffffe210</code>，这个地址和 <code>p</code> 之间刚好差了 8 个字节，也就是一个指针变量的地址，所以答案就很明显了。</p>
-<p>即，我们现在可以猜测，<code>r</code> <strong>是占用内存空间，并且占用的大小和指针变量相同大小</strong>。但是我们上面用gdb也看不了 <code>r</code> 的实际地址，所以这也只能是猜测，只是看似合理的猜测而已。</p>
-<p>为了证明这个猜测，我们继续把可执行文件反汇编出来看看：<code>objdump -d testref</code> 得到的结果如下：</p>
-<pre><code>00000000004006cd &lt;main&gt;:
-  4006cd:   55                      push   %rbp
-  4006ce:   48 89 e5                mov    %rsp,%rbp
-  4006d1:   c7 45 e8 06 00 00 00    movl   $0x6,-0x18(%rbp)   # int a = 6; a的地址 0x18
-  4006d8:   48 8d 45 e8             lea    -0x18(%rbp),%rax
-  4006dc:   48 89 45 f0             mov    %rax,-0x10(%rbp)   # int &amp;r = a; r的地址 0x10
-  4006e0:   48 8d 45 e8             lea    -0x18(%rbp),%rax
-  4006e4:   48 89 45 f8             mov    %rax,-0x8(%rbp)    # int *p = &amp;a; p的地址 0x8
-  4006e8:   48 8b 45 f0             mov    -0x10(%rbp),%rax  # 下面两行是为了后面的赋值做准备
-  4006ec:   8b 00                   mov    (%rax),%eax
-  4006ee:   89 45 ec                mov    %eax,-0x14(%rbp)   # int x = r;   x的地址 0x14
-  4006f1:   b8 00 00 00 00          mov    $0x0,%eax
-  4006f6:   5d                      pop    %rbp
-  4006f7:   c3                      retq </code></pre>
-<p>我把对应处，都写在上面的注释里了。</p>
-<p>所以，现在可以得到结论：<font color='red'><strong>引用类型的变量会占用内存空间，占用的内存空间的大小和指针类型的大小是相同的。</strong></font> 从上面的汇编代码可以看出，虽然引用是一个对象的别名，但是在汇编层面，和指针是一样的。</p>
-<p>2015.07.29</p>
+  <section class="twelve wide column"><p>这是一篇查漏补缺的文章，探究一下linux网络编程中read函数的几种返回值，以及分别在什么情况下发生的，当然也会顺带提及 <em>TCP</em> 的一点点知识（毕竟谈到网络是离不开TCP的）。</p>
+<p>为了验证，写了一个 client 和 server 来测试相关的东西。</p>
+<h2 id="tcp的三次握手和三次挥手">TCP的三次握手和三次挥手</h2>
+<p>是的，你没看错，是三次挥手，而不是四次。一般情况下，TCP在建立连接是需要三次握手，在断开连接时需要四次挥手，但是有时只需要三次挥手就够了，下图是我用tcpdump的抓包情况：</p>
+<figure>
+<img src="/static/images/2016/20161126_read_01.png" alt="tcp连接过程" /><figcaption>tcp连接过程</figcaption>
+</figure>
+<p>上图可以分为三个部分：</p>
+<ul>
+<li>建立连接，三次握手，红色部分；</li>
+<li>数据传输，蓝色部分；</li>
+<li>关闭连接，三次挥手，紫色部分。</li>
+</ul>
+<p>对应TCP的传输过程如下：</p>
+<figure>
+<img src="/static/images/2016/20161126_read_02.png" alt="tcp传输过程" /><figcaption>tcp传输过程</figcaption>
+</figure>
+<p>出现三次挥手的原因是因为，被动关闭连接的一端（本图中的 server 端）缓冲区内没有需要发送的数据，所以将ACK 和 FIN 合并发送给了 Client 端。如果 server 端收到 FIN 时缓冲区内还有未发送的数据，那么 server 端会先回 ACK，等到数据发送完成，再发送 FIN，这样就是通常我们看到的四次挥手了。</p>
+<h2 id="阻塞模式下对-readwrite-的测试">阻塞模式下对 read/write 的测试</h2>
+<h3 id="测试1">测试1</h3>
+<p>流程如下：</p>
+<figure>
+<img src="/static/images/2016/20161126_read_03.png" alt="测试1" /><figcaption>测试1</figcaption>
+</figure>
+<p>结果：</p>
+<p>当缓冲区还有未读取的数据时，调用 close 函数关闭 socket，会触发 TCP 发送 RST，此时对方等到数据接收，调用 read 函数，会得到 <strong>-1</strong> 的返回值，<strong>errno</strong> 被设置为104 (<em>Connection reset by peer</em>)，如果在收到 RST 之后仍然继续调用 write 函数，会触发系统的 SIGPIPE 信号，导致程序退出（如果未处理该信号的话）。</p>
+<figure>
+<img src="/static/images/2016/20161126_read_04.png" alt="sigpipe信号" /><figcaption>sigpipe信号</figcaption>
+</figure>
+<h3 id="测试2">测试2</h3>
+<p>流程如下：</p>
+<figure>
+<img src="/static/images/2016/20161126_read_05.png" alt="测试2" /><figcaption>测试2</figcaption>
+</figure>
+<p>结果：</p>
+<p>当对方已经关闭连接时（即对方发送了 FIN），此时再调用 write 写数据，会触发对方发送一个 RST，如果忽略 SIGPIPE 信号，继续 write 数据，得到的返回值是 <strong>-1</strong>，<strong>errno</strong>被设置为32(<em>Broken pipe</em>)。</p>
+<h3 id="测试3">测试3</h3>
+<p>流程如下：</p>
+<figure>
+<img src="/static/images/2016/20161126_read_06.png" alt="测试3" /><figcaption>测试3</figcaption>
+</figure>
+<p>结果：</p>
+<p>调用 <em>setsockopt</em> 给read设置一个超时时间(<code>setsockopt(sockfd, SOL_SOCKET,SO_RCVTIMEO, &amp;ti, sizeof(ti));</code> )，超时之后，read函数返回<strong>-1</strong>，<strong>errno</strong>被设置为11(<em>Resource temporarily unavailable</em>)。</p>
+<h2 id="非阻塞模式下对read的测试">非阻塞模式下对read的测试</h2>
+<p>使用 <em>fcntl</em> 设置socket为非阻塞模式，调用 read 的结果是会立刻返回 <strong>-1</strong>，然后<strong>errno</strong>被设置为了11。</p>
+<h2 id="结论">结论</h2>
+<p><strong>read</strong> 函数返回值：</p>
+<ul>
+<li>大于0：成功读取的数据长度（Byte）；</li>
+<li>等于0：该 socket 已经关闭；</li>
+<li>等于-1：异常发生，包括但不限于以下几种：</li>
+<li>超时,errno=11；</li>
+<li>连接异常关闭（RST）,errno=104；</li>
+<li>主动关闭socket后再去 read,errno=9；</li>
+<li>非阻塞模式下的没有数据时，errno=11。</li>
+</ul>
+<p><strong>write</strong> 函数返回值：</p>
+<ul>
+<li>大于0：成功写入的数据长度（Byte）；</li>
+<li>等于0：写入长度为0；</li>
+<li>小于0：异常发生，包括但不限于以下几种：</li>
+<li>主动关闭再写数据,errno=9；</li>
+<li>连接异常关闭（RST）之后再写数据,errno=32。</li>
+</ul>
 
     <div class="ui divider"></div>
     <div class="ui small one item menu">
@@ -109,11 +137,11 @@
     <div class="ui small header">
       Committed
     </div>
-    <date>2015-07-29</date>
+    <date>2016-11-26</date>
     <div class="ui small header">
       Updated
     </div>
-    <date>2015-07-29</date>
+    <date>2016-11-26</date>
     <div class="ui small header">
       Category
     </div>
@@ -131,9 +159,23 @@
     </div>
     <div class="ui list">
       <div class="item">
-        <a href="/tags#C++">
+        <a href="/tags#Linux">
           <div class="ui label">
-            C++<sup>1</sup>
+            Linux<sup>1</sup>
+          </div>
+        </a>
+      </div>
+      <div class="item">
+        <a href="/tags#read函数">
+          <div class="ui label">
+            read函数<sup>1</sup>
+          </div>
+        </a>
+      </div>
+      <div class="item">
+        <a href="/tags#网络">
+          <div class="ui label">
+            网络<sup>2</sup>
           </div>
         </a>
       </div>
@@ -142,7 +184,7 @@
       Links
     </div>
     <div class="ui small two item menu">
-      <a class="item" title="抓取知乎每日吐槽" href="/posts/2015-07-26-zhihu-sarcasm/">Prev</a><a class="item" title="据挖掘及其应用 —— 杨强讲座" href="/posts/2016-11-05-data-mining-and-its-application/">Next</a>
+      <a class="item" title="一张图了解TCP" href="/posts/2016-11-19-tcp/">Prev</a><a class="item" title="我玩王者荣耀这九个月" href="/posts/2017-08-25-play-king-of-glory-9-months/">Next</a>
     </div>
   </aside>
 </div>
