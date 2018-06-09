@@ -82,10 +82,10 @@
               <div class="sub header">
                 2014-11-30
               </div>
-            </h2><p>偶然发现一个可以去除豆瓣广告的方法，下面先看豆瓣主页的两处广告：<br /> <img src="/static/images/201406/20141130_douban1.png" /> <img src="/static/images/201406/20141130_douban2.png" alt="豆瓣广告" /></p>
-<p>把鼠标放在广告上的时候，浏览器下面就能看到链接的地址信息，同时，如果点看网页的源码，也可以更明显看到广告加载的信息，如下图<br/> <img src="/static/images/201406/20141130_douban3.png" alt="豆瓣广告源码" /> 上面的图中都有一个 <code>http://erebor.douban.com/</code> 的网址，所以去除广告的方法就很简单了，只要把 <code>erebor.douban.com</code> 这个域名重定向到本地（即 <code>127.0.0.1</code>）就搞定<sup><a href="#fn:1" name="fnref:1">1</a></sup>。</p>
+            </h2><p>偶然发现一个可以去除豆瓣广告的方法，下面先看豆瓣主页的两处广告：<br /> <img src="/static/images/201406/20141130_douban1.png" alt="豆瓣广告" /> <img src="/static/images/201406/20141130_douban2.png" /></p>
+<p>把鼠标放在广告上的时候，浏览器下面就能看到链接的地址信息，同时，如果点看网页的源码，也可以更明显看到广告加载的信息，如下图<br/> <img src="/static/images/201406/20141130_douban3.png" alt="豆瓣广告源码" /></p>
+<p>上面的图中都有一个 <code>http://erebor.douban.com/</code> 的网址，所以去除广告的方法就很简单了，只要把 <code>erebor.douban.com</code> 这个域名重定向到本地（即 <code>127.0.0.1</code>）就搞定<sup><a href="#fn:1" name="fnref:1">1</a></sup>。</p>
 <p>在hosts的文件中加入如下代码就OK:<br/> <img src="/static/images/201406/20141130_douban4.png" alt="hosts文件" /> 这个文件的在 <em>Mac OS X</em> 系统的路径为：<code>/private/etc/hosts</code>, windows系统也在etc目录下。</p>
-<p>2014.11.30 10:58</p>
 
             <div class="ui small basic button">
               <a href="/posts/2014-11-30-prevent-douban-ad/">Read More…</a>

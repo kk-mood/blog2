@@ -41,8 +41,9 @@
     <published>2014-11-30T12:26:17Z</published>
     <updated>2014-11-30T12:26:17Z</updated>
     <link rel="alternate" href="http://blog2.karottc.com/posts/2014-11-30-prevent-douban-ad/"/>
-    <content type="html">&lt;p&gt;偶然发现一个可以去除豆瓣广告的方法，下面先看豆瓣主页的两处广告：&lt;br /&gt; &lt;img src="/static/images/201406/20141130_douban1.png" /&gt; &lt;img src="/static/images/201406/20141130_douban2.png" alt="豆瓣广告" /&gt;&lt;/p&gt;
-&lt;p&gt;把鼠标放在广告上的时候，浏览器下面就能看到链接的地址信息，同时，如果点看网页的源码，也可以更明显看到广告加载的信息，如下图&lt;br/&gt; &lt;img src="/static/images/201406/20141130_douban3.png" alt="豆瓣广告源码" /&gt; 上面的图中都有一个 &lt;code&gt;http://erebor.douban.com/&lt;/code&gt; 的网址，所以去除广告的方法就很简单了，只要把 &lt;code&gt;erebor.douban.com&lt;/code&gt; 这个域名重定向到本地（即 &lt;code&gt;127.0.0.1&lt;/code&gt;）就搞定&lt;sup&gt;&lt;a href="#fn:1" name="fnref:1"&gt;1&lt;/a&gt;&lt;/sup&gt;。&lt;/p&gt;
+    <content type="html">&lt;p&gt;偶然发现一个可以去除豆瓣广告的方法，下面先看豆瓣主页的两处广告：&lt;br /&gt; &lt;img src="/static/images/201406/20141130_douban1.png" alt="豆瓣广告" /&gt; &lt;img src="/static/images/201406/20141130_douban2.png" /&gt;&lt;/p&gt;
+&lt;p&gt;把鼠标放在广告上的时候，浏览器下面就能看到链接的地址信息，同时，如果点看网页的源码，也可以更明显看到广告加载的信息，如下图&lt;br/&gt; &lt;img src="/static/images/201406/20141130_douban3.png" alt="豆瓣广告源码" /&gt;&lt;/p&gt;
+&lt;p&gt;上面的图中都有一个 &lt;code&gt;http://erebor.douban.com/&lt;/code&gt; 的网址，所以去除广告的方法就很简单了，只要把 &lt;code&gt;erebor.douban.com&lt;/code&gt; 这个域名重定向到本地（即 &lt;code&gt;127.0.0.1&lt;/code&gt;）就搞定&lt;sup&gt;&lt;a href="#fn:1" name="fnref:1"&gt;1&lt;/a&gt;&lt;/sup&gt;。&lt;/p&gt;
 &lt;p&gt;在hosts的文件中加入如下代码就OK:&lt;br/&gt; &lt;img src="/static/images/201406/20141130_douban4.png" alt="hosts文件" /&gt; 这个文件的在 &lt;em&gt;Mac OS X&lt;/em&gt; 系统的路径为：&lt;code&gt;/private/etc/hosts&lt;/code&gt;, windows系统也在etc目录下。&lt;/p&gt;
 &lt;p&gt;2014.11.30 10:58&lt;/p&gt;
 &lt;h4 id="footnotes"&gt;Footnotes:&lt;/h4&gt;
