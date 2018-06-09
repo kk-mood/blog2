@@ -115,7 +115,7 @@
     <link rel="alternate" href="http://blog2.karottc.com/posts/2016-11-19-tcp/"/>
     <content type="html">&lt;p&gt;从下面一张图了解TCP：&lt;/p&gt;
 &lt;figure&gt;
-&lt;img src="/images/2016/TCP.svg" alt="TCP" /&gt;&lt;figcaption&gt;TCP&lt;/figcaption&gt;
+&lt;img src="/static/images/2016/TCP.svg" alt="TCP" /&gt;&lt;figcaption&gt;TCP&lt;/figcaption&gt;
 &lt;/figure&gt;
 </content>
   </entry>
