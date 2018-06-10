@@ -10,6 +10,90 @@
     <uri>http://blog2.karottc.com</uri>
   </author>
   <entry>
+    <id>tag:blog2.karottc.com,2018-06-08:/posts/2018-06-08-the-blogs-i-read-in-those-years/</id>
+    <title type="html">那些年我读过的Blog（Ⅰ）</title>
+    <published>2018-06-08T12:26:17Z</published>
+    <updated>2016-06-10T12:26:17Z</updated>
+    <link rel="alternate" href="http://blog2.karottc.com/posts/2018-06-08-the-blogs-i-read-in-those-years/"/>
+    <content type="html">&lt;h2 id="序"&gt;序&lt;/h2&gt;
+&lt;p&gt;近期发现自己已经很久很久没有写过文章，其中包括公开的和非公开的Blog，于是自己去翻了以前很多关注的人的Blog，发现也已经有很大一部分没有更新了，遂有了本文，梳理一下自己那些年关注过并且现在已经不再更新的Blog。&lt;/p&gt;
+&lt;p&gt;我是从2009年下半年&lt;sup&gt;1&lt;/sup&gt;开始看Blog的&lt;sup&gt;&lt;a href="#fn:1" name="fnref:1"&gt;1&lt;/a&gt;&lt;/sup&gt;，一直保持较高频率的时间看了4年，是这些Blog的文章伴随了我的成长，一路走来。&lt;/p&gt;
+&lt;h2 id="技术类blog"&gt;技术类Blog&lt;/h2&gt;
+&lt;h3 id="刘未鹏"&gt;刘未鹏&lt;/h3&gt;
+&lt;p&gt;在我这里，刘未鹏是对我影响最大的，他的文章，涵盖了技术（计算机系统、算法、编程、机器学习）、心智思维、数学这些领域，常常有跨领域的交叉解释。读他的文章，对我的心智和思维提升很多。&lt;/p&gt;
+&lt;p&gt;他在2009年毕业之前在&lt;a href="https://blog.csdn.net/pongba/"&gt;CSDN写文章&lt;/a&gt;，后面申请了&lt;a href="http://mindhacks.cn/"&gt;独立域名&lt;/a&gt;，就换了新的地方继续写，2012年之前，Blog的更新还是比较多的，在这之后，就很少很少写了，在这之后关注的领域也更多在了育儿方面，猜测是跟自己小孩有些关系吧。&lt;/p&gt;
+&lt;p&gt;他的个人经历，在南大读了7年（本科+硕士），然后去微软亚研，然后去西雅图微软总部，现在估计在西雅图晒太阳逗女儿玩吧。&lt;/p&gt;
+&lt;p&gt;刘未鹏的Blog其实现在还在更新，只是非常慢了，大概1-2年一篇，所以我也把他暂列为了不更新Blog的作者List里面。&lt;/p&gt;
+&lt;p&gt;下面附上曾经的和现在的Blog地址：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Blog：&lt;a href="http://mindhacks.cn/" class="uri"&gt;http://mindhacks.cn/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;CSDN：&lt;a href="http://blog.csdn.net/pongba/" class="uri"&gt;http://blog.csdn.net/pongba/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;豆瓣：&lt;a href="http://book.douban.com/people/pongba/" class="uri"&gt;http://book.douban.com/people/pongba/&lt;/a&gt; &lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="其他"&gt;其他&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;徐宥：&lt;a href="http://blog.youxu.info/" class="uri"&gt;http://blog.youxu.info/&lt;/a&gt;，刘未鹏的好友，Blog在2011，2012之后更新频率大幅下降；&lt;/li&gt;
+&lt;li&gt;顾森：http://www.matrix67.com/blog/，他不是数学科班的，但是文章大多是数学相关的，看了提高对数学的兴趣，也是获益不少；&lt;/li&gt;
+&lt;li&gt;万维钢：https://www.geekonomics10000.com/，提升思维和对世界的认知，前两年开始在《得到》写付费专栏之后，Blog更新频率降了非常多；&lt;/li&gt;
+&lt;li&gt;fudan_abc：https://blog.csdn.net/fudan_abc，这个Blog是复旦的三个人在维护，主要是Linux内核相关的，风格比较风趣，2012年之后没有再更新了；&lt;/li&gt;
+&lt;li&gt;g9：https://blog.csdn.net/g9yuayon，和徐宥他们是好友，也是从徐宥那里知道他的blog，不更新好多年了，但是还是可以把历史文章一看；&lt;/li&gt;
+&lt;li&gt;July：https://blog.csdn.net/v_JULY_v，他的文章对付面试挺有用的，所以后面本人也创业做在线教育、培训相关的了；&lt;/li&gt;
+&lt;li&gt;陈硕：https://blog.csdn.net/Solstice，Muduo网络库的作者，Blog主要是Linux、网络的偏多；&lt;/li&gt;
+&lt;li&gt;吴翰清：&lt;a href="http://taosay.net/" class="uri"&gt;http://taosay.net/&lt;/a&gt;，人称道哥，网络安全的，Blog不更新很多年了，后面改写微信公众号了，先是阿里安全专家，后创业，然后公司又被阿里收购，被阿里收购之后，微信公众号也没有再更新过了。&lt;/li&gt;
+&lt;li&gt;池建强：http://www.cnblogs.com/Michael282694/，后面写微信公众号之后，把这个Blog的文章写清空了，这个地址现在没有任何东西；&lt;/li&gt;
+&lt;li&gt;张丹：&lt;a href="http://blog.fens.me/about/" class="uri"&gt;http://blog.fens.me/about/&lt;/a&gt;，10+年工作经验，从程序员做到构架师，再转型为数据科学家。这个地址现在已经打不开了，不知道是Blog迁移了，还是不维护了；&lt;/li&gt;
+&lt;li&gt;https://blog.csdn.net/phphot，当年CSDN排名第一的Blog，2009年之后没有更新了；&lt;/li&gt;
+&lt;li&gt;王远轩：&lt;a href="http://blog.yxwang.me/" class="uri"&gt;http://blog.yxwang.me/&lt;/a&gt;，2013 复旦研究生，2013年之后很少更新Blog了；&lt;/li&gt;
+&lt;li&gt;Lucida：http://www.cnblogs.com/figure9/，&lt;a href="http://zh.lucida.me/" class="uri"&gt;http://zh.lucida.me/&lt;/a&gt;，2013毕业在Google工作三年，2017年初加入Facebook，2016年之后机会很少更新Blog，据他自己描述，后面也不会更新高质量的文章了，太耗费精力了，没有那么多时间。&lt;em&gt;他的文章有很多关于程序员书单，学习路径的书&lt;/em&gt;；&lt;/li&gt;
+&lt;li&gt;郭佳宝：https://www.byvoid.com/，清华计算机，中学就开始NOIP比赛，刚上大一就写了一本书《&lt;a href="https://www.byvoid.com/zht/project/node"&gt;Node.js開發指南&lt;/a&gt;》毕业之后主要是写全世界旅游的游记，之前有很多好的技术文章；&lt;/li&gt;
+&lt;li&gt;林爽：https://linshuang.info/，郭佳宝的好友，目前Blog已不能访问；&lt;/li&gt;
+&lt;li&gt;张佳伟：http://ghosertblog.github.io/，cmd markdown在线编辑器作者；&lt;/li&gt;
+&lt;li&gt;张亮：https://blog.csdn.net/sparkliang，《Libevent源码剖析》作者，2016年之后Blog就没有再更新了；&lt;/li&gt;
+&lt;li&gt;吴垠：https://blog.csdn.net/wooin，2008年之后就没有再更新了，他的VIM配置相关的文章，让我受益多年，尤其是刚入行的时候帮助很大；&lt;/li&gt;
+&lt;li&gt;http://blog.sina.com.cn/s/articlelist_1664227735_0_1.html，淘宝的故事和技术；&lt;/li&gt;
+&lt;li&gt;王飞：&lt;a href="http://ibuick.com/" class="uri"&gt;http://ibuick.com/&lt;/a&gt;，一名程序员，也是一名OS X / iOS科技文章作者，大学英语专业，后来因JAVA进入IT界。开发的软件大都是OSX平台的，比如desktopforecasting、icheck等。著有《OSX高手进阶》，参与创建APP分享站疯狂盒子。言辞犀利，率性而为，自称职业果粉，坚决的抵制一切盗版，算是程序员中的另类；&lt;/li&gt;
+&lt;li&gt;陈梓涵：http://www.cppblog.com/vczh，网名叫 &lt;strong&gt;vczh&lt;/strong&gt;，目前在微软西雅图，C++领域大牛，github上有个人作品；&lt;/li&gt;
+&lt;li&gt;何咏：http://www.csyong.net/index.php，vczh的好友；&lt;/li&gt;
+&lt;li&gt;余昊：http://www.luanxiang.org/blog/，近两年，主要在写微信公众号了，Blog不怎么更新了；&lt;/li&gt;
+&lt;li&gt;kedebug：http://kedebug.me/，文章被删掉不少；&lt;/li&gt;
+&lt;li&gt;李华明：http://www.himigame.com/，2013年左右，移动开发领域红极一时的Blog，不过我做后端的，感觉这个Blog不是很有意义；&lt;/li&gt;
+&lt;li&gt;http://www.cnblogs.com/Dahaka，隔壁班的大牛，接触计算机很早，毕业之后几乎不写Blog了；&lt;/li&gt;
+&lt;li&gt;kongfy：http://blog.kongfy.com/，南大本科+研究生，做分布式数据库相关开发，两年没有更新Blog了，以前的文章质量较高；&lt;/li&gt;
+&lt;li&gt;http://www.blogjava.net/Hafeyang/，前端开发的Blog，2012年之后没有更新了；&lt;/li&gt;
+&lt;li&gt;http://blog.wysaid.org/，有很多图形图像处理相关的实用技能；&lt;/li&gt;
+&lt;li&gt;其他几个：&lt;/li&gt;
+&lt;li&gt;http://oilbeater.com/&lt;/li&gt;
+&lt;li&gt;http://www.cnblogs.com/xiaxi/&lt;/li&gt;
+&lt;li&gt;http://blog.martianz.cn/&lt;/li&gt;
+&lt;li&gt;https://www.yangzhiping.com/tech/&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="非技术类blog"&gt;非技术类Blog&lt;/h2&gt;
+&lt;h3 id="绝影"&gt;绝影&lt;/h3&gt;
+&lt;p&gt;在我还对程序世界一无所知的时候，他通过故事给了我认知。他是《&lt;a href="https://book.douban.com/subject/3267945/"&gt;疯狂程序员&lt;/a&gt;》的作者，一直在CSDN上连载这个小说，可惜现在他的CSDN主页已经被封了。&lt;/p&gt;
+&lt;p&gt;四川人，常搞一些软件破解类的事。&lt;/p&gt;
+&lt;p&gt;CSDN主页：&lt;a href="http://blog.csdn.net/hitetoshi" class="uri"&gt;http://blog.csdn.net/hitetoshi&lt;/a&gt;，已经被封了。&lt;/p&gt;
+&lt;h3 id="其他-1"&gt;其他&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;norains：https://blog.csdn.net/norains，小说《&lt;a href="https://book.douban.com/subject/24696924/"&gt;一个程序员的奋斗史&lt;/a&gt;》的作者，主页搞WinCE相关开发，小说连载完成后，再也没有更新了；&lt;/li&gt;
+&lt;li&gt;王信文：http://verypig.com/，创办的莉莉丝，手游《刀塔传奇》火了之后，Blog再也没有更新了；&lt;/li&gt;
+&lt;li&gt;陈小花：http://chenxiaohua.net/，王信文的老婆，Blog也几年没更新，偶尔写篇文章，当然现在早就转移到微信公众号写文章了，婚前的文章挺好的，婚后的文章，主题变了，看得少了；&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="尾"&gt;尾&lt;/h2&gt;
+&lt;p&gt;上面列的都是曾经我看过优质并且更新的Blog，如今都不怎么更新了，还有一些遗漏的，不过不想花更多的精力去补全了。很多人不写了，大概有如下几点原因：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;年龄渐增，精力有限，没有那么多时间写出高质量的文章了，索性不写了；&lt;/li&gt;
+&lt;li&gt;转移到别的平台去了：&lt;/li&gt;
+&lt;li&gt;免费的微信公众号；&lt;/li&gt;
+&lt;li&gt;付费的各种专栏，《得到》，《极客时间》等等；&lt;/li&gt;
+&lt;li&gt;觉得写文章花时间和精力，收益小，不想写了。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;然而我看了不少文章，自己却不爱写，可能还是输入的不够，写不出来吧。&lt;/p&gt;
+&lt;p&gt;下一篇文章我会写写我看过的Blog，目前还在更新的。&lt;/p&gt;
+&lt;h4 id="footnotes"&gt;Footnotes:&lt;/h4&gt;
+&lt;p&gt;&lt;sup&gt;&lt;a href="#fnref:1" name="fn:1"&gt;1&lt;/a&gt;&lt;/sup&gt; 因为这个时间我刚刚踏入大学的校门，大学之前几乎没有网络，对Blog也是一无所知。&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
     <id>tag:blog2.karottc.com,2017-08-25:/posts/2017-08-25-play-king-of-glory-9-months/</id>
     <title type="html">我玩王者荣耀这九个月</title>
     <published>2017-08-25T12:26:17Z</published>
@@ -364,51 +448,6 @@
 &lt;p&gt;2014.11.30 10:58&lt;/p&gt;
 &lt;h4 id="footnotes"&gt;Footnotes:&lt;/h4&gt;
 &lt;p&gt;&lt;sup&gt;&lt;a href="#fnref:1" name="fn:1"&gt;1&lt;/a&gt;&lt;/sup&gt; 从网页源码看来，豆瓣的前端不错，至少代码看起来挺整齐的，不像其他一些网站，那代码简直就不是人看的。&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <id>tag:blog2.karottc.com,2014-09-21:/posts/2014-09-21-math/</id>
-    <title type="html">测试数学公式</title>
-    <published>2014-09-21T12:26:17Z</published>
-    <updated>2014-09-21T12:26:17Z</updated>
-    <link rel="alternate" href="http://blog2.karottc.com/posts/2014-09-21-math/"/>
-    <content type="html">&lt;h2 id="公式"&gt;公式&lt;/h2&gt;
-&lt;ol type="1"&gt;
-&lt;li&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;&lt;span class="math display"&gt;\[\frac{3+x}{5}\]&lt;/span&gt;&lt;/p&gt;
-&lt;hr /&gt;
-&lt;ol start="2" type="1"&gt;
-&lt;li&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;&lt;span class="math display"&gt;\[f(x)=x^2-1\]&lt;/span&gt;&lt;/p&gt;
-\(f(x)=x^2-1\)
-&lt;hr /&gt;
-&lt;ol start="3" type="1"&gt;
-&lt;li&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;&lt;span class="math display"&gt;\[\sqrt[3]{x^4-3x+1}\]&lt;/span&gt;&lt;/p&gt;
-\(\)
-&lt;hr /&gt;
-&lt;ol start="4" type="1"&gt;
-&lt;li&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;&lt;span class="math display"&gt;\[\sum\limits_{i= 1}^\infty x_i\]&lt;/span&gt;&lt;/p&gt;
-&lt;hr /&gt;
-&lt;ol start="5" type="1"&gt;
-&lt;li&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;&lt;span class="math display"&gt;\[\cos\pi=-1  and  \alpha\]&lt;/span&gt;.&lt;/p&gt;
-&lt;p&gt;\(=-1\) and \(\)&lt;/p&gt;
-&lt;p&gt;asdfasdfsdf: \(ax^2+bx+c=0\) SDFDFASFsfsaf&lt;/p&gt;
-&lt;p&gt;原来这个 \(^{-  } + 1 = 0\) 叫欧拉公式，今天才知道 -_-|||。&lt;/p&gt;
-&lt;p&gt;原来这个 &lt;span class="math display"&gt;\[\mathrm{e}^{- \mathrm{i} \pi} + 1 = 0\\\]&lt;/span&gt; 叫欧拉公式，今天才知道 -_-|||。&lt;/p&gt;
-&lt;p&gt;原来这个 \(&lt;span class="math display"&gt;\[\mathrm{e}^{- \mathrm{i} \pi} + 1 = 0\\\]&lt;/span&gt;) 叫欧拉公式，今天才知道 -_-|||。&lt;/p&gt;
-&lt;hr /&gt;
-&lt;ol start="6" type="1"&gt;
-&lt;li&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;&lt;span class="math display"&gt;\[x_{1,2} = \frac{-b \pm \sqrt{b^2-4ac}}{2b}.\]&lt;/span&gt;&lt;/p&gt;
 </content>
   </entry>
 </feed>
