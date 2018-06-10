@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <id>http://blog2.karottc.com/</id>
   <title>杂思未济</title>
-  <updated>2017-05-25T12:26:17Z</updated>
+  <updated>2018-06-10T12:26:17Z</updated>
   <link rel="alternate" href="http://blog2.karottc.com/"/>
   <link rel="self" href="http://blog2.karottc.com/atom.xml"/>
   <author>
@@ -13,11 +13,11 @@
     <id>tag:blog2.karottc.com,2018-06-08:/posts/2018-06-08-the-blogs-i-read-in-those-years/</id>
     <title type="html">那些年我读过的Blog（Ⅰ）</title>
     <published>2018-06-08T12:26:17Z</published>
-    <updated>2016-06-10T12:26:17Z</updated>
+    <updated>2018-06-10T12:26:17Z</updated>
     <link rel="alternate" href="http://blog2.karottc.com/posts/2018-06-08-the-blogs-i-read-in-those-years/"/>
     <content type="html">&lt;h2 id="序"&gt;序&lt;/h2&gt;
 &lt;p&gt;近期发现自己已经很久很久没有写过文章，其中包括公开的和非公开的Blog，于是自己去翻了以前很多关注的人的Blog，发现也已经有很大一部分没有更新了，遂有了本文，梳理一下自己那些年关注过并且现在已经不再更新的Blog。&lt;/p&gt;
-&lt;p&gt;我是从2009年下半年&lt;sup&gt;1&lt;/sup&gt;开始看Blog的&lt;sup&gt;&lt;a href="#fn:1" name="fnref:1"&gt;1&lt;/a&gt;&lt;/sup&gt;，一直保持较高频率的时间看了4年，是这些Blog的文章伴随了我的成长，一路走来。&lt;/p&gt;
+&lt;p&gt;我是从2009年下半年开始看Blog的&lt;sup&gt;&lt;a href="#fn:1" name="fnref:1"&gt;1&lt;/a&gt;&lt;/sup&gt;，一直保持较高频率的时间看了4年，是这些Blog的文章伴随了我的成长，一路走来。&lt;/p&gt;
 &lt;h2 id="技术类blog"&gt;技术类Blog&lt;/h2&gt;
 &lt;h3 id="刘未鹏"&gt;刘未鹏&lt;/h3&gt;
 &lt;p&gt;在我这里，刘未鹏是对我影响最大的，他的文章，涵盖了技术（计算机系统、算法、编程、机器学习）、心智思维、数学这些领域，常常有跨领域的交叉解释。读他的文章，对我的心智和思维提升很多。&lt;/p&gt;
@@ -33,40 +33,40 @@
 &lt;h3 id="其他"&gt;其他&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;徐宥：&lt;a href="http://blog.youxu.info/" class="uri"&gt;http://blog.youxu.info/&lt;/a&gt;，刘未鹏的好友，Blog在2011，2012之后更新频率大幅下降；&lt;/li&gt;
-&lt;li&gt;顾森：http://www.matrix67.com/blog/，他不是数学科班的，但是文章大多是数学相关的，看了提高对数学的兴趣，也是获益不少；&lt;/li&gt;
-&lt;li&gt;万维钢：https://www.geekonomics10000.com/，提升思维和对世界的认知，前两年开始在《得到》写付费专栏之后，Blog更新频率降了非常多；&lt;/li&gt;
-&lt;li&gt;fudan_abc：https://blog.csdn.net/fudan_abc，这个Blog是复旦的三个人在维护，主要是Linux内核相关的，风格比较风趣，2012年之后没有再更新了；&lt;/li&gt;
-&lt;li&gt;g9：https://blog.csdn.net/g9yuayon，和徐宥他们是好友，也是从徐宥那里知道他的blog，不更新好多年了，但是还是可以把历史文章一看；&lt;/li&gt;
-&lt;li&gt;July：https://blog.csdn.net/v_JULY_v，他的文章对付面试挺有用的，所以后面本人也创业做在线教育、培训相关的了；&lt;/li&gt;
-&lt;li&gt;陈硕：https://blog.csdn.net/Solstice，Muduo网络库的作者，Blog主要是Linux、网络的偏多；&lt;/li&gt;
+&lt;li&gt;顾森：&lt;a href="http://www.matrix67.com/blog/" class="uri"&gt;http://www.matrix67.com/blog/&lt;/a&gt;，他不是数学科班的，但是文章大多是数学相关的，看了提高对数学的兴趣，也是获益不少；&lt;/li&gt;
+&lt;li&gt;万维钢：&lt;a href="https://www.geekonomics10000.com/" class="uri"&gt;https://www.geekonomics10000.com/&lt;/a&gt;，提升思维和对世界的认知，前两年开始在《得到》写付费专栏之后，Blog更新频率降了非常多；&lt;/li&gt;
+&lt;li&gt;fudan_abc：&lt;a href="https://blog.csdn.net/fudan_abc" class="uri"&gt;https://blog.csdn.net/fudan_abc&lt;/a&gt;，这个Blog是复旦的三个人在维护，主要是Linux内核相关的，风格比较风趣，2012年之后没有再更新了；&lt;/li&gt;
+&lt;li&gt;g9：&lt;a href="https://blog.csdn.net/g9yuayon" class="uri"&gt;https://blog.csdn.net/g9yuayon&lt;/a&gt;，和徐宥他们是好友，也是从徐宥那里知道他的blog，不更新好多年了，但是还是可以把历史文章一看；&lt;/li&gt;
+&lt;li&gt;July：&lt;a href="https://blog.csdn.net/v_JULY_v" class="uri"&gt;https://blog.csdn.net/v_JULY_v&lt;/a&gt;，他的文章对付面试挺有用的，所以后面本人也创业做在线教育、培训相关的了；&lt;/li&gt;
+&lt;li&gt;陈硕：&lt;a href="https://blog.csdn.net/Solstice" class="uri"&gt;https://blog.csdn.net/Solstice&lt;/a&gt;，Muduo网络库的作者，Blog主要是Linux、网络的偏多；&lt;/li&gt;
 &lt;li&gt;吴翰清：&lt;a href="http://taosay.net/" class="uri"&gt;http://taosay.net/&lt;/a&gt;，人称道哥，网络安全的，Blog不更新很多年了，后面改写微信公众号了，先是阿里安全专家，后创业，然后公司又被阿里收购，被阿里收购之后，微信公众号也没有再更新过了。&lt;/li&gt;
-&lt;li&gt;池建强：http://www.cnblogs.com/Michael282694/，后面写微信公众号之后，把这个Blog的文章写清空了，这个地址现在没有任何东西；&lt;/li&gt;
+&lt;li&gt;池建强：&lt;a href="http://www.cnblogs.com/Michael282694/" class="uri"&gt;http://www.cnblogs.com/Michael282694/&lt;/a&gt;，后面写微信公众号之后，把这个Blog的文章写清空了，这个地址现在没有任何东西；&lt;/li&gt;
 &lt;li&gt;张丹：&lt;a href="http://blog.fens.me/about/" class="uri"&gt;http://blog.fens.me/about/&lt;/a&gt;，10+年工作经验，从程序员做到构架师，再转型为数据科学家。这个地址现在已经打不开了，不知道是Blog迁移了，还是不维护了；&lt;/li&gt;
-&lt;li&gt;https://blog.csdn.net/phphot，当年CSDN排名第一的Blog，2009年之后没有更新了；&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://blog.csdn.net/phphot" class="uri"&gt;https://blog.csdn.net/phphot&lt;/a&gt;，当年CSDN排名第一的Blog，2009年之后没有更新了；&lt;/li&gt;
 &lt;li&gt;王远轩：&lt;a href="http://blog.yxwang.me/" class="uri"&gt;http://blog.yxwang.me/&lt;/a&gt;，2013 复旦研究生，2013年之后很少更新Blog了；&lt;/li&gt;
-&lt;li&gt;Lucida：http://www.cnblogs.com/figure9/，&lt;a href="http://zh.lucida.me/" class="uri"&gt;http://zh.lucida.me/&lt;/a&gt;，2013毕业在Google工作三年，2017年初加入Facebook，2016年之后机会很少更新Blog，据他自己描述，后面也不会更新高质量的文章了，太耗费精力了，没有那么多时间。&lt;em&gt;他的文章有很多关于程序员书单，学习路径的书&lt;/em&gt;；&lt;/li&gt;
-&lt;li&gt;郭佳宝：https://www.byvoid.com/，清华计算机，中学就开始NOIP比赛，刚上大一就写了一本书《&lt;a href="https://www.byvoid.com/zht/project/node"&gt;Node.js開發指南&lt;/a&gt;》毕业之后主要是写全世界旅游的游记，之前有很多好的技术文章；&lt;/li&gt;
-&lt;li&gt;林爽：https://linshuang.info/，郭佳宝的好友，目前Blog已不能访问；&lt;/li&gt;
-&lt;li&gt;张佳伟：http://ghosertblog.github.io/，cmd markdown在线编辑器作者；&lt;/li&gt;
-&lt;li&gt;张亮：https://blog.csdn.net/sparkliang，《Libevent源码剖析》作者，2016年之后Blog就没有再更新了；&lt;/li&gt;
-&lt;li&gt;吴垠：https://blog.csdn.net/wooin，2008年之后就没有再更新了，他的VIM配置相关的文章，让我受益多年，尤其是刚入行的时候帮助很大；&lt;/li&gt;
-&lt;li&gt;http://blog.sina.com.cn/s/articlelist_1664227735_0_1.html，淘宝的故事和技术；&lt;/li&gt;
+&lt;li&gt;Lucida：&lt;a href="http://www.cnblogs.com/figure9/" class="uri"&gt;http://www.cnblogs.com/figure9/&lt;/a&gt;，&lt;a href="http://zh.lucida.me/" class="uri"&gt;http://zh.lucida.me/&lt;/a&gt;，2013毕业在Google工作三年，2017年初加入Facebook，2016年之后机会很少更新Blog，据他自己描述，后面也不会更新高质量的文章了，太耗费精力了，没有那么多时间。&lt;em&gt;他的文章有很多关于程序员书单，学习路径的书&lt;/em&gt;；&lt;/li&gt;
+&lt;li&gt;郭佳宝：&lt;a href="https://www.byvoid.com/" class="uri"&gt;https://www.byvoid.com/&lt;/a&gt;，清华计算机，中学就开始NOIP比赛，刚上大一就写了一本书《&lt;a href="https://www.byvoid.com/zht/project/node"&gt;Node.js開發指南&lt;/a&gt;》毕业之后主要是写全世界旅游的游记，之前有很多好的技术文章；&lt;/li&gt;
+&lt;li&gt;林爽：&lt;a href="https://linshuang.info/" class="uri"&gt;https://linshuang.info/&lt;/a&gt;，郭佳宝的好友，目前Blog已不能访问；&lt;/li&gt;
+&lt;li&gt;张佳伟：&lt;a href="http://ghosertblog.github.io/" class="uri"&gt;http://ghosertblog.github.io/&lt;/a&gt;，cmd markdown在线编辑器作者；&lt;/li&gt;
+&lt;li&gt;张亮：&lt;a href="https://blog.csdn.net/sparkliang" class="uri"&gt;https://blog.csdn.net/sparkliang&lt;/a&gt;，《Libevent源码剖析》作者，2016年之后Blog就没有再更新了；&lt;/li&gt;
+&lt;li&gt;吴垠：&lt;a href="https://blog.csdn.net/wooin" class="uri"&gt;https://blog.csdn.net/wooin&lt;/a&gt;，2008年之后就没有再更新了，他的VIM配置相关的文章，让我受益多年，尤其是刚入行的时候帮助很大；&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://blog.sina.com.cn/s/articlelist_1664227735_0_1.html" class="uri"&gt;http://blog.sina.com.cn/s/articlelist_1664227735_0_1.html&lt;/a&gt;，淘宝的故事和技术；&lt;/li&gt;
 &lt;li&gt;王飞：&lt;a href="http://ibuick.com/" class="uri"&gt;http://ibuick.com/&lt;/a&gt;，一名程序员，也是一名OS X / iOS科技文章作者，大学英语专业，后来因JAVA进入IT界。开发的软件大都是OSX平台的，比如desktopforecasting、icheck等。著有《OSX高手进阶》，参与创建APP分享站疯狂盒子。言辞犀利，率性而为，自称职业果粉，坚决的抵制一切盗版，算是程序员中的另类；&lt;/li&gt;
-&lt;li&gt;陈梓涵：http://www.cppblog.com/vczh，网名叫 &lt;strong&gt;vczh&lt;/strong&gt;，目前在微软西雅图，C++领域大牛，github上有个人作品；&lt;/li&gt;
-&lt;li&gt;何咏：http://www.csyong.net/index.php，vczh的好友；&lt;/li&gt;
-&lt;li&gt;余昊：http://www.luanxiang.org/blog/，近两年，主要在写微信公众号了，Blog不怎么更新了；&lt;/li&gt;
-&lt;li&gt;kedebug：http://kedebug.me/，文章被删掉不少；&lt;/li&gt;
-&lt;li&gt;李华明：http://www.himigame.com/，2013年左右，移动开发领域红极一时的Blog，不过我做后端的，感觉这个Blog不是很有意义；&lt;/li&gt;
-&lt;li&gt;http://www.cnblogs.com/Dahaka，隔壁班的大牛，接触计算机很早，毕业之后几乎不写Blog了；&lt;/li&gt;
-&lt;li&gt;kongfy：http://blog.kongfy.com/，南大本科+研究生，做分布式数据库相关开发，两年没有更新Blog了，以前的文章质量较高；&lt;/li&gt;
-&lt;li&gt;http://www.blogjava.net/Hafeyang/，前端开发的Blog，2012年之后没有更新了；&lt;/li&gt;
-&lt;li&gt;http://blog.wysaid.org/，有很多图形图像处理相关的实用技能；&lt;/li&gt;
+&lt;li&gt;陈梓涵：&lt;a href="http://www.cppblog.com/vczh" class="uri"&gt;http://www.cppblog.com/vczh&lt;/a&gt;，网名叫 &lt;strong&gt;vczh&lt;/strong&gt;，目前在微软西雅图，C++领域大牛，github上有个人作品；&lt;/li&gt;
+&lt;li&gt;何咏：&lt;a href="http://www.csyong.net/index.php" class="uri"&gt;http://www.csyong.net/index.php&lt;/a&gt;，vczh的好友；&lt;/li&gt;
+&lt;li&gt;余昊：&lt;a href="http://www.luanxiang.org/blog/" class="uri"&gt;http://www.luanxiang.org/blog/&lt;/a&gt;，近两年，主要在写微信公众号了，Blog不怎么更新了；&lt;/li&gt;
+&lt;li&gt;kedebug：&lt;a href="http://kedebug.me/" class="uri"&gt;http://kedebug.me/&lt;/a&gt;，文章被删掉不少；&lt;/li&gt;
+&lt;li&gt;李华明：&lt;a href="http://www.himigame.com/" class="uri"&gt;http://www.himigame.com/&lt;/a&gt;，2013年左右，移动开发领域红极一时的Blog，不过我做后端的，感觉这个Blog不是很有意义；&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.cnblogs.com/Dahaka" class="uri"&gt;http://www.cnblogs.com/Dahaka&lt;/a&gt;，隔壁班的大牛，接触计算机很早，毕业之后几乎不写Blog了；&lt;/li&gt;
+&lt;li&gt;kongfy：&lt;a href="http://blog.kongfy.com/" class="uri"&gt;http://blog.kongfy.com/&lt;/a&gt;，南大本科+研究生，做分布式数据库相关开发，两年没有更新Blog了，以前的文章质量较高；&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.blogjava.net/Hafeyang/" class="uri"&gt;http://www.blogjava.net/Hafeyang/&lt;/a&gt;，前端开发的Blog，2012年之后没有更新了；&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://blog.wysaid.org/" class="uri"&gt;http://blog.wysaid.org/&lt;/a&gt;，有很多图形图像处理相关的实用技能；&lt;/li&gt;
 &lt;li&gt;其他几个：
 &lt;ul&gt;
-&lt;li&gt;http://oilbeater.com/&lt;/li&gt;
-&lt;li&gt;http://www.cnblogs.com/xiaxi/&lt;/li&gt;
-&lt;li&gt;http://blog.martianz.cn/&lt;/li&gt;
-&lt;li&gt;https://www.yangzhiping.com/tech/&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://oilbeater.com/" class="uri"&gt;http://oilbeater.com/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.cnblogs.com/xiaxi/" class="uri"&gt;http://www.cnblogs.com/xiaxi/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://blog.martianz.cn/" class="uri"&gt;http://blog.martianz.cn/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.yangzhiping.com/tech/" class="uri"&gt;https://www.yangzhiping.com/tech/&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id="非技术类blog"&gt;非技术类Blog&lt;/h2&gt;
@@ -76,9 +76,9 @@
 &lt;p&gt;CSDN主页：&lt;a href="http://blog.csdn.net/hitetoshi" class="uri"&gt;http://blog.csdn.net/hitetoshi&lt;/a&gt;，已经被封了。&lt;/p&gt;
 &lt;h3 id="其他-1"&gt;其他&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;norains：https://blog.csdn.net/norains，小说《&lt;a href="https://book.douban.com/subject/24696924/"&gt;一个程序员的奋斗史&lt;/a&gt;》的作者，主页搞WinCE相关开发，小说连载完成后，再也没有更新了；&lt;/li&gt;
-&lt;li&gt;王信文：http://verypig.com/，创办的莉莉丝，手游《刀塔传奇》火了之后，Blog再也没有更新了；&lt;/li&gt;
-&lt;li&gt;陈小花：http://chenxiaohua.net/，王信文的老婆，Blog也几年没更新，偶尔写篇文章，当然现在早就转移到微信公众号写文章了，婚前的文章挺好的，婚后的文章，主题变了，看得少了；&lt;/li&gt;
+&lt;li&gt;norains：&lt;a href="https://blog.csdn.net/norains" class="uri"&gt;https://blog.csdn.net/norains&lt;/a&gt;，小说《&lt;a href="https://book.douban.com/subject/24696924/"&gt;一个程序员的奋斗史&lt;/a&gt;》的作者，主要搞WinCE相关开发，小说连载完成后，再也没有更新了；&lt;/li&gt;
+&lt;li&gt;王信文：&lt;a href="http://verypig.com/" class="uri"&gt;http://verypig.com/&lt;/a&gt;，创办的莉莉丝，手游《刀塔传奇》火了之后，Blog再也没有更新了；&lt;/li&gt;
+&lt;li&gt;陈小花：&lt;a href="http://chenxiaohua.net/" class="uri"&gt;http://chenxiaohua.net/&lt;/a&gt;，王信文的老婆，Blog也几年没更新，偶尔写篇文章，当然现在早就转移到微信公众号写文章了，婚前的文章挺好的，婚后的文章，主题变了，看得少了；&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id="尾"&gt;尾&lt;/h2&gt;
 &lt;p&gt;上面列的都是曾经我看过优质并且更新的Blog，如今都不怎么更新了，还有一些遗漏的，不过不想花更多的精力去补全了。很多人不写了，大概有如下几点原因：&lt;/p&gt;
