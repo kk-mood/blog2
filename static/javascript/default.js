@@ -23,7 +23,8 @@ function json_to_quote(data) {
 
 function show_disqus_comments(event) {
   $.ajaxSetup({ cache: true });
-  $.getScript("http://xiaohanyu.disqus.com/embed.js");
+  //$.getScript("http://xiaohanyu.disqus.com/embed.js");
+  $.getScript("http://karottc.disqus.com/embed.js");
   $.ajaxSetup({ cache: false });
   setTimeout(function() {
     $("#show-disqus-comments")
