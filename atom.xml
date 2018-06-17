@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <id>http://blog2.karottc.com/</id>
   <title>杂思未济</title>
-  <updated>2018-06-17T04:55:17Z</updated>
+  <updated>2018-06-17T10:01:17Z</updated>
   <link rel="alternate" href="http://blog2.karottc.com/"/>
   <link rel="self" href="http://blog2.karottc.com/atom.xml"/>
   <author>
@@ -13,7 +13,7 @@
     <id>tag:blog2.karottc.com,2018-06-12:/posts/2018-07-01-5th-anniversary-of-graduation/</id>
     <title type="html">毕业5周年记</title>
     <published>2018-06-12T12:26:17Z</published>
-    <updated>2018-06-17T04:55:17Z</updated>
+    <updated>2018-06-17T10:01:17Z</updated>
     <link rel="alternate" href="http://blog2.karottc.com/posts/2018-07-01-5th-anniversary-of-graduation/"/>
     <content type="html">&lt;h2 id="序"&gt;序&lt;/h2&gt;
 &lt;p&gt;从2013年6月底离校至今，已经毕业5年了，这几年的经历，对我而言，现在并不知道意味着什么。一直以为自己还是刚毕业的样子，然而看到组内已经有95后的小鲜肉入职时，猛然发现时间已悄悄过去多年。和基友聚餐喝酒聊天时，酒量的下降也提示着我已不是少年。&lt;/p&gt;
@@ -95,7 +95,7 @@
 &lt;h2 id="第二年"&gt;第二年&lt;/h2&gt;
 &lt;p&gt;2014.07 - 2015.06，背水一战&lt;/p&gt;
 &lt;h3 id="裸辞"&gt;裸辞&lt;/h3&gt;
-&lt;p&gt;想去互联网行业的想法日渐坚定，于是开始投简历，鉴于之前转型失败的经验，这次准备换一个平滑的过渡，去做后台开发。经历了一些面试，比如：&lt;a href="http://mood.karottc.com/2014/11/06/1-meila-interview"&gt;美啦网&lt;/a&gt;，&lt;a href="http://mood.karottc.com/2014/10/23/ctrips-interviews-shanghai"&gt;携程&lt;/a&gt;，&lt;a href="http://mood.karottc.com/2014/09/18/1-summary-interview"&gt;腾讯1&lt;/a&gt;，&lt;a href="http://mood.karottc.com/2014/10/28/tencent-background-development"&gt;腾讯2&lt;/a&gt;，&lt;a href="http://mood.karottc.com/2014/10/29/fenqile-interviews"&gt;分期乐&lt;/a&gt; 等等，全都失败了，已经马上快毕业一年半了，再一直这样下去，后面转走会越来越难，所以心一横，先辞职，再找工作，不给自己留退路，辞职之后也才有更多时间复习和面试。&lt;/p&gt;
+&lt;p&gt;想去互联网行业的想法日渐坚定，于是开始投简历，鉴于之前转型失败的经验，这次准备换一个平滑的过渡，去做后台开发。经历了一些面试，比如：&lt;a href="http://mood.karottc.com/2014/11/06/1-meila-interview"&gt;美啦网&lt;/a&gt;，&lt;a href="http://mood.karottc.com/2014/10/23/ctrips-interviews-shanghai"&gt;携程&lt;/a&gt;，&lt;a href="http://mood.karottc.com/2014/09/18/1-summary-interview"&gt;腾讯1&lt;/a&gt;，&lt;a href="http://mood.karottc.com/2014/10/28/tencent-background-development"&gt;腾讯2&lt;/a&gt;，&lt;a href="http://mood.karottc.com/2014/10/29/fenqile-interviews"&gt;分期乐&lt;/a&gt; 等等，全都失败了，已经马上快毕业一年半了，这样下去，后面再转走会越来越难，所以心一横，先辞职，再找工作，不给自己留退路，辞职之后也才有更多时间复习和面试。&lt;/p&gt;
 &lt;p&gt;裸辞挺考验心态的，在家复习的每一天，心态都在变化，每一次面试，每复习完成一个知识点，心态都在变化，那时还特地记录离职后的心态变化：&lt;/p&gt;
 &lt;figure&gt;
 &lt;img src="/static/images/2018/201806_16_fire.png" alt="离职后的心态变化日记" /&gt;&lt;figcaption&gt;离职后的心态变化日记&lt;/figcaption&gt;
@@ -105,9 +105,9 @@
 &lt;ul&gt;
 &lt;li&gt;部门面临危机，最多是产品被砍（一时半会儿也还砍不掉），不会裁员；&lt;/li&gt;
 &lt;li&gt;半年前有比较充足的复习，相关的知识点还都记得，感觉面试难度应该不大；&lt;/li&gt;
-&lt;li&gt;手上有一个完整的作品，从App的开发，到后台服务器的架设，全是自己一个弄得，所以有些底气。&lt;/li&gt;
+&lt;li&gt;手上有一个完整的作品，从App的开发，到后台服务器的架设，全是自己一个人弄的，所以有些底气。&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;后面也证明，这次换工作也比较轻松一点，自己做的那个玩具似的系统和App在后面的面试中也派上了用场，在和 &lt;strong&gt;GM&lt;/strong&gt; 的面试中，演示后获得了认可。回想起来，第一次换工作变成了一个跳板，帮我把薪资和公司的级别都做了一个大的提升。这两次的连跳，完成了一个职业生涯的完美的转身，去了一个更大的舞台，展示自己、提升自己，现在依然还在这个公司。&lt;/p&gt;
+&lt;p&gt;后面也证明，这次换工作也比较轻松一点，自己做的那个玩具似的系统和App在后面的面试中也派上了用场，在和 &lt;strong&gt;GM&lt;/strong&gt; 的面试中，演示后获得了认可。回想起来，第一次换工作变成了一个跳板，帮我把薪资和公司的级别都做了一个大的提升。这两次的连跳，完成了一个职业生涯的完美转身，去了一个更大的舞台，展示自己、提升自己，现在依然还在这个公司。&lt;/p&gt;
 &lt;h3 id="锻炼"&gt;锻炼&lt;/h3&gt;
 &lt;p&gt;2015年1月换工作之后，虽然是去了一互联网公司，但是下班时间变到了8点，也还不算晚，所以鉴于自己的身体状况，制定了一个运动计划，隔天锻炼1-2小时，一直坚持N个月，直到下次换工作。就在自己一个住的房子锻炼，锻炼腹肌、胸肌、韧带，每个周末去体育馆跑步。&lt;/p&gt;
 &lt;figure&gt;
@@ -119,18 +119,18 @@
 &lt;/figure&gt;
 &lt;p&gt;在接下来的一年时间的挥霍中，全靠这锻炼出来的身体了。&lt;/p&gt;
 &lt;h3 id="移动开发"&gt;移动开发&lt;/h3&gt;
-&lt;p&gt;这一年也学习了iOS开发，在锻炼的间隙，因为我是隔天锻炼，所以不锻炼的时候就在学习iOS开发，用苹果新推出的 &lt;strong&gt;Swift&lt;/strong&gt; 语言，当时做了两个练手的的项目，一个是&lt;a href="http://blog2.karottc.com/posts/2015-07-25-swift-2048/"&gt;游戏&lt;/a&gt;，做这个是为了熟悉语法，熟悉iOS的开发过程，和各种控件的使用。&lt;/p&gt;
+&lt;p&gt;这一年也学习了iOS开发，在锻炼的间隙，因为我是隔天锻炼，所以不锻炼的时候就在学习iOS开发，用苹果新推出的 &lt;strong&gt;Swift&lt;/strong&gt; 语言，当时做了两个练手的项目，一个是&lt;a href="http://blog2.karottc.com/posts/2015-07-25-swift-2048/"&gt;游戏&lt;/a&gt;，做这个是为了熟悉语法，熟悉iOS的开发过程，和各种控件的使用。&lt;/p&gt;
 &lt;p&gt;在这个游戏做完之后，开始做了另一个大一点也完整的项目——&lt;a href="http://blog2.karottc.com/posts/2015-07-26-zhihu-sarcasm/"&gt;抓取知乎吐槽的内容并展示&lt;/a&gt;，这个项目有三个部分：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;App端，展示数据；&lt;/li&gt;
 &lt;li&gt;服务器端，给App提供数据；&lt;/li&gt;
 &lt;li&gt;抓取平台，抓取知乎的数据放入服务器中。&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;做这个是为了完整体验和了解互联网的模式和验证一些当时自己的思考。只是误打误撞，这个项目在后面的找工作也有助益。&lt;/p&gt;
+&lt;p&gt;做这个是为了完整体验和了解互联网的模式和验证一些当时自己的思考。只是误打误撞，这个项目在后面的找工作过程中也有助益。&lt;/p&gt;
 &lt;h3 id="头文字d完结"&gt;《头文字D》完结&lt;/h3&gt;
 &lt;p&gt;《头文字D》是我喜欢的为数不多的动漫之一，在当年上初中一年级的时候接触到了，就在一直追这个动画片，一接触就喜欢上了，可能就是喜欢里面拓海那呆呆的样子吧，能够在主角身上找到一些自己的影子，可惜的是，我只有呆，却没有他那样的天赋和实力，虽然随着年岁的渐大，自卑感在减少，但是偶尔的一次自卑却来的更加沉重……&lt;/p&gt;
-&lt;p&gt;所以《头文字D》寄托的是我从里面看到只有专注和继续的努力，就能变得很强，强大的可以超越自卑。不过从第一部的中拓海的呆，到最后一部中的决赛，拓海一直在成长，从呆变成了一个可以冷静分析、制定策略去取胜的高手（在比赛中为了获胜，不惜赌上荣誉，也自己也不爽的方式去赢得比赛）。而我好像一直在拒绝接受成人世界的规则，为了不变成自己曾经讨厌的那类人，一直在拒绝长大和改变。这是我这么多年一来的一直的纠结……&lt;/p&gt;
-&lt;p&gt;不过这个动画的完结，也算是了却一桩心愿。&lt;/p&gt;
+&lt;p&gt;所以《头文字D》寄托的是我从里面看到只有专注和继续的努力，就能变得很强，强大的可以超越自卑。不过从第一部的中拓海的呆，到最后一部中的决赛，拓海一直在成长，从呆变成了一个可以冷静分析、制定策略去取胜的高手（在比赛中为了获胜，不惜赌上荣誉，用自己也不爽的方式去赢得比赛）。而我好像一直在拒绝接受成人世界的规则，为了不变成自己曾经讨厌的那类人，一直在拒绝长大和改变。这是我这么多年以来一直的纠结……&lt;/p&gt;
+&lt;p&gt;不过这个动画的完结，也算是了却了一桩心愿。&lt;/p&gt;
 &lt;figure&gt;
 &lt;img src="/static/images/2018/201806_20_initial_d.jpg" alt="头文字D·完结" /&gt;&lt;figcaption&gt;头文字D·完结&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -138,6 +138,63 @@
 &lt;p&gt;《DUET》这个一玩就喜欢的游戏，持续玩了半年，终于通关了。详情请看&lt;a href="http://mood.karottc.com/2014/08/23/duet"&gt;这里&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="第三年"&gt;第三年&lt;/h2&gt;
 &lt;p&gt;2015.07 - 2016.06，渐入佳境&lt;/p&gt;
+&lt;p&gt;第二次换工作，稳定了下来，公司的业务也在上升期。自我提升和工作提升，只要按照既定计划，一次执行即可。恰好这个时间点有个两个大学同学到了深圳工作，于是生活翻开了新的篇章，开始了一起比较浪的生活。&lt;/p&gt;
+&lt;h3 id="活动"&gt;活动&lt;/h3&gt;
+&lt;p&gt;在接下来的一年多时间里，我们总是三五个人的一起走了不少地方，喝酒、徒步、骑行、自驾游。&lt;/p&gt;
+&lt;h4 id="两次骑行"&gt;两次骑行&lt;/h4&gt;
+&lt;p&gt;2015年9月来了一场骑行，从深圳坂田骑到西涌，单程大概有100公里，骑了8小时，没有前几个月锻炼出来的身体，根本扛不住，第一天喝了一罐红牛，第二天喝了两罐红牛，才最终稳妥的骑回了坂田。&lt;/p&gt;
+&lt;figure&gt;
+&lt;img src="/static/images/2018/201806_21_bike.JPG" alt="西涌骑行" /&gt;&lt;figcaption&gt;西涌骑行&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;第二次骑行是2016年6月，算是纪念毕业三周年，半夜开始从深圳坂田骑行到深圳湾看日出，然后第二天在骑回去，单程大概30公里的样子。有了上一次的骑行经历，这次距离就是小case了。&lt;/p&gt;
+&lt;p&gt;回到坂田之后吃了午饭，大醉了一场，可能由于熬夜没有吃东西，然后喝了这些酒就更容易醉吧。&lt;/p&gt;
+&lt;figure&gt;
+&lt;img src="/static/images/2018/201806_22_bike.jpg" alt="深圳湾骑行" /&gt;&lt;figcaption&gt;深圳湾骑行&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;h4 id="深圳百公里"&gt;深圳百公里&lt;/h4&gt;
+&lt;p&gt;2016年年初，参加深圳磨房举办的百公里活动，这个活动是每年都举办，大概是从深圳湾出发，一直走到大鹏，差不多100公里，每隔一段距离有补给点和签到点。当时我们一起报名了，想挑战一下自己，结果，活动当天下大雨，我们走了10公里，然后就去吃烤鱼回家了，成了一个遗憾。 &lt;img src="/static/images/2018/201806_23_100km.JPG" alt="2016深圳百公里" /&gt;&lt;/p&gt;
+&lt;h4 id="深圳徒步"&gt;深圳徒步&lt;/h4&gt;
+&lt;p&gt;当时给自己定了一个队名——组队刷地图，为了这个目标，为了不让周末闲在家里，所以时常出去走了不少地方：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;欢乐海岸，走了好几遍；&lt;/li&gt;
+&lt;li&gt;深圳湾，走了好几遍；&lt;/li&gt;
+&lt;li&gt;蛇口，水湾、赤湾，看航母，看艺术展；&lt;/li&gt;
+&lt;li&gt;梧桐绿道（当时号称深圳最美绿道）；&lt;/li&gt;
+&lt;li&gt;爬过南山，喝过小酒；&lt;/li&gt;
+&lt;li&gt;逛过深大，路过世界之窗；&lt;/li&gt;
+&lt;li&gt;走过罗湖老街；&lt;/li&gt;
+&lt;li&gt;春节回来上班第一天就用红包赌酒；&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure&gt;
+&lt;img src="/static/images/2018/201806_24_play.jpg" alt="深圳游玩" /&gt;&lt;figcaption&gt;深圳游玩&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;h4 id="自驾去惠州"&gt;自驾去惠州&lt;/h4&gt;
+&lt;p&gt;说来也是搞笑，租了一辆车，开去惠州，结果在惠州打了一晚上麻将，天气也不好，一路上在下雨，只是冒雨在路过的海滩玩了两个小时。&lt;/p&gt;
+&lt;figure&gt;
+&lt;img src="/static/images/2018/201806_25_huizhou.jpg" alt="惠州游" /&gt;&lt;figcaption&gt;惠州游&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;h4 id="香港徒步"&gt;香港徒步&lt;/h4&gt;
+&lt;p&gt;这期间去了香港两次，逛了一些有名的地点。&lt;/p&gt;
+&lt;figure&gt;
+&lt;img src="/static/images/2018/201806_26_hk.jpg" alt="香港" /&gt;&lt;figcaption&gt;香港&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;h4 id="澳门"&gt;澳门&lt;/h4&gt;
+&lt;p&gt;有一个同学即将离开深圳，回老家西安去了，这次的澳门之行就算是分别之前的最后一站了，澳门可玩的确实不多，地方也很小，一天足够把该去的都去一遍了，也是是标准的大众旅游方式。&lt;/p&gt;
+&lt;figure&gt;
+&lt;img src="/static/images/2018/201806_27_aomen.jpg" alt="澳门之行" /&gt;&lt;figcaption&gt;澳门之行&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;h4 id="饯别酒"&gt;饯别酒&lt;/h4&gt;
+&lt;p&gt;一年前一起决定开始浪的时候，并没有想到分别的这一天来的这么快。天下没有不散的宴席，各自都有自己的选择和梦想。一起浪过，经历过，以后还能偶尔一起把酒话当年，足矣。这次饯别，把平时没有一起浪的广州、深圳两地的小伙伴一起叫了过来。&lt;/p&gt;
+&lt;figure&gt;
+&lt;img src="/static/images/2018/201806_28_leave.JPG" alt="酒" /&gt;&lt;figcaption&gt;酒&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;blockquote&gt;
+&lt;p&gt;踏花归去，行囊已旧，未来风雨绸缪。一杯别酒，满城秋意，此书将为谁收？青春着锦，踌躇满志，肆笑妄言天下陋。纵知前途千万险，轻别离，热血万户侯。想多少年后，沉浮世久，夜思少年愁，将叹有月如钩。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id="公司相关"&gt;公司相关&lt;/h3&gt;
+&lt;h4 id="公司长跑"&gt;公司长跑&lt;/h4&gt;
+&lt;h4 id="百赞达人"&gt;百赞达人&lt;/h4&gt;
+&lt;h3 id="遇见爱情"&gt;遇见爱情&lt;/h3&gt;
 &lt;h2 id="第四年"&gt;第四年&lt;/h2&gt;
 &lt;p&gt;2016.07 - 2017.06，沉迷游戏&lt;/p&gt;
 &lt;h3 id="工作-1"&gt;工作&lt;/h3&gt;
