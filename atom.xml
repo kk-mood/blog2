@@ -23,7 +23,12 @@
 &lt;h2 id="ios"&gt;iOS&lt;/h2&gt;
 &lt;p&gt;首先还是必须去官网下载&lt;a href="https://www.fmod.com/download"&gt;fmod的API文档&lt;/a&gt;（https://www.fmod.com/download），虽然看了文档也是一脸懵逼，但是聊胜于无，也必须看，因为所有的尝试还是需要依据官方文档来进行。&lt;/p&gt;
 &lt;p&gt;这个要分成两部分来讲，因为iOS和Android 两个平台，要分别写两套代码，虽然核心使用fmod api的部分是一样的。&lt;/p&gt;
-&lt;p&gt;对于，iOS的平台，需要提前知道的知识点： * 会react-native（废话，不会这个就不会有这一堆问题了）； * 稍微会一点点Object-c； * 会OC和C++的混编；&lt;/p&gt;
+&lt;p&gt;对于，iOS的平台，需要提前知道的知识点：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;会react-native（废话，不会这个就不会有这一堆问题了）；&lt;/li&gt;
+&lt;li&gt;稍微会一点点Object-c；&lt;/li&gt;
+&lt;li&gt;会OC和C++的混编；&lt;/li&gt;
+&lt;/ul&gt;
 &lt;p&gt;基本思路是在RN界面点击播放按钮，然后将音频的相关URL传递给iOS的native函数，下载音频文件，调用FMOD STUDIO API 播放、暂停、停止等操作，同时给播放时注册回调函数，在回调函数中回去数据再回调给RN，然后更新界面。&lt;/p&gt;
 &lt;p&gt;下面给出关键步骤的部分代码。&lt;/p&gt;
 &lt;h3 id="react-native-调用ios-native-接口"&gt;React-Native 调用iOS Native 接口&lt;/h3&gt;
