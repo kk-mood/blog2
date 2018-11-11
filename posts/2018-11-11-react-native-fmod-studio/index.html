@@ -238,6 +238,291 @@ FMOD_RESULT F_CALLBACK markerCallback(FMOD_STUDIO_EVENT_CALLBACK_TYPE type, FMOD
   <span class="op">}</span></code></pre></div>
 <p>以上，就是在iOS上播放fmod studio 的 bank 音频的整个流程。</p>
 <h2 id="android">Android</h2>
+<p>同样由于FMOD的API是c/c++的，所以Android端只能用JNI来实现。这里和iOS不同的地方在于，在iOS上，OC和C/C++可以混编，所以可以同时实现，但是Android端的java和C/C++不能混编，只能分开弄，也就是对音频文件的下周再Android做，调用音频播放接口在C/C++这里做。</p>
+<p>下载音频文件的代码如下：</p>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java"><span class="co">// 能够被rn调用的方法使用@ReactMethod声明</span>
+<span class="at">@ReactMethod</span>
+<span class="kw">public</span> <span class="dt">void</span> <span class="fu">testNativeDownloadFile</span>(ReadableMap map) {
+    <span class="co">// 测试文件下载</span>
+    <span class="co">//System.out.print(map);</span>
+    Log.<span class="fu">d</span>(<span class="st">&quot;xxx&quot;</span>, map.<span class="fu">getString</span>(<span class="st">&quot;event&quot;</span>));
+    ReadableArray urlList = map.<span class="fu">getArray</span>(<span class="st">&quot;url_list&quot;</span>);
+    <span class="kw">for</span> (<span class="dt">int</span> i = <span class="dv">0</span>; i &lt; urlList.<span class="fu">size</span>(); ++i) {
+        Log.<span class="fu">d</span>(<span class="st">&quot;xxx&quot;</span>, <span class="st">&quot;url:&quot;</span>+urlList.<span class="fu">getString</span>(i));
+    }
+    <span class="co">// /storage/emulated/0</span>
+    <span class="bu">String</span> path = <span class="bu">Environment</span>.<span class="fu">getExternalStorageDirectory</span>().<span class="fu">getAbsolutePath</span>();
+    Log.<span class="fu">d</span>(<span class="st">&quot;xxx&quot;</span>,<span class="st">&quot;path: &quot;</span> + path);
+    <span class="bu">String</span> path1 = <span class="bu">Environment</span>.<span class="fu">getDataDirectory</span>().<span class="fu">getPath</span>();
+    Log.<span class="fu">d</span>(<span class="st">&quot;xxx&quot;</span>,<span class="st">&quot;path1: &quot;</span> + path1);   <span class="co">// /data</span>
+    <span class="bu">String</span> path2 = <span class="bu">Environment</span>.<span class="fu">getDownloadCacheDirectory</span>().<span class="fu">getPath</span>();
+    Log.<span class="fu">d</span>(<span class="st">&quot;xxx&quot;</span>,<span class="st">&quot;path2: &quot;</span> + path2);   <span class="co">// /data/cache</span>
+    <span class="bu">String</span> path3 = <span class="bu">Environment</span>.<span class="fu">getExternalStoragePublicDirectory</span>(<span class="bu">Environment</span>.<span class="fu">DIRECTORY_DOWNLOADS</span>).<span class="fu">getPath</span>();
+    Log.<span class="fu">d</span>(<span class="st">&quot;xxx&quot;</span>,<span class="st">&quot;path3: &quot;</span> + path3);   <span class="co">// /storage/emulated/0/Download</span>
+    <span class="bu">String</span> path4 = <span class="bu">Environment</span>.<span class="fu">getExternalStorageDirectory</span>().<span class="fu">toString</span>();
+    Log.<span class="fu">d</span>(<span class="st">&quot;xxx&quot;</span>,<span class="st">&quot;path4: &quot;</span> + path4);
+    <span class="bu">String</span> path5 = mReactContext.<span class="fu">getExternalFilesDir</span>(<span class="kw">null</span>).<span class="fu">toString</span>();
+    Log.<span class="fu">d</span>(<span class="st">&quot;xxx&quot;</span>,<span class="st">&quot;path5:&quot;</span>+path5);  <span class="co">// /storage/emulated/0/Android/data/com.test_rn_native/files</span>
+
+    <span class="bu">String</span> namePre = map.<span class="fu">getString</span>(<span class="st">&quot;name_pre&quot;</span>);
+    <span class="bu">String</span> fmodName = map.<span class="fu">getString</span>(<span class="st">&quot;event&quot;</span>);
+
+    <span class="bu">String</span>[] fileList = <span class="kw">new</span> <span class="bu">String</span>[urlList.<span class="fu">size</span>()];
+
+    <span class="kw">for</span> (<span class="dt">int</span> i = <span class="dv">0</span>; i &lt; urlList.<span class="fu">size</span>(); ++i) {
+        <span class="bu">String</span> fileName = <span class="fu">downloadFile</span>(urlList.<span class="fu">getString</span>(i), namePre);
+        fileList[i] = fileName;
+    }
+    <span class="kw">for</span> (<span class="dt">int</span> i = <span class="dv">0</span>; i &lt; fileList.<span class="fu">length</span>; ++i) {
+        <span class="bu">File</span> f = <span class="kw">new</span> <span class="bu">File</span>(fileList[i]);
+        <span class="kw">if</span> (f.<span class="fu">exists</span>() &amp;&amp; f.<span class="fu">isFile</span>()) {
+            Log.<span class="fu">d</span>(<span class="st">&quot;xxx&quot;</span>, fileList[i] + <span class="st">&quot; size:&quot;</span> + f.<span class="fu">length</span>());
+        } <span class="kw">else</span> {
+            Log.<span class="fu">d</span>(<span class="st">&quot;xxx&quot;</span>, <span class="st">&quot;file not exists:&quot;</span> + fileList[i]);
+        }
+    }
+}
+<span class="kw">public</span> <span class="bu">String</span> <span class="fu">downloadFile</span>(<span class="bu">String</span> url, <span class="bu">String</span> namePre) {
+    Log.<span class="fu">i</span>(<span class="st">&quot;xxx&quot;</span>,<span class="st">&quot;downloadFile step into，url=&quot;</span> + url);
+    <span class="bu">String</span> filePath = <span class="st">&quot;&quot;</span>;
+    <span class="kw">try</span> {
+        <span class="bu">String</span> downPath = mReactContext.<span class="fu">getExternalFilesDir</span>(<span class="kw">null</span>).<span class="fu">toString</span>() + <span class="st">&quot;/&quot;</span>;
+        <span class="dt">long</span> startTime = <span class="bu">System</span>.<span class="fu">currentTimeMillis</span>();
+        <span class="bu">String</span> filename = namePre + url.<span class="fu">substring</span>(url.<span class="fu">lastIndexOf</span>(<span class="st">&quot;/&quot;</span>) + <span class="dv">1</span>);
+        Log.<span class="fu">i</span>(<span class="st">&quot;xxx&quot;</span>,<span class="st">&quot;start download&quot;</span>);
+        <span class="bu">URL</span> myURL = <span class="kw">new</span> <span class="bu">URL</span>(url);
+        <span class="bu">URLConnection</span> conn = myURL.<span class="fu">openConnection</span>();
+        conn.<span class="fu">connect</span>();
+        <span class="bu">InputStream</span> is = conn.<span class="fu">getInputStream</span>();
+        <span class="dt">int</span> fileSize = conn.<span class="fu">getContentLength</span>();<span class="co">//根据响应获取文件大小</span>
+        <span class="kw">if</span> (fileSize &lt;= <span class="dv">0</span>) <span class="kw">throw</span> <span class="kw">new</span> <span class="bu">RuntimeException</span>(<span class="st">&quot;无法获知文件大小 &quot;</span>);
+        <span class="kw">if</span> (is == <span class="kw">null</span>) <span class="kw">throw</span> <span class="kw">new</span> <span class="bu">RuntimeException</span>(<span class="st">&quot;stream is null&quot;</span>);
+        <span class="bu">File</span> file1 = <span class="kw">new</span> <span class="bu">File</span>(downPath);
+        <span class="kw">if</span> (!file1.<span class="fu">exists</span>()) {
+            file1.<span class="fu">mkdirs</span>();
+        }
+        filePath = downPath + filename;
+        <span class="bu">FileOutputStream</span> fos = <span class="kw">new</span> <span class="bu">FileOutputStream</span>(filePath);
+        <span class="dt">byte</span> buf[] = <span class="kw">new</span> <span class="dt">byte</span>[<span class="dv">4096</span>];
+        <span class="dt">int</span> downLoadFileSize = <span class="dv">0</span>;
+        <span class="kw">do</span>{
+            <span class="co">//循环读取</span>
+            <span class="dt">int</span> numread = is.<span class="fu">read</span>(buf);
+            <span class="kw">if</span> (numread == -<span class="dv">1</span>)
+            {
+                <span class="kw">break</span>;
+            }
+            fos.<span class="fu">write</span>(buf, <span class="dv">0</span>, numread);
+            downLoadFileSize += numread;
+            <span class="co">//更新进度条</span>
+        } <span class="kw">while</span> (<span class="kw">true</span>);
+        Log.<span class="fu">i</span>(<span class="st">&quot;xxx&quot;</span>,<span class="st">&quot;download success:&quot;</span> + filePath);
+        Log.<span class="fu">i</span>(<span class="st">&quot;xxx&quot;</span>,<span class="st">&quot;totalTime=&quot;</span>+ (<span class="bu">System</span>.<span class="fu">currentTimeMillis</span>() - startTime));
+    } <span class="kw">catch</span> (<span class="bu">Exception</span> ex) {
+        Log.<span class="fu">e</span>(<span class="st">&quot;xxx&quot;</span>, <span class="st">&quot;error: &quot;</span> + ex.<span class="fu">getMessage</span>(), ex);
+    }
+    <span class="kw">return</span> filePath;
+}</code></pre></div>
+<p>然后把下载的文件传递给JNI层，这里有一点要特别注意， JNI 的编译，只能用CMAKE，老的方式是用NDK编译，但是会有各种各样的问题，用cmake编译，一切都会变得简单。</p>
+<p>JNI的代码如下：</p>
+<div class="sourceCode"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span class="at">static</span> FMOD::Studio::System* gsystem = NULL;
+<span class="at">static</span> FMOD::Studio::EventDescription * geventDesc = NULL;
+<span class="at">static</span> FMOD::Studio::EventInstance * gengine = NULL;
+<span class="at">static</span> <span class="dt">bool</span> gStop = <span class="kw">false</span>;
+
+<span class="co">// 回调使用</span>
+JavaVM *gVM = NULL;
+jobject gObj;
+
+<span class="co">//</span>
+<span class="co">// Callback to free memory-point allocation when it is safe to do so</span>
+<span class="co">//</span>
+FMOD_RESULT F_CALLBACK studioCallback(FMOD_STUDIO_SYSTEM *system, FMOD_STUDIO_SYSTEM_CALLBACK_TYPE type, <span class="dt">void</span> *commanddata, <span class="dt">void</span> *userdata)
+{
+    <span class="cf">if</span> (type == FMOD_STUDIO_SYSTEM_CALLBACK_BANK_UNLOAD)
+    {
+        <span class="co">// For memory-point, it is now safe to free our memory</span>
+        FMOD::Studio::Bank* bank = (FMOD::Studio::Bank*)commanddata;
+        <span class="dt">void</span>* memory;
+        <span class="co">// ERRCHECK(bank-&gt;getUserData(&amp;memory));</span>
+        bank-&gt;getUserData(&amp;memory);
+        <span class="cf">if</span> (memory)
+        {
+            free(memory);
+        }
+    }
+    <span class="cf">return</span> FMOD_OK;
+}
+
+<span class="co">// marker的回调</span>
+FMOD_RESULT F_CALLBACK markerCallback(FMOD_STUDIO_EVENT_CALLBACK_TYPE type, FMOD_STUDIO_EVENTINSTANCE *event, <span class="dt">void</span> *parameters) {
+    <span class="co">//cout &lt;&lt; &quot;LINE:&quot; &lt;&lt; __LINE__ &lt;&lt; &quot;,xxx log: type:&quot; &lt;&lt; type &lt;&lt; &quot;,obj:&quot; &lt;&lt; FMOD_STUDIO_EVENT_CALLBACK_TIMELINE_MARKER &lt;&lt; endl;</span>
+    <span class="cf">if</span> (type == FMOD_STUDIO_EVENT_CALLBACK_TIMELINE_MARKER) {
+        FMOD_STUDIO_TIMELINE_MARKER_PROPERTIES* props = (FMOD_STUDIO_TIMELINE_MARKER_PROPERTIES*)parameters;
+         LOGD(<span class="st">&quot;jni params marker: </span><span class="sc">%s</span><span class="st">&quot;</span>,props-&gt;name);
+        <span class="co">// [[NSNotificationCenter defaultCenter] postNotificationName:@&quot;sendCustomEventNotification&quot; object:[NSString stringWithUTF8String:props-&gt;name]];</span>
+        <span class="co">// 回调java代码</span>
+        <span class="co">// 获取方法ID, 通过方法名和签名, 调用静态方法</span>
+        <span class="co">// 非静态方法需要创建实例</span>
+        JNIEnv *env;
+        <span class="dt">int</span> getEnvStat = gVM-&gt;GetEnv((<span class="dt">void</span> **) &amp;env,JNI_VERSION_1_6);
+        <span class="cf">if</span> (getEnvStat == JNI_EDETACHED) {
+            <span class="co">//如果没有，主动附加到jvm环境中，获取到env</span>
+            <span class="cf">if</span> (gVM-&gt;AttachCurrentThread(&amp;env, NULL) != <span class="dv">0</span>) {
+                <span class="cf">return</span> FMOD_OK;
+            }
+        }
+        <span class="co">//通过全局变量g_obj 获取到要回调的类</span>
+        jclass javaClass = env-&gt;GetObjectClass(gObj);
+        <span class="cf">if</span> (javaClass == <span class="dv">0</span>) {
+            LOGD(<span class="st">&quot;Unable to find class&quot;</span>);
+            gVM-&gt;DetachCurrentThread();
+            <span class="cf">return</span> FMOD_OK;
+        }
+        jmethodID mid = env-&gt;GetMethodID(javaClass, <span class="st">&quot;callMethod&quot;</span>, <span class="st">&quot;(Ljava/lang/String;)V&quot;</span>);
+        <span class="cf">if</span> (mid == NULL) {
+            LOGD(<span class="st">&quot;Unable to find method:callMethod&quot;</span>);
+            <span class="cf">return</span> FMOD_OK;
+        }
+
+        env-&gt;CallVoidMethod(gObj, mid, env-&gt;NewStringUTF(props-&gt;name));
+    }
+    <span class="cf">return</span> FMOD_OK;
+}
+
+
+JNIEXPORT jstring JNICALL Java_com_test_1rn_1native_OpenNativeModule_testParams
+  (JNIEnv *env, jobject obj, jobjectArray urlList, jstring fmodName) {
+    LOGD(<span class="st">&quot;STEP into native method&quot;</span>);
+    jboolean isCopy = <span class="kw">false</span>;
+    <span class="at">const</span> <span class="dt">char</span> *str = env-&gt;GetStringUTFChars(fmodName, &amp;isCopy);
+    <span class="cf">if</span> (str == NULL) {
+        LOGD(<span class="st">&quot;this error&quot;</span>);
+        <span class="cf">return</span> NULL;
+    }
+    LOGD(<span class="st">&quot;fmodName:</span><span class="sc">%s</span><span class="st">&quot;</span>, str);
+    string fmodNameStr = str;
+
+    <span class="dt">int</span> len = env-&gt;GetArrayLength(urlList);
+    vector&lt;string&gt; fileList;
+    <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">0</span>; i &lt; len; ++i) {
+        jstring jstr = (jstring)env-&gt;GetObjectArrayElement(urlList, i);
+        string url = env-&gt;GetStringUTFChars(jstr, NULL);
+        fileList.push_back(url);
+    }
+
+    <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">0</span>; i &lt; fileList.size(); ++i) {
+        LOGD(<span class="st">&quot;file </span><span class="sc">%d</span><span class="st">: </span><span class="sc">%s</span><span class="st">&quot;</span>,i, fileList[i].c_str());
+    }
+
+    <span class="co">//FMOD::Studio::System* gsystem;</span>
+    <span class="co">//FMOD::Studio::EventDescription * geventDesc;</span>
+    <span class="co">//FMOD::Studio::EventInstance * gengine;</span>
+
+    <span class="at">const</span> <span class="dt">int</span> BANK_COUNT = fileList.size();
+    FMOD::Studio::Bank* banks[BANK_COUNT];
+
+    <span class="cf">if</span> (gsystem == NULL) {
+        LOGD(<span class="st">&quot;init fmod studio&quot;</span>);
+    } <span class="cf">else</span> {
+        LOGD(<span class="st">&quot;release fmod studio&quot;</span>);
+        gsystem-&gt;release();
+    }
+    FMOD::Studio::System::create(&amp;gsystem);
+    gsystem-&gt;initialize(<span class="dv">1024</span>, FMOD_STUDIO_INIT_NORMAL, FMOD_INIT_NORMAL, <span class="dv">0</span>);
+    gsystem-&gt;setCallback(studioCallback, FMOD_STUDIO_SYSTEM_CALLBACK_BANK_UNLOAD);
+    <span class="cf">for</span> (<span class="dt">int</span> i = <span class="dv">0</span>; i &lt; fileList.size(); ++i) {
+        gsystem-&gt;loadBankFile(fileList[i].c_str(), FMOD_STUDIO_LOAD_BANK_NORMAL, &amp;banks[i]);
+    }
+    gsystem-&gt;update();
+
+    string eventStr = <span class="st">&quot;event:/&quot;</span> + fmodNameStr;
+
+    LOGD(<span class="st">&quot;event:</span><span class="sc">%s</span><span class="st">&quot;</span>,eventStr.c_str());
+
+    gsystem-&gt;getEvent(eventStr.c_str(), &amp;geventDesc);
+    geventDesc-&gt;createInstance(&amp;gengine);
+
+    gengine-&gt;setCallback(markerCallback,
+                         FMOD_STUDIO_EVENT_CALLBACK_TIMELINE_MARKER
+                         | FMOD_STUDIO_EVENT_CALLBACK_TIMELINE_BEAT
+                         | FMOD_STUDIO_EVENT_CALLBACK_SOUND_PLAYED
+                         | FMOD_STUDIO_EVENT_CALLBACK_SOUND_STOPPED);
+
+    env-&gt;GetJavaVM(&amp;gVM);
+    gObj = env-&gt;NewGlobalRef(obj);
+
+    gengine-&gt;start();
+    gsystem-&gt;update();
+
+    <span class="cf">return</span> env-&gt;NewStringUTF(<span class="st">&quot;success testParams&quot;</span>);
+}
+
+JNIEXPORT <span class="dt">void</span> JNICALL Java_com_test_1rn_1native_OpenNativeModule_testFmodPause
+        (JNIEnv *env, jobject obj) {
+    <span class="cf">if</span> (gsystem == NULL) {
+        <span class="cf">return</span>;
+    }
+    <span class="dt">bool</span> paused = <span class="kw">false</span>;
+    <span class="dt">int</span> ret = gengine-&gt;getPaused(&amp;paused);
+    LOGD(<span class="st">&quot;pause: </span><span class="sc">%d</span><span class="st">, ret:</span><span class="sc">%d</span><span class="st">&quot;</span>, paused, ret);
+    ret = gengine-&gt;setPaused(!paused);
+    gsystem-&gt;update();
+}
+
+JNIEXPORT <span class="dt">void</span> JNICALL Java_com_test_1rn_1native_OpenNativeModule_testFmodStop
+        (JNIEnv *env, jobject obj) {
+    <span class="cf">if</span> (gsystem == NULL) {
+        <span class="cf">return</span>;
+    }
+    <span class="cf">if</span> (gStop == <span class="kw">false</span>) {
+        gengine-&gt;stop(FMOD_STUDIO_STOP_IMMEDIATE);
+        gStop = <span class="kw">true</span>;
+    } <span class="cf">else</span> {
+        gengine-&gt;start();
+        gStop = <span class="kw">false</span>;
+    }
+
+    gsystem-&gt;update();
+    LOGD(<span class="st">&quot;stop status: </span><span class="sc">%d</span><span class="st">&quot;</span>, gStop);
+}</code></pre></div>
+<p>需要修改app/build.gradle 文件，才能把fmod相关的.so 打包进apk中。</p>
+<pre class="configure"><code>    sourceSets.main {
+       jniLibs.srcDirs = [&#39;src/main/jniLibs&#39;]
+
+    }</code></pre>
+<p>要解决react-native 和 FMOD之后引起的32-bit和64-bit 的arm结构不兼容问题，也需要修改app/build.gradle.</p>
+<pre class="configure"><code>defaultConfig {
+    applicationId &quot;com.test_rn_native&quot;
+    minSdkVersion 16
+    targetSdkVersion 22
+    versionCode 1
+    versionName &quot;1.0&quot;
+    ndk {
+        abiFilters &quot;armeabi-v7a&quot;, &quot;x86&quot;
+    }
+
+    externalNativeBuild {
+        cmake {
+            cppFlags &quot;&quot;
+            abiFilters &quot;armeabi-v7a&quot;, &quot;x86&quot;
+        }
+    }
+    packagingOptions {
+        exclude &quot;lib/arm64-v8a&quot;    // 排除这个文件夹
+    }
+}</code></pre>
+<p>现在，Android端应该也能正常播放fmod studio bank的音频文件了。最后一步，在rn端接受Android的回调。</p>
+<div class="sourceCode"><pre class="sourceCode js"><code class="sourceCode javascript"><span class="at">componentDidMount</span>() <span class="op">{</span>
+    <span class="kw">let</span> eventEmitter <span class="op">=</span> <span class="kw">new</span> <span class="at">NativeEventEmitter</span>(nativeModule)<span class="op">;</span>
+    <span class="kw">this</span>.<span class="at">listener</span> <span class="op">=</span> <span class="va">eventEmitter</span>.<span class="at">addListener</span>(<span class="st">&quot;customEvent&quot;</span><span class="op">,</span> <span class="kw">this</span>.<span class="at">listenCallback</span>)<span class="op">;</span>
+    <span class="va">DeviceEventEmitter</span>.<span class="at">addListener</span>(<span class="st">&#39;customEvent&#39;</span><span class="op">,</span> <span class="kw">this</span>.<span class="at">listenCallback</span>)<span class="op">;</span>
+  <span class="op">}</span>
+  <span class="at">listenCallback</span>(item) <span class="op">{</span>
+    <span class="va">console</span>.<span class="at">log</span>(<span class="st">&quot;native notition:&quot;</span><span class="op">+</span>item)<span class="op">;</span>
+  <span class="op">}</span></code></pre></div>
+<h2 id="尾">尾</h2>
+<p>整个项目的demo工程已经放到<a href="https://github.com/karottc/rn-fmod-demo">GitHub</a>，在几乎没有资料的情况下，自己摸索和尝试，记录一下，给后面有需要的朋友一些参考，当然上面并没有列全我这个过程碰到的各种问题。</p>
 
     <div class="ui divider"></div>
     <div class="ui small one item menu">
