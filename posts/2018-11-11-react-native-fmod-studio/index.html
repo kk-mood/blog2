@@ -83,7 +83,6 @@
 <span class="co">// testNativeDownloadFile 是OpenNativeModule中实现的 method</span></code></pre></div>
 <p>RN端的核心代码就这几行，剩下的是iOS端的实现。</p>
 <div class="sourceCode"><pre class="sourceCode objective-c"><code class="sourceCode objectivec"><span class="co">// 所有能被RN调用的方法，需要用RCT_EXPORT_METHOD声明</span>
-
 RCT_EXPORT_METHOD(testNativeDownloadFile:(NSDictionary *)dict) {
   NSArray *url_list = [dict objectForKey:<span class="st">@&quot;url_list&quot;</span>];
   NSMutableArray __block *file_list = [NSMutableArray arrayWithCapacity:url_list.count];
@@ -138,6 +137,78 @@ RCT_EXPORT_METHOD(testNativeDownloadFile:(NSDictionary *)dict) {
     }
   }</code></pre></div>
 <h3 id="播放fmod-studio-的-bank-音频">播放FMOD Studio 的 bank 音频</h3>
+<p>由于FMOD官方给的API都是C/C++的，所以这里需要OC和C++混编来实现音频播放，上面的调用Native接口的代码已经把所有的音频文件下载好了，剩下的就是加载相关的库来播放。</p>
+<div class="sourceCode"><pre class="sourceCode objective-c"><code class="sourceCode objectivec">
+FMOD::Studio::System* gsystem = NULL;
+FMOD::Studio::EventDescription * geventDesc = NULL;
+FMOD::Studio::EventInstance * gengine = NULL;
+
+<span class="dt">const</span> <span class="dt">int</span> BANK_COUNT = (<span class="dt">int</span>)file_list.count;
+  FMOD::Studio::Bank* banks[BANK_COUNT];
+  <span class="kw">if</span> (gsystem == NULL) {
+    NSLog(<span class="st">@&quot;xxx log: LINE:%d, init fmod studio system&quot;</span>, __LINE__);
+    <span class="co">//FMOD::Studio::System::create(&amp;gsystem);</span>
+  } <span class="kw">else</span> {
+    NSLog(<span class="st">@&quot;xxx log: LINE:%d, unloadAll fmod studio system&quot;</span>, __LINE__);
+    <span class="co">//gengine-&gt;stop(FMOD_STUDIO_STOP_IMMEDIATE);</span>
+    <span class="co">//gsystem-&gt;unloadAll();</span>
+    gsystem-&gt;release();
+  }
+  FMOD::Studio::System::create(&amp;gsystem);
+  gsystem-&gt;initialize(<span class="dv">1024</span>, FMOD_STUDIO_INIT_NORMAL, FMOD_INIT_NORMAL, <span class="dv">0</span>);
+  gsystem-&gt;setCallback(studioCallback, FMOD_STUDIO_SYSTEM_CALLBACK_BANK_UNLOAD);
+  <span class="kw">for</span> (<span class="dt">int</span> i = <span class="dv">0</span>; i &lt; file_list.count; ++i) {
+    gsystem-&gt;loadBankFile([file_list[i] cStringUsingEncoding:NSUTF8StringEncoding], FMOD_STUDIO_LOAD_BANK_NORMAL, &amp;banks[i]);
+  }
+  gsystem-&gt;update();
+  NSString *eventStr = [<span class="st">@&quot;event:/&quot;</span> stringByAppendingString: fmod_name];
+  NSLog(<span class="st">@&quot;xxx log: LINE:%d, event_file: %@&quot;</span>, __LINE__, eventStr);
+  gsystem-&gt;getEvent([eventStr cStringUsingEncoding:NSUTF8StringEncoding], &amp;geventDesc);
+  <span class="co">// 控制延迟的，暂时不用</span>
+  <span class="co">//FMOD::System *lowLevelSystem;</span>
+  <span class="co">//gsystem-&gt;getLowLevelSystem(&amp;lowLevelSystem);</span>
+  <span class="co">//lowLevelSystem-&gt;setDSPBufferSize(4096, 2);</span>
+  <span class="co">//gsystem-&gt;getEvent(&quot;event:/xxxxx&quot;, &amp;geventDesc);</span>
+  geventDesc-&gt;createInstance(&amp;gengine);
+  gengine-&gt;start();
+  gsystem-&gt;update();
+}
+
+
+<span class="co">// Callback to free memory-point allocation when it is safe to do so</span>
+<span class="co">//</span>
+FMOD_RESULT F_CALLBACK studioCallback(FMOD_STUDIO_SYSTEM *system, FMOD_STUDIO_SYSTEM_CALLBACK_TYPE type, <span class="dt">void</span> *commanddata, <span class="dt">void</span> *userdata)
+{
+  <span class="kw">if</span> (type == FMOD_STUDIO_SYSTEM_CALLBACK_BANK_UNLOAD)
+  {
+    <span class="co">// For memory-point, it is now safe to free our memory</span>
+    FMOD::Studio::Bank* bank = (FMOD::Studio::Bank*)commanddata;
+    <span class="dt">void</span>* memory;
+    ERRCHECK(bank-&gt;getUserData(&amp;memory));
+    <span class="kw">if</span> (memory)
+    {
+      free(memory);
+    }
+  }
+  <span class="kw">return</span> FMOD_OK;
+}</code></pre></div>
+<p>现在，已经可以正常播放FMOD的音频了，接下来我们要获取音频播放过程中的事件，这个相对就很简单了，设置一下回调就ok。</p>
+<div class="sourceCode"><pre class="sourceCode objective-c"><code class="sourceCode objectivec">gengine-&gt;setCallback(markerCallback,
+                       FMOD_STUDIO_EVENT_CALLBACK_TIMELINE_MARKER
+                       | FMOD_STUDIO_EVENT_CALLBACK_TIMELINE_BEAT
+                       | FMOD_STUDIO_EVENT_CALLBACK_SOUND_PLAYED
+                       | FMOD_STUDIO_EVENT_CALLBACK_SOUND_STOPPED);
+
+<span class="co">// marker的回调</span>
+FMOD_RESULT F_CALLBACK markerCallback(FMOD_STUDIO_EVENT_CALLBACK_TYPE type, FMOD_STUDIO_EVENTINSTANCE *event, <span class="dt">void</span> *parameters) {
+  cout &lt;&lt; <span class="st">&quot;LINE:&quot;</span> &lt;&lt; __LINE__ &lt;&lt; <span class="st">&quot;,xxx log: type:&quot;</span> &lt;&lt; type &lt;&lt; <span class="st">&quot;,obj:&quot;</span> &lt;&lt; FMOD_STUDIO_EVENT_CALLBACK_TIMELINE_MARKER &lt;&lt; endl;
+  <span class="kw">if</span> (type == FMOD_STUDIO_EVENT_CALLBACK_TIMELINE_MARKER) {
+    FMOD_STUDIO_TIMELINE_MARKER_PROPERTIES* props = (FMOD_STUDIO_TIMELINE_MARKER_PROPERTIES*)parameters;
+    <span class="co">///TODO</span>
+  }
+  ...
+  <span class="kw">return</span> FMOD_OK;
+}</code></pre></div>
 
     <div class="ui divider"></div>
     <div class="ui small one item menu">

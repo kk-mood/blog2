@@ -40,7 +40,6 @@
 &lt;span class="co"&gt;// testNativeDownloadFile 是OpenNativeModule中实现的 method&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;RN端的核心代码就这几行，剩下的是iOS端的实现。&lt;/p&gt;
 &lt;div class="sourceCode"&gt;&lt;pre class="sourceCode objective-c"&gt;&lt;code class="sourceCode objectivec"&gt;&lt;span class="co"&gt;// 所有能被RN调用的方法，需要用RCT_EXPORT_METHOD声明&lt;/span&gt;
-
 RCT_EXPORT_METHOD(testNativeDownloadFile:(NSDictionary *)dict) {
   NSArray *url_list = [dict objectForKey:&lt;span class="st"&gt;@&amp;quot;url_list&amp;quot;&lt;/span&gt;];
   NSMutableArray __block *file_list = [NSMutableArray arrayWithCapacity:url_list.count];
@@ -95,6 +94,78 @@ RCT_EXPORT_METHOD(testNativeDownloadFile:(NSDictionary *)dict) {
     }
   }&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h3 id="播放fmod-studio-的-bank-音频"&gt;播放FMOD Studio 的 bank 音频&lt;/h3&gt;
+&lt;p&gt;由于FMOD官方给的API都是C/C++的，所以这里需要OC和C++混编来实现音频播放，上面的调用Native接口的代码已经把所有的音频文件下载好了，剩下的就是加载相关的库来播放。&lt;/p&gt;
+&lt;div class="sourceCode"&gt;&lt;pre class="sourceCode objective-c"&gt;&lt;code class="sourceCode objectivec"&gt;
+FMOD::Studio::System* gsystem = NULL;
+FMOD::Studio::EventDescription * geventDesc = NULL;
+FMOD::Studio::EventInstance * gengine = NULL;
+
+&lt;span class="dt"&gt;const&lt;/span&gt; &lt;span class="dt"&gt;int&lt;/span&gt; BANK_COUNT = (&lt;span class="dt"&gt;int&lt;/span&gt;)file_list.count;
+  FMOD::Studio::Bank* banks[BANK_COUNT];
+  &lt;span class="kw"&gt;if&lt;/span&gt; (gsystem == NULL) {
+    NSLog(&lt;span class="st"&gt;@&amp;quot;xxx log: LINE:%d, init fmod studio system&amp;quot;&lt;/span&gt;, __LINE__);
+    &lt;span class="co"&gt;//FMOD::Studio::System::create(&amp;amp;gsystem);&lt;/span&gt;
+  } &lt;span class="kw"&gt;else&lt;/span&gt; {
+    NSLog(&lt;span class="st"&gt;@&amp;quot;xxx log: LINE:%d, unloadAll fmod studio system&amp;quot;&lt;/span&gt;, __LINE__);
+    &lt;span class="co"&gt;//gengine-&amp;gt;stop(FMOD_STUDIO_STOP_IMMEDIATE);&lt;/span&gt;
+    &lt;span class="co"&gt;//gsystem-&amp;gt;unloadAll();&lt;/span&gt;
+    gsystem-&amp;gt;release();
+  }
+  FMOD::Studio::System::create(&amp;amp;gsystem);
+  gsystem-&amp;gt;initialize(&lt;span class="dv"&gt;1024&lt;/span&gt;, FMOD_STUDIO_INIT_NORMAL, FMOD_INIT_NORMAL, &lt;span class="dv"&gt;0&lt;/span&gt;);
+  gsystem-&amp;gt;setCallback(studioCallback, FMOD_STUDIO_SYSTEM_CALLBACK_BANK_UNLOAD);
+  &lt;span class="kw"&gt;for&lt;/span&gt; (&lt;span class="dt"&gt;int&lt;/span&gt; i = &lt;span class="dv"&gt;0&lt;/span&gt;; i &amp;lt; file_list.count; ++i) {
+    gsystem-&amp;gt;loadBankFile([file_list[i] cStringUsingEncoding:NSUTF8StringEncoding], FMOD_STUDIO_LOAD_BANK_NORMAL, &amp;amp;banks[i]);
+  }
+  gsystem-&amp;gt;update();
+  NSString *eventStr = [&lt;span class="st"&gt;@&amp;quot;event:/&amp;quot;&lt;/span&gt; stringByAppendingString: fmod_name];
+  NSLog(&lt;span class="st"&gt;@&amp;quot;xxx log: LINE:%d, event_file: %@&amp;quot;&lt;/span&gt;, __LINE__, eventStr);
+  gsystem-&amp;gt;getEvent([eventStr cStringUsingEncoding:NSUTF8StringEncoding], &amp;amp;geventDesc);
+  &lt;span class="co"&gt;// 控制延迟的，暂时不用&lt;/span&gt;
+  &lt;span class="co"&gt;//FMOD::System *lowLevelSystem;&lt;/span&gt;
+  &lt;span class="co"&gt;//gsystem-&amp;gt;getLowLevelSystem(&amp;amp;lowLevelSystem);&lt;/span&gt;
+  &lt;span class="co"&gt;//lowLevelSystem-&amp;gt;setDSPBufferSize(4096, 2);&lt;/span&gt;
+  &lt;span class="co"&gt;//gsystem-&amp;gt;getEvent(&amp;quot;event:/xxxxx&amp;quot;, &amp;amp;geventDesc);&lt;/span&gt;
+  geventDesc-&amp;gt;createInstance(&amp;amp;gengine);
+  gengine-&amp;gt;start();
+  gsystem-&amp;gt;update();
+}
+
+
+&lt;span class="co"&gt;// Callback to free memory-point allocation when it is safe to do so&lt;/span&gt;
+&lt;span class="co"&gt;//&lt;/span&gt;
+FMOD_RESULT F_CALLBACK studioCallback(FMOD_STUDIO_SYSTEM *system, FMOD_STUDIO_SYSTEM_CALLBACK_TYPE type, &lt;span class="dt"&gt;void&lt;/span&gt; *commanddata, &lt;span class="dt"&gt;void&lt;/span&gt; *userdata)
+{
+  &lt;span class="kw"&gt;if&lt;/span&gt; (type == FMOD_STUDIO_SYSTEM_CALLBACK_BANK_UNLOAD)
+  {
+    &lt;span class="co"&gt;// For memory-point, it is now safe to free our memory&lt;/span&gt;
+    FMOD::Studio::Bank* bank = (FMOD::Studio::Bank*)commanddata;
+    &lt;span class="dt"&gt;void&lt;/span&gt;* memory;
+    ERRCHECK(bank-&amp;gt;getUserData(&amp;amp;memory));
+    &lt;span class="kw"&gt;if&lt;/span&gt; (memory)
+    {
+      free(memory);
+    }
+  }
+  &lt;span class="kw"&gt;return&lt;/span&gt; FMOD_OK;
+}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;现在，已经可以正常播放FMOD的音频了，接下来我们要获取音频播放过程中的事件，这个相对就很简单了，设置一下回调就ok。&lt;/p&gt;
+&lt;div class="sourceCode"&gt;&lt;pre class="sourceCode objective-c"&gt;&lt;code class="sourceCode objectivec"&gt;gengine-&amp;gt;setCallback(markerCallback,
+                       FMOD_STUDIO_EVENT_CALLBACK_TIMELINE_MARKER
+                       | FMOD_STUDIO_EVENT_CALLBACK_TIMELINE_BEAT
+                       | FMOD_STUDIO_EVENT_CALLBACK_SOUND_PLAYED
+                       | FMOD_STUDIO_EVENT_CALLBACK_SOUND_STOPPED);
+
+&lt;span class="co"&gt;// marker的回调&lt;/span&gt;
+FMOD_RESULT F_CALLBACK markerCallback(FMOD_STUDIO_EVENT_CALLBACK_TYPE type, FMOD_STUDIO_EVENTINSTANCE *event, &lt;span class="dt"&gt;void&lt;/span&gt; *parameters) {
+  cout &amp;lt;&amp;lt; &lt;span class="st"&gt;&amp;quot;LINE:&amp;quot;&lt;/span&gt; &amp;lt;&amp;lt; __LINE__ &amp;lt;&amp;lt; &lt;span class="st"&gt;&amp;quot;,xxx log: type:&amp;quot;&lt;/span&gt; &amp;lt;&amp;lt; type &amp;lt;&amp;lt; &lt;span class="st"&gt;&amp;quot;,obj:&amp;quot;&lt;/span&gt; &amp;lt;&amp;lt; FMOD_STUDIO_EVENT_CALLBACK_TIMELINE_MARKER &amp;lt;&amp;lt; endl;
+  &lt;span class="kw"&gt;if&lt;/span&gt; (type == FMOD_STUDIO_EVENT_CALLBACK_TIMELINE_MARKER) {
+    FMOD_STUDIO_TIMELINE_MARKER_PROPERTIES* props = (FMOD_STUDIO_TIMELINE_MARKER_PROPERTIES*)parameters;
+    &lt;span class="co"&gt;///TODO&lt;/span&gt;
+  }
+  ...
+  &lt;span class="kw"&gt;return&lt;/span&gt; FMOD_OK;
+}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 </content>
   </entry>
   <entry>
