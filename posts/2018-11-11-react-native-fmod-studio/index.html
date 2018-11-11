@@ -13,7 +13,7 @@
     <link href="/manifest.json" rel="manifest" />
     <link color="#5bbad5" href="/safari-pinned-tab.svg" rel="mask-icon" />
     <meta content="#ffffff" name="theme-color" />
-    <title>抓取知乎每日吐槽</title>
+    <title>毕业5周年记</title>
     <link href="/static/dist/semantic-ui/semantic.min.css" rel="stylesheet" type="text/css" />
     <link href="/static/dist/fonts.css/fonts.css" rel="stylesheet" type="text/css" />
     <link href="/static/stylesheet/default.css" rel="stylesheet" type="text/css" />
@@ -52,50 +52,92 @@
     <article class="ui stackable divided grid"><header class="row article-head">
   <div class="column">
     <h1 class="ui header">
-      抓取知乎每日吐槽
+      毕业5周年记
     </h1>
     <div class="ui divider desktop"></div>
   </div>
 </header>
 <div class="row article-body">
-  <section class="twelve wide column"><p><strong>知乎日报</strong> 里面有一节，叫做⎾如何正确的吐槽⏌，里面有很多很有意思而有短小的回答，基本上我我每天都会看一眼。所以我就写了脚本把他们全部抓了下来，放到自己的服务器上，同时每天还在定时去抓取当天新出来的数据，然后用 <em>swift</em> 写了一个 app 来从自己的服务器获取数据来看。</p>
-<p>下面记录一下做这件事的过程。</p>
-<h2 id="抓取数据">抓取数据</h2>
-<p>要抓取知乎的吐槽数据，第一步就是要知道它对应的 <em>URL</em> ，这个获取方法也很简单，直接抓个包就能知道了，具体的形式大概如下这样：</p>
-<ul>
-<li><code>http://news-at.zhihu.com/api/4/section/2/before/xxxxxx</code> , 这个是获取整个吐槽的标题列表的url；</li>
-<li><code>http://news-at.zhihu.com/api/4/story/xxxxx</code> ，这个是获取具体某一天的内容的url。</li>
-</ul>
-<h3 id="创建数据库">创建数据库</h3>
-<p>这个数据量并不大，我建了两张表，一张存索引，一张存每天具体的内容。如下图：</p>
-<figure>
-<img src="/static/images/201501/20150726-zhihu-mysql.png" alt="Mysql表" /><figcaption>Mysql表</figcaption>
-</figure>
-<h3 id="搭建服务器">搭建服务器</h3>
-<p>有了数据，下一步就是提供 <em>CGI</em> 接口给外部调用获取数据，然后显示。</p>
-<p>然后，我用 <em>nginx</em> + <em>django</em> 搭了一个服务器，提供了三个接口，都是返回 <em>JSON</em> 格式的数据，三个接口具体如下：</p>
-<ul>
-<li><code>http://104.128.85.9:8001/api/gethomelist</code>：获取首屏的数据列表；</li>
-<li><code>http://104.128.85.9:8001/api/getnextlist?timestamp=1434666598</code>：下拉刷新的时候获取新增数据；</li>
-<li><code>http://104.128.85.9:8001/api/getstorydetail?id=4827840</code>：获取某一天具体的内容。</li>
-</ul>
-<p>可以看得出来，我这三个接口都是为了给 app 端调用而设计提供的，所以下一步就是完成一个 app 把这些内容显示出来。</p>
-<h2 id="app-端显示">app 端显示</h2>
-<p>app 端的工作就是：</p>
-<ul>
-<li>通过网络请求获取数据；</li>
-<li>解析 <em>JSON</em> 数据然后根据一定的排版显示。</li>
-</ul>
-<p>当然，我也是只实现了一个极其简陋的效果，直接放图好了： <img src="/static/images/201501/20150726-zhihu-app1.png" alt="app图" /></p>
-<figure>
-<img src="/static/images/201501/20150726-zhihu-app2.png" alt="App效果图" /><figcaption>App效果图</figcaption>
-</figure>
-<p>上面两个图是历史列表和具体某一天内容的截图，下面再放一个应用图标的图： <img src="/static/images/201501/20150726-zhihu-app3.png" /> 上面有个图标乱入了，这个是我学习 <em>swift</em> 的做的一个练习，具体可以看这篇：<a href="http://www.karottc.com/blog/2015/07/25/swift-2048/">点我</a>.</p>
-<p>整个过程大概就是这样。</p>
-<h4 id="附件资料">附件资料</h4>
-<p>上面提到的服务和抓去知乎数据的代码在这里：<a href="https://github.com/karottc/crawlzhihu">点我</a>。</p>
-<p>app 源码在这里：<a href="https://github.com/karottc/zhihudailyapp">点我</a>。</p>
-<p>2015.07.26</p>
+  <section class="twelve wide column"><h2 id="背景">背景</h2>
+<p>最近RN的项目中用的音频文件是fmod的.bank 格式的，关于fmod是什么，可以参考<a href="https://www.fmod.com/">fmod的官网</a>（https://www.fmod.com/），或者自己去网上搜索。本项目的核心诉求是，在播放音频的同时，音频会不定时的产生事件回调，通知到RN，然后RN根据事件来绘制不同的页面（展示不同的内容）。</p>
+<p>在网上根本找不到任何RN使用fmod的资料，退一步，iOS和Android 使用fmod的资料也是少之又少，都看了一遍之后，毫无帮助，没办法，只能靠自己去尝试了。</p>
+<p>从fmod官网下载了iOS、Android、H5的相关库，里面的例子全是C++的，iOS和Android的项目工程文件，根本打不开，官方指导也没有说明第一步、第二步等等分别调用什么API。fmod 以前是做PC上的游戏的，他对移动端的支持非常有限，从文档不全就能略知一二。</p>
+<p>本文就梳理一下自己摸索的流程和踩过的坑。</p>
+<h2 id="ios">iOS</h2>
+<p>首先还是必须去官网下载<a href="https://www.fmod.com/download">fmod的API文档</a>（https://www.fmod.com/download），虽然看了文档也是一脸懵逼，但是聊胜于无，也必须看，因为所有的尝试还是需要依据官方文档来进行。</p>
+<p>这个要分成两部分来讲，因为iOS和Android 两个平台，要分别写两套代码，虽然核心使用fmod api的部分是一样的。</p>
+<p>对于，iOS的平台，需要提前知道的知识点： * 会react-native（废话，不会这个就不会有这一堆问题了）； * 稍微会一点点Object-c； * 会OC和C++的混编；</p>
+<p>基本思路是在RN界面点击播放按钮，然后将音频的相关URL传递给iOS的native函数，下载音频文件，调用FMOD STUDIO API 播放、暂停、停止等操作，同时给播放时注册回调函数，在回调函数中回去数据再回调给RN，然后更新界面。</p>
+<p>下面给出关键步骤的部分代码。</p>
+<h3 id="react-native-调用ios-native-接口">React-Native 调用iOS Native 接口</h3>
+<p>在RN端是通过NativeModules 来实现的</p>
+<div class="sourceCode"><pre class="sourceCode js"><code class="sourceCode javascript"><span class="im">import</span> <span class="op">{</span>NativeModules<span class="op">}</span> <span class="im">from</span> <span class="st">&#39;react-native&#39;</span><span class="op">;</span>
+
+<span class="co">// OpenNativeModule 这个是iOS端和Android端自己定义和实现的module</span>
+<span class="kw">var</span> nativeModule <span class="op">=</span> <span class="va">NativeModules</span>.<span class="at">OpenNativeModule</span><span class="op">;</span>
+
+...
+
+<span class="co">// 调用的时候</span>
+<span class="va">nativeModule</span>.<span class="at">testNativeDownloadFile</span>(params)<span class="op">;</span>
+<span class="co">// testNativeDownloadFile 是OpenNativeModule中实现的 method</span></code></pre></div>
+<p>RN端的核心代码就这几行，剩下的是iOS端的实现。</p>
+<div class="sourceCode"><pre class="sourceCode objective-c"><code class="sourceCode objectivec"><span class="co">// 所有能被RN调用的方法，需要用RCT_EXPORT_METHOD声明</span>
+
+RCT_EXPORT_METHOD(testNativeDownloadFile:(NSDictionary *)dict) {
+  NSArray *url_list = [dict objectForKey:<span class="st">@&quot;url_list&quot;</span>];
+  NSMutableArray __block *file_list = [NSMutableArray arrayWithCapacity:url_list.count];
+  NSInteger __block task_count = <span class="dv">0</span>;
+  <span class="kw">for</span> (<span class="dt">int</span> i = <span class="dv">0</span>; i &lt; url_list.count; ++i) {
+    <span class="co">// 替换url中的空格，否则ios不支持，会有错误码-1002</span>
+    NSString *tmpUrl = [url_list[i] stringByReplacingOccurrencesOfString:<span class="st">@&quot; &quot;</span> withString:<span class="st">@&quot;%20&quot;</span>];
+    NSURL* url = [NSURL URLWithString:tmpUrl];
+    NSLog(<span class="st">@&quot;xxx log: download url: %@&quot;</span>, tmpUrl);
+    <span class="co">// 得到session对象</span>
+    NSURLSession* session = [NSURLSession sharedSession];
+    
+    <span class="co">// 创建任务</span>
+    
+    NSURLSessionDownloadTask* downloadTask = [session downloadTaskWithURL:url completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error) {
+      <span class="co">//NSLog(@&quot;xxx log: file path: %@&quot;, location.path);</span>
+      <span class="co">// NSLog(@&quot;xxx log: file name: %@&quot;, response.suggestedFilename);</span>
+      <span class="co">//NSLog(@&quot;xxx log: error code: %@&quot;, error);   // 如果有异常，输出错误信息</span>
+      <span class="co">// [file_list addObject:response.suggestedFilename];</span>
+      
+      NSString *caches = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject];
+      <span class="co">// response.suggestedFilename ：建议使用的文件名，一般跟服务器端的文件名一致</span>
+      NSString *file = [caches stringByAppendingPathComponent:response.suggestedFilename];
+      
+      <span class="co">// 将临时文件剪切或者复制Caches文件夹</span>
+      NSFileManager *mgr = [NSFileManager defaultManager];
+      
+      <span class="co">// AtPath : 剪切前的文件路径</span>
+      <span class="co">// ToPath : 剪切后的文件路径</span>
+      [mgr moveItemAtPath:location.path toPath:file error:nil];
+      
+      NSLog(<span class="st">@&quot;xxx log: file path:%@&quot;</span>, file);
+      
+      [file_list addObject:file];
+      NSLog(<span class="st">@&quot;xxx log: LINE:%d, file list: %lu&quot;</span>, __LINE__, file_list.count);
+      --task_count;  <span class="co">// 任务完成</span>
+      }];
+    <span class="co">// 开始任务</span>
+    ++task_count;
+    [downloadTask resume];
+    NSLog(<span class="st">@&quot;xxx log: finish&quot;</span>);
+    
+    <span class="co">//break;</span>
+  }
+  <span class="kw">while</span> (true) {
+    <span class="kw">if</span> (task_count &lt;= <span class="dv">0</span>) {
+      NSLog(<span class="st">@&quot;xxx log: LINE:%d, file list: %lu&quot;</span>, __LINE__, file_list.count);
+      <span class="kw">for</span> (<span class="dt">int</span> i = <span class="dv">0</span>; i &lt; file_list.count; ++i) {
+        NSLog(<span class="st">@&quot;xxx log: LINE:%d, file_name: %@&quot;</span>, __LINE__, file_list[i]);
+      }
+      <span class="kw">break</span>;
+    }
+  }</code></pre></div>
+<h3 id="播放fmod-studio-的-bank-音频">播放FMOD Studio 的 bank 音频</h3>
 
     <div class="ui divider"></div>
     <div class="ui small one item menu">
@@ -112,11 +154,11 @@
     <div class="ui small header">
       Committed
     </div>
-    <date>2015-07-26</date>
+    <date>2018-11-12</date>
     <div class="ui small header">
       Updated
     </div>
-    <date>2015-07-26</date>
+    <date>2018-11-12</date>
     <div class="ui small header">
       Category
     </div>
@@ -134,16 +176,30 @@
     </div>
     <div class="ui list">
       <div class="item">
-        <a href="/tags#知乎日报">
+        <a href="/tags#ReactNative">
           <div class="ui label">
-            知乎日报<sup>1</sup>
+            ReactNative<sup>1</sup>
           </div>
         </a>
       </div>
       <div class="item">
-        <a href="/tags#爬虫">
+        <a href="/tags#FMOD">
           <div class="ui label">
-            爬虫<sup>1</sup>
+            FMOD<sup>1</sup>
+          </div>
+        </a>
+      </div>
+      <div class="item">
+        <a href="/tags#iOS">
+          <div class="ui label">
+            iOS<sup>1</sup>
+          </div>
+        </a>
+      </div>
+      <div class="item">
+        <a href="/tags#Android">
+          <div class="ui label">
+            Android<sup>1</sup>
           </div>
         </a>
       </div>
@@ -152,7 +208,7 @@
       Links
     </div>
     <div class="ui small two item menu">
-      <a class="item" title="用 Swift 语言实现 2048游戏" href="/posts/2015-07-25-swift-2048/">Prev</a><a class="item" title="C++的引用类型的变量到底占不占用内存空间？" href="/posts/2015-07-29-cpp-reference/">Next</a>
+      <a class="item" title="毕业5周年记" href="/posts/2018-07-01-5th-anniversary-of-graduation/">Prev</a><a class="item" title="Archive" href="/archive">Archive</a>
     </div>
   </aside>
 </div>
