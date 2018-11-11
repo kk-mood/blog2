@@ -209,6 +209,35 @@ FMOD_RESULT F_CALLBACK markerCallback(FMOD_STUDIO_EVENT_CALLBACK_TYPE type, FMOD
   ...
   <span class="kw">return</span> FMOD_OK;
 }</code></pre></div>
+<p>接下来需要把音频的回调传递给RN侧，iOS侧通过一个事件通知来做。</p>
+<div class="sourceCode"><pre class="sourceCode objective-c"><code class="sourceCode objectivec"><span class="co">// native 主动通知 rn端</span>
+- (instancetype)init {
+  <span class="kw">self</span> = [<span class="kw">super</span> init];
+  <span class="kw">if</span> (<span class="kw">self</span>) {
+    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+    [defaultCenter removeObserver:<span class="kw">self</span>];
+    [defaultCenter addObserver:<span class="kw">self</span>
+                      selector:<span class="kw">@selector</span>(sendCustomEvent:)
+                          name:<span class="st">@&quot;sendCustomEventNotification&quot;</span>
+                        object:nil];
+  }
+  <span class="kw">return</span> <span class="kw">self</span>;
+}
+- (<span class="dt">void</span>)sendCustomEvent:(NSNotification *)notification {
+  NSString *name = notification.object;
+  NSLog(<span class="st">@&quot;LINE: %d,xxx log: notification:%@&quot;</span>, __LINE__,name);
+  [<span class="kw">self</span> sendEventWithName:<span class="st">@&quot;customEvent&quot;</span> body:name];
+}</code></pre></div>
+<p>RN侧接收事件，然后进行相应渲染。</p>
+<div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="at">componentDidMount</span>() <span class="op">{</span>
+    <span class="kw">let</span> eventEmitter <span class="op">=</span> <span class="kw">new</span> <span class="at">NativeEventEmitter</span>(nativeModule)<span class="op">;</span>
+    <span class="kw">this</span>.<span class="at">listener</span> <span class="op">=</span> <span class="va">eventEmitter</span>.<span class="at">addListener</span>(<span class="st">&quot;customEvent&quot;</span><span class="op">,</span> <span class="kw">this</span>.<span class="at">listenCallback</span>)<span class="op">;</span>
+  <span class="op">}</span>
+  <span class="at">listenCallback</span>(item) <span class="op">{</span>
+    <span class="va">console</span>.<span class="at">log</span>(<span class="st">&quot;native notition:&quot;</span><span class="op">+</span>item)<span class="op">;</span>
+  <span class="op">}</span></code></pre></div>
+<p>以上，就是在iOS上播放fmod studio 的 bank 音频的整个流程。</p>
+<h2 id="android">Android</h2>
 
     <div class="ui divider"></div>
     <div class="ui small one item menu">

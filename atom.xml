@@ -166,6 +166,35 @@ FMOD_RESULT F_CALLBACK markerCallback(FMOD_STUDIO_EVENT_CALLBACK_TYPE type, FMOD
   ...
   &lt;span class="kw"&gt;return&lt;/span&gt; FMOD_OK;
 }&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;接下来需要把音频的回调传递给RN侧，iOS侧通过一个事件通知来做。&lt;/p&gt;
+&lt;div class="sourceCode"&gt;&lt;pre class="sourceCode objective-c"&gt;&lt;code class="sourceCode objectivec"&gt;&lt;span class="co"&gt;// native 主动通知 rn端&lt;/span&gt;
+- (instancetype)init {
+  &lt;span class="kw"&gt;self&lt;/span&gt; = [&lt;span class="kw"&gt;super&lt;/span&gt; init];
+  &lt;span class="kw"&gt;if&lt;/span&gt; (&lt;span class="kw"&gt;self&lt;/span&gt;) {
+    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+    [defaultCenter removeObserver:&lt;span class="kw"&gt;self&lt;/span&gt;];
+    [defaultCenter addObserver:&lt;span class="kw"&gt;self&lt;/span&gt;
+                      selector:&lt;span class="kw"&gt;@selector&lt;/span&gt;(sendCustomEvent:)
+                          name:&lt;span class="st"&gt;@&amp;quot;sendCustomEventNotification&amp;quot;&lt;/span&gt;
+                        object:nil];
+  }
+  &lt;span class="kw"&gt;return&lt;/span&gt; &lt;span class="kw"&gt;self&lt;/span&gt;;
+}
+- (&lt;span class="dt"&gt;void&lt;/span&gt;)sendCustomEvent:(NSNotification *)notification {
+  NSString *name = notification.object;
+  NSLog(&lt;span class="st"&gt;@&amp;quot;LINE: %d,xxx log: notification:%@&amp;quot;&lt;/span&gt;, __LINE__,name);
+  [&lt;span class="kw"&gt;self&lt;/span&gt; sendEventWithName:&lt;span class="st"&gt;@&amp;quot;customEvent&amp;quot;&lt;/span&gt; body:name];
+}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;RN侧接收事件，然后进行相应渲染。&lt;/p&gt;
+&lt;div class="sourceCode"&gt;&lt;pre class="sourceCode javascript"&gt;&lt;code class="sourceCode javascript"&gt;&lt;span class="at"&gt;componentDidMount&lt;/span&gt;() &lt;span class="op"&gt;{&lt;/span&gt;
+    &lt;span class="kw"&gt;let&lt;/span&gt; eventEmitter &lt;span class="op"&gt;=&lt;/span&gt; &lt;span class="kw"&gt;new&lt;/span&gt; &lt;span class="at"&gt;NativeEventEmitter&lt;/span&gt;(nativeModule)&lt;span class="op"&gt;;&lt;/span&gt;
+    &lt;span class="kw"&gt;this&lt;/span&gt;.&lt;span class="at"&gt;listener&lt;/span&gt; &lt;span class="op"&gt;=&lt;/span&gt; &lt;span class="va"&gt;eventEmitter&lt;/span&gt;.&lt;span class="at"&gt;addListener&lt;/span&gt;(&lt;span class="st"&gt;&amp;quot;customEvent&amp;quot;&lt;/span&gt;&lt;span class="op"&gt;,&lt;/span&gt; &lt;span class="kw"&gt;this&lt;/span&gt;.&lt;span class="at"&gt;listenCallback&lt;/span&gt;)&lt;span class="op"&gt;;&lt;/span&gt;
+  &lt;span class="op"&gt;}&lt;/span&gt;
+  &lt;span class="at"&gt;listenCallback&lt;/span&gt;(item) &lt;span class="op"&gt;{&lt;/span&gt;
+    &lt;span class="va"&gt;console&lt;/span&gt;.&lt;span class="at"&gt;log&lt;/span&gt;(&lt;span class="st"&gt;&amp;quot;native notition:&amp;quot;&lt;/span&gt;&lt;span class="op"&gt;+&lt;/span&gt;item)&lt;span class="op"&gt;;&lt;/span&gt;
+  &lt;span class="op"&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;以上，就是在iOS上播放fmod studio 的 bank 音频的整个流程。&lt;/p&gt;
+&lt;h2 id="android"&gt;Android&lt;/h2&gt;
 </content>
   </entry>
   <entry>
