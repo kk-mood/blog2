@@ -487,12 +487,12 @@ JNIEXPORT <span class="dt">void</span> JNICALL Java_com_test_1rn_1native_OpenNat
     LOGD(<span class="st">&quot;stop status: </span><span class="sc">%d</span><span class="st">&quot;</span>, gStop);
 }</code></pre></div>
 <p>需要修改app/build.gradle 文件，才能把fmod相关的.so 打包进apk中。</p>
-<pre class="configure"><code>    sourceSets.main {
+<pre class="shell"><code>    sourceSets.main {
        jniLibs.srcDirs = [&#39;src/main/jniLibs&#39;]
 
     }</code></pre>
 <p>要解决react-native 和 FMOD之后引起的32-bit和64-bit 的arm结构不兼容问题，也需要修改app/build.gradle.</p>
-<pre class="configure"><code>defaultConfig {
+<pre class="shell"><code>defaultConfig {
     applicationId &quot;com.test_rn_native&quot;
     minSdkVersion 16
     targetSdkVersion 22
