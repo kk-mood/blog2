@@ -1,20 +1,109 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <id>http://blog2.karottc.com/</id>
+  <id>http://blogs.karottc.com/</id>
   <title>杂思未济</title>
-  <updated>2018-11-11T18:29:50Z</updated>
-  <link rel="alternate" href="http://blog2.karottc.com/"/>
-  <link rel="self" href="http://blog2.karottc.com/atom.xml"/>
+  <updated>2020-05-23T23:07:21Z</updated>
+  <link rel="alternate" href="http://blogs.karottc.com/"/>
+  <link rel="self" href="http://blogs.karottc.com/atom.xml"/>
   <author>
     <name>karottc</name>
-    <uri>http://blog2.karottc.com</uri>
+    <uri>http://blogs.karottc.com</uri>
   </author>
   <entry>
-    <id>tag:blog2.karottc.com,2018-11-11:/posts/2018-11-11-react-native-fmod-studio/</id>
+    <id>tag:blogs.karottc.com,2020-05-23:/posts/2020-05-23-personal-tool-box/</id>
+    <title type="html">搭建个人工具箱</title>
+    <published>2020-05-23T23:07:18Z</published>
+    <updated>2020-05-23T23:07:21Z</updated>
+    <link rel="alternate" href="http://blogs.karottc.com/posts/2020-05-23-personal-tool-box/"/>
+    <content type="html">&lt;p&gt;本文讲一下如何搭建一个私人的工具箱，来更好的帮助工作和生活。&lt;/p&gt;
+&lt;h2 id="什么是工具箱"&gt;什么是工具箱&lt;/h2&gt;
+&lt;p&gt;顾名思义，工具箱就是一系列工具的合集，类似古代医生的药箱，通常手艺人、匠人这类的人都有这样一个箱子，里面是各种问题、场景的解决方案。&lt;/p&gt;
+&lt;h2 id="为什么要有工具箱"&gt;为什么要有工具箱&lt;/h2&gt;
+&lt;p&gt;有了工具箱，再碰到类似的问题、场景，便可以直接从工具箱中取出合适的工具直接解决，而不是从头开始再做一个能解决这个问题的工具，比如现在要钉一个钉子：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;没有工具箱：先用木头、铁器做成一个锤子，然后去敲钉子，&lt;/li&gt;
+&lt;li&gt;有了工具箱：直接取出锤子敲钉子&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;因为需要提高效率，所以需要工具箱。&lt;/p&gt;
+&lt;h2 id="怎么搭建工具箱"&gt;怎么搭建工具箱&lt;/h2&gt;
+&lt;p&gt;不同职业工具箱内容肯定是不同的，但是内容虽然不一样，操作的方法却是一样的——道虽不同，其理一也。&lt;/p&gt;
+&lt;h3 id="代码工具箱"&gt;代码工具箱&lt;/h3&gt;
+&lt;p&gt;这个里面主要是放一些常用的代码片段，时常用的时候不用每次都去google，自己工具箱里的工具比临时去google 更加可靠和高效，比如 Python 常用的文件结构：&lt;/p&gt;
+&lt;div class="sourceCode"&gt;&lt;pre class="sourceCode python"&gt;&lt;code class="sourceCode python"&gt;&lt;span class="co"&gt;#!/usr/bin/env python&lt;/span&gt;
+&lt;span class="co"&gt;# -*- coding: utf-8 -*-&lt;/span&gt;
+
+&lt;span class="im"&gt;import&lt;/span&gt; os
+
+&lt;span class="cf"&gt;if&lt;/span&gt; &lt;span class="va"&gt;__name__&lt;/span&gt; &lt;span class="op"&gt;==&lt;/span&gt; &lt;span class="st"&gt;&amp;quot;__main__&amp;quot;&lt;/span&gt;:
+    &lt;span class="co"&gt;# &lt;/span&gt;&lt;span class="al"&gt;TODO&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;python的时间转换：&lt;/p&gt;
+&lt;div class="sourceCode"&gt;&lt;pre class="sourceCode python"&gt;&lt;code class="sourceCode python"&gt;&lt;span class="co"&gt;# datetime 转成时间戳&lt;/span&gt;
+&lt;span class="co"&gt;#字符串转成 datetime， 2015-08-28 16:43:37.283000&lt;/span&gt;
+d &lt;span class="op"&gt;=&lt;/span&gt; datetime.datetime.strptime(strValue, &lt;span class="st"&gt;&amp;quot;%Y-%m-&lt;/span&gt;&lt;span class="sc"&gt;%d&lt;/span&gt;&lt;span class="st"&gt; %H:%M:%S.&lt;/span&gt;&lt;span class="sc"&gt;%f&lt;/span&gt;&lt;span class="st"&gt;&amp;quot;&lt;/span&gt;)
+t &lt;span class="op"&gt;=&lt;/span&gt; d.timetuple()
+timeStamp &lt;span class="op"&gt;=&lt;/span&gt; &lt;span class="bu"&gt;int&lt;/span&gt;(time.mktime(t))   &lt;span class="co"&gt;# 秒&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;等等各种常用的片段，给个示范的不完整截图： &lt;img src="https://blogimages-1254083755.file.myqcloud.com/blog/blog_20200523_01.jpg" alt="工具箱截图" /&gt;&lt;/p&gt;
+&lt;p&gt;代码工具箱的目录组织，可以如下：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ tree -L 2
+.
+├── cpp
+│   └── readme-cpp.md
+├── java
+│   └── readme-java.md
+├── kindle
+│   └── kindle_notes_export.py
+├── latex
+│   └── readme-latex.md
+├── python
+│   ├── mysql_util.py
+│   └── readme-python.md
+├── ss
+│   └── main_ss.py
+└── thinking
+    ├── images
+    └── thinking-model.md&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="私人google"&gt;私人Google&lt;/h3&gt;
+&lt;p&gt;在如今这个信息纷繁复杂的时代，信息可以分成几个类型：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;外网公开可搜索的，比如google、百度一搜就能有的；&lt;/li&gt;
+&lt;li&gt;付费类知识，比如：得到、极客时间等平台付费课程&lt;/li&gt;
+&lt;li&gt;平台类信息：比如微信公众号，在外网搜不到；&lt;/li&gt;
+&lt;li&gt;自己的产出、笔记等等；&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;要想同时搜索到这些类型的信息，没有任何一个现有平台可以做到，所以我们需要搭建自己的私人搜索引擎，同时也是我们的外部大脑。这样的工具需要满足下面的条件：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;输入方便：导入、剪藏网页等&lt;/li&gt;
+&lt;li&gt;输出方便：搜索能力&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;额外的非必须的加分项：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;格式好&lt;/li&gt;
+&lt;li&gt;编辑功能强大&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;根据我多年（超过5年）的使用各种软件的结论，很多软件额外加分项做的很好，可惜的是上面必须的核心功能却远远不够，最终我长期使用的是：Evernote，做私人Google 是非常优秀的，和这个软件的定位合适相符的。&lt;/p&gt;
+&lt;p&gt;当然，工具各有喜好，只要能达到自己的目的就好，我这两天在Telegram 上发起过一个投票，看看大家都偏向于哪个工具，这里把结果发出来，给大家参考，自行选择： &lt;img src="https://blogimages-1254083755.file.myqcloud.com/blog/blog_20200523_02_evernote.png" alt="各种note软件" /&gt;&lt;/p&gt;
+&lt;p&gt;关于Evernote的组织形式，给一个我的参考： &lt;img src="https://blogimages-1254083755.file.myqcloud.com/blog/blog_20200523_03_evernote.png" alt="evernote结构" /&gt;&lt;/p&gt;
+&lt;p&gt;我稍微了研究了一下Evernote，对于电脑端：基本笔记本、层级这类信息是放在sqlite 中，笔记内容是放在内置的一个es之类的搜索引擎里面，所以在离线时也能做到完美搜索。猜测服务器那边也多半是mysql+es+redis这种架构，同时加了一些机器学习、OCR的功能。知道了它的原理，用起来会更加放心。&lt;/p&gt;
+&lt;h3 id="一些好用的软件"&gt;一些好用的软件&lt;/h3&gt;
+&lt;p&gt;Google calendar+Google keep：用来做日程规划、GTD、TODO list。有明确时间点的就在放入google calendar中，没有明确时间的放入google keep 中，简单实用，比面试上各种眼花缭乱的GTD、TODO 工具好了无数倍。而且这两个工具都在Google的 Gsuit 中，所以也不用担心被Google砍掉。&lt;/p&gt;
+&lt;p&gt;Typora：一款很优秀的markdown 写作工具；&lt;/p&gt;
+&lt;p&gt;这里讲一个复杂的使用场景：我经常用typora 写了东西，想放到evernote中，这样可以方便搜索，但是又想保持在Typora 中优秀的样式。如果直接导出html，然后复制到Evernote，样式还是会变化走样，导出PDF放入Evernote是附件形式，不够直接。&lt;/p&gt;
+&lt;p&gt;所以，完美却有点复杂的方法是：&lt;/p&gt;
+&lt;ol type="1"&gt;
+&lt;li&gt;导出html格式文件&lt;/li&gt;
+&lt;li&gt;启动nginx，本地搞个web服务器&lt;/li&gt;
+&lt;li&gt;将第一步的网页放入nginx中，使得能够访问&lt;/li&gt;
+&lt;li&gt;浏览器访问网页，然后使用浏览器的Evernote的剪藏插件保存这个网页&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;通过这样的方式就可以做到完美格式存入Evernote。&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:blogs.karottc.com,2018-11-11:/posts/2018-11-11-react-native-fmod-studio/</id>
     <title type="html">React-Native 播放 FMOD Studio 的 bank 音频</title>
     <published>2018-11-11T18:29:46Z</published>
     <updated>2018-11-11T18:29:50Z</updated>
-    <link rel="alternate" href="http://blog2.karottc.com/posts/2018-11-11-react-native-fmod-studio/"/>
+    <link rel="alternate" href="http://blogs.karottc.com/posts/2018-11-11-react-native-fmod-studio/"/>
     <content type="html">&lt;h2 id="背景"&gt;背景&lt;/h2&gt;
 &lt;p&gt;最近RN的项目中用的音频文件是fmod的.bank 格式的，关于fmod是什么，可以参考&lt;a href="https://www.fmod.com/"&gt;fmod的官网&lt;/a&gt;（https://www.fmod.com/），或者自己去网上搜索。本项目的核心诉求是，在播放音频的同时，音频会不定时的产生事件回调，通知到RN，然后RN根据事件来绘制不同的页面（展示不同的内容）。&lt;/p&gt;
 &lt;p&gt;在网上根本找不到任何RN使用fmod的资料，退一步，iOS和Android 使用fmod的资料也是少之又少，都看了一遍之后，毫无帮助，没办法，只能靠自己去尝试了。&lt;/p&gt;
@@ -488,11 +577,11 @@ JNIEXPORT &lt;span class="dt"&gt;void&lt;/span&gt; JNICALL Java_com_test_1rn_1na
 </content>
   </entry>
   <entry>
-    <id>tag:blog2.karottc.com,2018-06-12:/posts/2018-07-01-5th-anniversary-of-graduation/</id>
+    <id>tag:blogs.karottc.com,2018-06-12:/posts/2018-07-01-5th-anniversary-of-graduation/</id>
     <title type="html">毕业5周年记</title>
     <published>2018-06-12T12:26:17Z</published>
     <updated>2018-06-18T03:03:17Z</updated>
-    <link rel="alternate" href="http://blog2.karottc.com/posts/2018-07-01-5th-anniversary-of-graduation/"/>
+    <link rel="alternate" href="http://blogs.karottc.com/posts/2018-07-01-5th-anniversary-of-graduation/"/>
     <content type="html">&lt;h2 id="序"&gt;序&lt;/h2&gt;
 &lt;p&gt;从2013年6月底离校至今，已经毕业5年了，这几年的经历，对我而言，现在并不知道意味着什么。一直以为自己还是刚毕业的样子，然而看到组内已经有95后的小鲜肉入职时，猛然发现时间已悄悄过去多年。和基友聚餐喝酒聊天时，酒量的下降也提示着我已不是少年。&lt;/p&gt;
 &lt;p&gt;年岁渐长，焦虑日增，对自己的人生愈加需要思考明白。&lt;/p&gt;
@@ -841,11 +930,11 @@ JNIEXPORT &lt;span class="dt"&gt;void&lt;/span&gt; JNICALL Java_com_test_1rn_1na
 </content>
   </entry>
   <entry>
-    <id>tag:blog2.karottc.com,2018-06-08:/posts/2018-06-08-the-blogs-i-read-in-those-years/</id>
+    <id>tag:blogs.karottc.com,2018-06-08:/posts/2018-06-08-the-blogs-i-read-in-those-years/</id>
     <title type="html">那些年我读过的Blog（Ⅰ）</title>
     <published>2018-06-08T12:26:17Z</published>
     <updated>2018-06-10T12:26:17Z</updated>
-    <link rel="alternate" href="http://blog2.karottc.com/posts/2018-06-08-the-blogs-i-read-in-those-years/"/>
+    <link rel="alternate" href="http://blogs.karottc.com/posts/2018-06-08-the-blogs-i-read-in-those-years/"/>
     <content type="html">&lt;h2 id="序"&gt;序&lt;/h2&gt;
 &lt;p&gt;近期发现自己已经很久很久没有写过文章，其中包括公开的和非公开的Blog，于是自己去翻了以前很多关注的人的Blog，发现也已经有很大一部分没有更新了，遂有了本文，梳理一下自己那些年关注过并且现在已经不再更新的Blog。&lt;/p&gt;
 &lt;p&gt;我是从2009年下半年开始看Blog的&lt;sup&gt;&lt;a href="#fn:1" name="fnref:1"&gt;1&lt;/a&gt;&lt;/sup&gt;，一直保持较高频率的时间看了4年，是这些Blog的文章伴随了我的成长，一路走来。&lt;/p&gt;
@@ -929,11 +1018,11 @@ JNIEXPORT &lt;span class="dt"&gt;void&lt;/span&gt; JNICALL Java_com_test_1rn_1na
 </content>
   </entry>
   <entry>
-    <id>tag:blog2.karottc.com,2017-08-25:/posts/2017-08-25-play-king-of-glory-9-months/</id>
+    <id>tag:blogs.karottc.com,2017-08-25:/posts/2017-08-25-play-king-of-glory-9-months/</id>
     <title type="html">我玩王者荣耀这九个月</title>
     <published>2017-08-25T12:26:17Z</published>
     <updated>2017-05-25T12:26:17Z</updated>
-    <link rel="alternate" href="http://blog2.karottc.com/posts/2017-08-25-play-king-of-glory-9-months/"/>
+    <link rel="alternate" href="http://blogs.karottc.com/posts/2017-08-25-play-king-of-glory-9-months/"/>
     <content type="html">&lt;p&gt;从去年12月份（准确的时间是：2016.12.01）开始玩王者荣耀，到现在也差不多9个月了，从最开始的狂热，到现在淡漠。所以今天就来回顾一下，谈谈得失，梳理一下心路历程的变化。&lt;/p&gt;
 &lt;figure&gt;
 &lt;img src="/static/images/2017/20170825_game_01.JPG" alt="最高段位" /&gt;&lt;figcaption&gt;最高段位&lt;/figcaption&gt;
@@ -955,11 +1044,11 @@ JNIEXPORT &lt;span class="dt"&gt;void&lt;/span&gt; JNICALL Java_com_test_1rn_1na
 </content>
   </entry>
   <entry>
-    <id>tag:blog2.karottc.com,2016-11-26:/posts/2016-11-26-socket-read-function/</id>
+    <id>tag:blogs.karottc.com,2016-11-26:/posts/2016-11-26-socket-read-function/</id>
     <title type="html">Linux网络中的read函数</title>
     <published>2016-11-26T12:26:17Z</published>
     <updated>2016-11-26T12:26:17Z</updated>
-    <link rel="alternate" href="http://blog2.karottc.com/posts/2016-11-26-socket-read-function/"/>
+    <link rel="alternate" href="http://blogs.karottc.com/posts/2016-11-26-socket-read-function/"/>
     <content type="html">&lt;p&gt;这是一篇查漏补缺的文章，探究一下linux网络编程中read函数的几种返回值，以及分别在什么情况下发生的，当然也会顺带提及 &lt;em&gt;TCP&lt;/em&gt; 的一点点知识（毕竟谈到网络是离不开TCP的）。&lt;/p&gt;
 &lt;p&gt;为了验证，写了一个 client 和 server 来测试相关的东西。&lt;/p&gt;
 &lt;h2 id="tcp的三次握手和三次挥手"&gt;TCP的三次握手和三次挥手&lt;/h2&gt;
@@ -1027,11 +1116,11 @@ JNIEXPORT &lt;span class="dt"&gt;void&lt;/span&gt; JNICALL Java_com_test_1rn_1na
 </content>
   </entry>
   <entry>
-    <id>tag:blog2.karottc.com,2016-11-19:/posts/2016-11-19-tcp/</id>
+    <id>tag:blogs.karottc.com,2016-11-19:/posts/2016-11-19-tcp/</id>
     <title type="html">一张图了解TCP</title>
     <published>2016-11-19T12:26:17Z</published>
     <updated>2016-11-19T12:26:17Z</updated>
-    <link rel="alternate" href="http://blog2.karottc.com/posts/2016-11-19-tcp/"/>
+    <link rel="alternate" href="http://blogs.karottc.com/posts/2016-11-19-tcp/"/>
     <content type="html">&lt;p&gt;从下面一张图了解TCP：&lt;/p&gt;
 &lt;figure&gt;
 &lt;img src="/static/images/2016/TCP.svg" alt="TCP" /&gt;&lt;figcaption&gt;TCP&lt;/figcaption&gt;
@@ -1039,11 +1128,11 @@ JNIEXPORT &lt;span class="dt"&gt;void&lt;/span&gt; JNICALL Java_com_test_1rn_1na
 </content>
   </entry>
   <entry>
-    <id>tag:blog2.karottc.com,2016-11-05:/posts/2016-11-05-data-mining-and-its-application/</id>
+    <id>tag:blogs.karottc.com,2016-11-05:/posts/2016-11-05-data-mining-and-its-application/</id>
     <title type="html">据挖掘及其应用 —— 杨强讲座</title>
     <published>2016-11-05T12:26:17Z</published>
     <updated>2016-11-05T12:26:17Z</updated>
-    <link rel="alternate" href="http://blog2.karottc.com/posts/2016-11-05-data-mining-and-its-application/"/>
+    <link rel="alternate" href="http://blogs.karottc.com/posts/2016-11-05-data-mining-and-its-application/"/>
     <content type="html">&lt;figure&gt;
 &lt;img src="/static/images/2016/yangqiang.jpg" alt="杨强教授简介" /&gt;&lt;figcaption&gt;杨强教授简介&lt;/figcaption&gt;
 &lt;/figure&gt;
@@ -1124,11 +1213,11 @@ JNIEXPORT &lt;span class="dt"&gt;void&lt;/span&gt; JNICALL Java_com_test_1rn_1na
 </content>
   </entry>
   <entry>
-    <id>tag:blog2.karottc.com,2015-07-29:/posts/2015-07-29-cpp-reference/</id>
+    <id>tag:blogs.karottc.com,2015-07-29:/posts/2015-07-29-cpp-reference/</id>
     <title type="html">C++的引用类型的变量到底占不占用内存空间？</title>
     <published>2015-07-29T12:26:17Z</published>
     <updated>2015-07-29T12:26:17Z</updated>
-    <link rel="alternate" href="http://blog2.karottc.com/posts/2015-07-29-cpp-reference/"/>
+    <link rel="alternate" href="http://blogs.karottc.com/posts/2015-07-29-cpp-reference/"/>
     <content type="html">&lt;p&gt;分析一下 &lt;strong&gt;C++&lt;/strong&gt; 里面的引用类型（例如：&lt;code&gt;int &amp;amp;r = a;&lt;/code&gt; ）中的 &lt;code&gt;r&lt;/code&gt; 变量是否占用内存空间呢？是否和 &lt;code&gt;int *p = &amp;amp;a;&lt;/code&gt; 中的 &lt;code&gt;p&lt;/code&gt; 变量一样占用内存空间呢？&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;本文将给出答案。&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;直接看一个简单的例子：&lt;br /&gt;&lt;/p&gt;
@@ -1168,11 +1257,11 @@ JNIEXPORT &lt;span class="dt"&gt;void&lt;/span&gt; JNICALL Java_com_test_1rn_1na
 </content>
   </entry>
   <entry>
-    <id>tag:blog2.karottc.com,2015-07-26:/posts/2015-07-26-zhihu-sarcasm/</id>
+    <id>tag:blogs.karottc.com,2015-07-26:/posts/2015-07-26-zhihu-sarcasm/</id>
     <title type="html">抓取知乎每日吐槽</title>
     <published>2015-07-26T12:26:17Z</published>
     <updated>2015-07-26T12:26:17Z</updated>
-    <link rel="alternate" href="http://blog2.karottc.com/posts/2015-07-26-zhihu-sarcasm/"/>
+    <link rel="alternate" href="http://blogs.karottc.com/posts/2015-07-26-zhihu-sarcasm/"/>
     <content type="html">&lt;p&gt;&lt;strong&gt;知乎日报&lt;/strong&gt; 里面有一节，叫做⎾如何正确的吐槽⏌，里面有很多很有意思而有短小的回答，基本上我我每天都会看一眼。所以我就写了脚本把他们全部抓了下来，放到自己的服务器上，同时每天还在定时去抓取当天新出来的数据，然后用 &lt;em&gt;swift&lt;/em&gt; 写了一个 app 来从自己的服务器获取数据来看。&lt;/p&gt;
 &lt;p&gt;下面记录一下做这件事的过程。&lt;/p&gt;
 &lt;h2 id="抓取数据"&gt;抓取数据&lt;/h2&gt;
@@ -1211,46 +1300,6 @@ JNIEXPORT &lt;span class="dt"&gt;void&lt;/span&gt; JNICALL Java_com_test_1rn_1na
 &lt;p&gt;上面提到的服务和抓去知乎数据的代码在这里：&lt;a href="https://github.com/karottc/crawlzhihu"&gt;点我&lt;/a&gt;。&lt;/p&gt;
 &lt;p&gt;app 源码在这里：&lt;a href="https://github.com/karottc/zhihudailyapp"&gt;点我&lt;/a&gt;。&lt;/p&gt;
 &lt;p&gt;2015.07.26&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <id>tag:blog2.karottc.com,2015-07-25:/posts/2015-07-25-swift-2048/</id>
-    <title type="html">用 Swift 语言实现 2048游戏</title>
-    <published>2015-07-25T12:26:17Z</published>
-    <updated>2015-07-25T12:26:17Z</updated>
-    <link rel="alternate" href="http://blog2.karottc.com/posts/2015-07-25-swift-2048/"/>
-    <content type="html">&lt;p&gt;前段时间粗浅的学习一下 �Swift 这个语言，一个多月前的苹果开发者大会上，Swift已经更新到了 &lt;strong&gt;SWift2.0&lt;/strong&gt; 了，相比1.0有了不少的变化，有些适配的 Swift1.0的库，现在已经不能直接拿来用了，需要稍微改一下，比如sqlite3.0，这个在下文中会讲到。本文主要记录一下用 �Swift 实现2048游戏这个过程。&lt;/p&gt;
-&lt;h3 id="基本功能的设计"&gt;基本功能的设计&lt;/h3&gt;
-&lt;p&gt;游戏在启动之后应该包括两个界面，1. 游戏的主界面；2. 游戏的设置界面，比如可以设置过关的分数，设置维度来控制难易度。&lt;/p&gt;
-&lt;p&gt;这种两个屏用 &lt;em&gt;UINavigationController&lt;/em&gt; 就可以搞定，主界面主要是绘图和分数的展示，设置界面主要是通过 &lt;em&gt;Label&lt;/em&gt; 和 &lt;em&gt;Button&lt;/em&gt; 来展示设置和响应用户设置。&lt;/p&gt;
-&lt;h3 id="游戏界面的实现"&gt;游戏界面的实现&lt;/h3&gt;
-&lt;p&gt;这是主要的工作，分成几步来说明：&lt;/p&gt;
-&lt;h4 id="游戏模型"&gt;游戏模型&lt;/h4&gt;
-&lt;p&gt;游戏模型通过一个 &lt;strong&gt;4 x 4&lt;/strong&gt; 的二维矩阵来实现：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;要保存当前的各个位置的数字；&lt;/li&gt;
-&lt;li&gt;控制新生成的数字；&lt;/li&gt;
-&lt;li&gt;记录当前的最大值；&lt;/li&gt;
-&lt;li&gt;判断当前是否每个位置上都有了数字；&lt;/li&gt;
-&lt;li&gt;滑动时判断相邻两个是否可以合并，生成合并之后的数字。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;这个部分是整个游戏的核心，因为所有界面上展示的数据，都是来自于这个游戏模型的当前数值。&lt;/p&gt;
-&lt;h4 id="初始界面"&gt;初始界面&lt;/h4&gt;
-&lt;p&gt;第一步：绘制一个初始的界面，也就是 &lt;strong&gt;4 X 4&lt;/strong&gt; 的一个格子；&lt;/p&gt;
-&lt;p&gt;第二步：初始数字的生成，用随机算法任意生成两个数字，同时控制数字 &lt;strong&gt;2&lt;/strong&gt; 出现的概率是90%，而数字 &lt;strong&gt;4&lt;/strong&gt; 出现的概率是 10%。&lt;/p&gt;
-&lt;p&gt;第三步：合并相邻数字。&lt;/p&gt;
-&lt;h4 id="游戏主体玩法"&gt;游戏主体玩法&lt;/h4&gt;
-&lt;p&gt;第一步：添加新出现数字的动画；&lt;/p&gt;
-&lt;p&gt;第二步：添加两个数字合并的动画；&lt;/p&gt;
-&lt;p&gt;第三步：在主界面增加收拾识别，本游戏中只用支持上下左右四种手势即可；&lt;/p&gt;
-&lt;p&gt;第四步：数字移动的算法，以向下滑动为例：当向下滑动的时候，从第一行依次向下移动一个位置（如果可以移动的话），同时移动了当前的位置的数字，上面位置的数字也有做相应的移动；&lt;/p&gt;
-&lt;p&gt;第五步：相邻数字的合并，移动之后，判断相邻的数字，如果相等，就合并；&lt;/p&gt;
-&lt;p&gt;第六步：合并之后，在剩余的位置上新生成一个数字，然后绘制图形。&lt;/p&gt;
-&lt;h3 id="小细节适配"&gt;小细节适配&lt;/h3&gt;
-&lt;p&gt;剩下要做的就是让游戏的设置生效，同时保存当前的游戏数据，在下一次启动的时候恢复。这里可以用sqlite保存，在github上有一个swift封装好的sqlite库，但是并能直接用到swift2.0上，所以，我做了小小的修改适配。&lt;/p&gt;
-&lt;p&gt;最后，整个游戏的源码，在这里：&lt;a href="https://github.com/karottc/swift-practice/tree/master/game2048"&gt;点我&lt;/a&gt;。&lt;/p&gt;
-&lt;p&gt;界面太丑了，所以我就不放游戏最后的截图了。等我什么时候心情好了再来美化一下界面。&lt;/p&gt;
-&lt;p&gt;2015.07.25&lt;/p&gt;
 </content>
   </entry>
 </feed>

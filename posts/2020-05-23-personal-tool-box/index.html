@@ -13,7 +13,7 @@
     <link href="/manifest.json" rel="manifest" />
     <link color="#5bbad5" href="/safari-pinned-tab.svg" rel="mask-icon" />
     <meta content="#ffffff" name="theme-color" />
-    <title>八皇后问题——Python简单解法</title>
+    <title>搭建个人工具箱</title>
     <link href="/static/dist/semantic-ui/semantic.min.css" rel="stylesheet" type="text/css" />
     <link href="/static/dist/fonts.css/fonts.css" rel="stylesheet" type="text/css" />
     <link href="/static/stylesheet/default.css" rel="stylesheet" type="text/css" />
@@ -52,77 +52,93 @@
     <article class="ui stackable divided grid"><header class="row article-head">
   <div class="column">
     <h1 class="ui header">
-      八皇后问题——Python简单解法
+      搭建个人工具箱
     </h1>
     <div class="ui divider desktop"></div>
   </div>
 </header>
 <div class="row article-body">
-  <section class="twelve wide column"><blockquote>
-<p>八皇后问题是一个以国际象棋为背景的问题：如何能够在8×8的国际象棋棋盘上放置八个皇后，使得任何一个皇后都无法直接吃掉其他的皇后？为了达到此目的，任两个皇后都不能处于同一条横行、纵行或斜线上。八皇后问题可以推广为更一般的n皇后摆放问题：这时棋盘的大小变为n×n，而皇后个数也变成n。当且仅当n = 1或n ≥ 4时问题有解。</p>
-</blockquote>
-<p>关于这个问题更详细的描述可以参见维基百科<sup><a href="#fnref:1" name="fnref:1">1</a></sup> ，使用Python的生成器（即含有yield语句的函数）来解这个问题就会变得很简单，15行以内python代码就可以解决这个问题，对于皇后的个数 n &lt; 8 来说还是非常快的，只是当数量上升到很多的时候，这个解法就会非常的慢。不过这里仍然只讨论最简单的解法，后面会顺便提一下更高效的解法，比如<font color="red">16</font>个皇后的情况在我的机器上只需要<font size="5px" color="red">18</font>秒。</p>
-<p>下面是这个解法的完整的代码：</p>
-<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="kw">def</span> conflict(state, nextX):
-    nextY <span class="op">=</span> <span class="bu">len</span>(state)
-    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(nextY):
-        <span class="cf">if</span> <span class="bu">abs</span>(state[i] <span class="op">-</span> nextX) <span class="kw">in</span> (<span class="dv">0</span>, nextY <span class="op">-</span> i):
-            <span class="cf">return</span> <span class="va">True</span>
-    <span class="cf">return</span> <span class="va">False</span>
+  <section class="twelve wide column"><p>本文讲一下如何搭建一个私人的工具箱，来更好的帮助工作和生活。</p>
+<h2 id="什么是工具箱">什么是工具箱</h2>
+<p>顾名思义，工具箱就是一系列工具的合集，类似古代医生的药箱，通常手艺人、匠人这类的人都有这样一个箱子，里面是各种问题、场景的解决方案。</p>
+<h2 id="为什么要有工具箱">为什么要有工具箱</h2>
+<p>有了工具箱，再碰到类似的问题、场景，便可以直接从工具箱中取出合适的工具直接解决，而不是从头开始再做一个能解决这个问题的工具，比如现在要钉一个钉子：</p>
+<ul>
+<li>没有工具箱：先用木头、铁器做成一个锤子，然后去敲钉子，</li>
+<li>有了工具箱：直接取出锤子敲钉子</li>
+</ul>
+<p>因为需要提高效率，所以需要工具箱。</p>
+<h2 id="怎么搭建工具箱">怎么搭建工具箱</h2>
+<p>不同职业工具箱内容肯定是不同的，但是内容虽然不一样，操作的方法却是一样的——道虽不同，其理一也。</p>
+<h3 id="代码工具箱">代码工具箱</h3>
+<p>这个里面主要是放一些常用的代码片段，时常用的时候不用每次都去google，自己工具箱里的工具比临时去google 更加可靠和高效，比如 Python 常用的文件结构：</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="co">#!/usr/bin/env python</span>
+<span class="co"># -*- coding: utf-8 -*-</span>
 
-<span class="kw">def</span> queens(num<span class="op">=</span><span class="dv">8</span>, state<span class="op">=</span>()):
-    <span class="cf">for</span> pos <span class="kw">in</span> <span class="bu">range</span>(num):
-        <span class="cf">if</span> <span class="kw">not</span> conflict(state, pos):
-            <span class="cf">if</span> <span class="bu">len</span>(state) <span class="op">==</span> num <span class="op">-</span> <span class="dv">1</span> :
-                <span class="cf">yield</span> (pos,)
-            <span class="cf">else</span>:
-                <span class="cf">for</span> result <span class="kw">in</span> queens(num, state<span class="op">+</span>(pos,)):
-                    <span class="cf">yield</span> (pos,) <span class="op">+</span> result</code></pre></div>
-<p>上面这段代码关键点有3个，分别是冲突判断（即放置当前皇后位置的时候不能和已存在的皇后有冲突）、递归（遍历所有的情况要用到的方法）和yield表达式（保存遍历的结果的迭代器）。</p>
-<p>冲突检测函数 <code>conflict</code> 的两个参数分别表示: 已存在的皇后的位置和将要放置的皇后的位置（即下一行中皇后的位置），冲突的条件就是，和已存在的皇后在同一垂直线上( <code>state[i] - nextX == 0</code> )或者在对角线上（ <code>state[i] - nextX == nextY - i</code> ）。</p>
-<p>递归函数是通过回溯法来求的每一种可能的情况，这个递归结束的条件是最后一个皇后能够无冲突的找到位置，然后从最后一个皇后的位置一次递归的向上层返回值，同时加上本层的皇后的位置，返回到最上层的时候即完成一次迭代( <code>next()</code> 函数调用一次)，并且会记住当前的位置，下次继续迭代的时候会接着继续进行（这个其实是yield的特性）。</p>
-<p>yield语句，在这里可以简单但当作储存返回值的一个元组或者列表来理解（实际上是一个迭代器，稍微有点复杂，后面会具体讲到），这里一次完整的递归（从 <code>yield (pos, )</code> 这句返回到最上层调用）生成一种可能的情况（序列），也即迭代器的一项（对应于一种满足要求的所有皇后的摆法），在yield的使用迭代过程中，隐式或显式的调用一次next函数即执行一次完整的递归。<font color="purple">;-)</font></p>
-<h3 id="yield-语句">yield 语句</h3>
-<p>yield的用法单独说一下是因为这个是理解上面的代码的关键，同时也是不好弄清楚的一个东西，<a href="https://github.com/karottc/practice/blob/master/python/generator_20140705.py">这里</a> 是一个关于yield的几行代码的使用例子。</p>
-<p>从概念上说，yield是包含在Python的生成器里面的，相关的概念定义如下： &gt; 生成器是一种用普通的函数语法定义的迭代器。 &gt; &gt; 任何包含yield语句的函数成为生成器<sup><a href="#fnref:2" name="fnref:2">2</a></sup>。</p>
-<p>用下面这段常见的Python来辅助说明：</p>
-<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="kw">def</span> fab(<span class="bu">max</span>):
-    a,b <span class="op">=</span> <span class="dv">0</span>,<span class="dv">1</span>
-    i <span class="op">=</span> <span class="dv">0</span>
-    <span class="cf">while</span> i <span class="op">&lt;</span> <span class="bu">max</span>:
-        <span class="cf">yield</span> a
-        a,b <span class="op">=</span> b, a<span class="op">+</span>b
-        i <span class="op">+=</span> <span class="dv">1</span>
-f <span class="op">=</span> fab(<span class="dv">5</span>)
-<span class="bu">print</span> f.<span class="bu">next</span>()  <span class="co"># output: 0</span>
-<span class="bu">print</span> f.<span class="bu">next</span>()  <span class="co"># output: 1</span>
-<span class="bu">print</span> f.<span class="bu">next</span>()  <span class="co"># output: 1</span>
-<span class="bu">print</span> f.<span class="bu">next</span>()  <span class="co"># output: 2</span>
+<span class="im">import</span> os
 
-<span class="cf">for</span> i <span class="kw">in</span> fab(<span class="dv">10</span>):
-    <span class="bu">print</span> i, <span class="st">&#39;,&#39;</span>,
-<span class="co"># output: 0 , 1 , 1 , 2 , 3 , 5 , 8 , 13 , 21 , 34 ,</span></code></pre></div>
-<p>在上面的代码中，fab函数就是生成器，和普通的函数的区别在于：</p>
+<span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&quot;__main__&quot;</span>:
+    <span class="co"># </span><span class="al">TODO</span></code></pre></div>
+<p>python的时间转换：</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="co"># datetime 转成时间戳</span>
+<span class="co">#字符串转成 datetime， 2015-08-28 16:43:37.283000</span>
+d <span class="op">=</span> datetime.datetime.strptime(strValue, <span class="st">&quot;%Y-%m-</span><span class="sc">%d</span><span class="st"> %H:%M:%S.</span><span class="sc">%f</span><span class="st">&quot;</span>)
+t <span class="op">=</span> d.timetuple()
+timeStamp <span class="op">=</span> <span class="bu">int</span>(time.mktime(t))   <span class="co"># 秒</span></code></pre></div>
+<p>等等各种常用的片段，给个示范的不完整截图： <img src="https://blogimages-1254083755.file.myqcloud.com/blog/blog_20200523_01.jpg" alt="工具箱截图" /></p>
+<p>代码工具箱的目录组织，可以如下：</p>
+<pre><code>$ tree -L 2
+.
+├── cpp
+│   └── readme-cpp.md
+├── java
+│   └── readme-java.md
+├── kindle
+│   └── kindle_notes_export.py
+├── latex
+│   └── readme-latex.md
+├── python
+│   ├── mysql_util.py
+│   └── readme-python.md
+├── ss
+│   └── main_ss.py
+└── thinking
+    ├── images
+    └── thinking-model.md</code></pre>
+<h3 id="私人google">私人Google</h3>
+<p>在如今这个信息纷繁复杂的时代，信息可以分成几个类型：</p>
+<ul>
+<li>外网公开可搜索的，比如google、百度一搜就能有的；</li>
+<li>付费类知识，比如：得到、极客时间等平台付费课程</li>
+<li>平台类信息：比如微信公众号，在外网搜不到；</li>
+<li>自己的产出、笔记等等；</li>
+</ul>
+<p>要想同时搜索到这些类型的信息，没有任何一个现有平台可以做到，所以我们需要搭建自己的私人搜索引擎，同时也是我们的外部大脑。这样的工具需要满足下面的条件：</p>
+<ul>
+<li>输入方便：导入、剪藏网页等</li>
+<li>输出方便：搜索能力</li>
+</ul>
+<p>额外的非必须的加分项：</p>
+<ul>
+<li>格式好</li>
+<li>编辑功能强大</li>
+</ul>
+<p>根据我多年（超过5年）的使用各种软件的结论，很多软件额外加分项做的很好，可惜的是上面必须的核心功能却远远不够，最终我长期使用的是：Evernote，做私人Google 是非常优秀的，和这个软件的定位合适相符的。</p>
+<p>当然，工具各有喜好，只要能达到自己的目的就好，我这两天在Telegram 上发起过一个投票，看看大家都偏向于哪个工具，这里把结果发出来，给大家参考，自行选择： <img src="https://blogimages-1254083755.file.myqcloud.com/blog/blog_20200523_02_evernote.png" alt="各种note软件" /></p>
+<p>关于Evernote的组织形式，给一个我的参考： <img src="https://blogimages-1254083755.file.myqcloud.com/blog/blog_20200523_03_evernote.png" alt="evernote结构" /></p>
+<p>我稍微了研究了一下Evernote，对于电脑端：基本笔记本、层级这类信息是放在sqlite 中，笔记内容是放在内置的一个es之类的搜索引擎里面，所以在离线时也能做到完美搜索。猜测服务器那边也多半是mysql+es+redis这种架构，同时加了一些机器学习、OCR的功能。知道了它的原理，用起来会更加放心。</p>
+<h3 id="一些好用的软件">一些好用的软件</h3>
+<p>Google calendar+Google keep：用来做日程规划、GTD、TODO list。有明确时间点的就在放入google calendar中，没有明确时间的放入google keep 中，简单实用，比面试上各种眼花缭乱的GTD、TODO 工具好了无数倍。而且这两个工具都在Google的 Gsuit 中，所以也不用担心被Google砍掉。</p>
+<p>Typora：一款很优秀的markdown 写作工具；</p>
+<p>这里讲一个复杂的使用场景：我经常用typora 写了东西，想放到evernote中，这样可以方便搜索，但是又想保持在Typora 中优秀的样式。如果直接导出html，然后复制到Evernote，样式还是会变化走样，导出PDF放入Evernote是附件形式，不够直接。</p>
+<p>所以，完美却有点复杂的方法是：</p>
 <ol type="1">
-<li>不调用next方法，它不会自动执行；</li>
-<li>每次调用next方法时只执行到yield语句处，然后挂起，等待下一次next的调用；</li>
-<li>下一次调用next方法时，从yield的下一句开始执行，直到执行到yield语句，然后循环2-3的操作。</li>
+<li>导出html格式文件</li>
+<li>启动nginx，本地搞个web服务器</li>
+<li>将第一步的网页放入nginx中，使得能够访问</li>
+<li>浏览器访问网页，然后使用浏览器的Evernote的剪藏插件保存这个网页</li>
 </ol>
-<p>上面代码中的输出情况就表明了这样的过程，对于上面的 <code>for</code> 循环来说，<code>for</code> 循环里面的函数是隐式调用了所有的next方法，生成了一个列表(list)，在for循环中的 <code>fab(10)</code> 是和 <code>list(fab(10))</code> 等价的，可以用 <code>print list(fab((10))</code> 看输出结果加以验证。</p>
-<h3 id="debug-上面代码">Debug 上面代码</h3>
-<p>如果觉得上面的代码很难理解，可以用单步执行的方式去跟踪和调试代码，同时使用 <code>print</code> 大法也是很有效果的。关于 step by step 的工具，可以使用 PyCharm 或者 Eclipse + Pydev 这两个IDE，或者也可以使用 pdb 这个工具，pdb和gdb的使用命令没有多大差别，所以如果是常用gdb来调代码的话，用pdb是毫无障碍的，当然，用这些工具的时候可以适时的配合几句 <code>print</code> 来会更好一些，上面三种，我个人还是推荐使用IDE（即PyCharm或者Pydev）,因为有些功能还是那些面向指令集的调试器（比如pdb）没法比的.</p>
-<p>通过单步跟踪之后，对yield的执行过程和上面的代码的递归调用栈应该就比较清楚了。</p>
-<h3 id="高效的八皇后问题解法">高效的八皇后问题解法</h3>
-<p>这段代码是用C语言写的，用了语言特性的位操作等，所以比python的快很多，对于小于等于16个皇后来说，这段C代码的实现比上面15行的Python代码实现快了好几个数据量级。</p>
-<p>具体的代码请查看<a href="https://github.com/karottc/practice/blob/master/python/eight_empress.c">这里</a> : https://github.com/karottc/practice/blob/master/python/eight_empress.c .</p>
-<p>这是在我的机器上的运行时间的截图：</p>
-<figure>
-<img src="/static/images/201406/20140710_runtime.png" alt="runtime" /><figcaption>runtime</figcaption>
-</figure>
-<p>2014.07.10</p>
-<h4 id="footnotes">Footnotes:</h4>
-<p><sup><a href="#fnref:1" name="fnref:1">1</a></sup> 这个问题的两处描述分别是<a href="http://zh.wikipedia.org/wiki/%E5%85%AB%E7%9A%87%E5%90%8E%E9%97%AE%E9%A2%98">中文维基</a> 和 <a href="http://en.wikipedia.org/wiki/Eight_queens_puzzle">英文维基</a>, 推荐看英文的，因为英文的更详尽，中文相比英文版的维基百科的内容太少，对这个问题的描述一半都不到。</p>
-<p><sup><a href="#fnref:2" name="fnref:2">2</a></sup> 引用自<a href="http://book.douban.com/subject/4866934/">《Python基础教程（第二版）》</a>。</p>
+<p>通过这样的方式就可以做到完美格式存入Evernote。</p>
 
     <div class="ui divider"></div>
     <div class="ui small one item menu">
@@ -139,19 +155,19 @@ f <span class="op">=</span> fab(<span class="dv">5</span>)
     <div class="ui small header">
       Committed
     </div>
-    <date>2014-07-10</date>
+    <date>2020-05-24</date>
     <div class="ui small header">
       Updated
     </div>
-    <date>2014-07-10</date>
+    <date>2020-05-24</date>
     <div class="ui small header">
       Category
     </div>
     <div class="ui list">
       <div class="item">
-        <a href="/categories#技术">
+        <a href="/categories#工具">
           <div class="ui label">
-            技术<sup>10</sup>
+            工具<sup>1</sup>
           </div>
         </a>
       </div>
@@ -161,16 +177,16 @@ f <span class="op">=</span> fab(<span class="dv">5</span>)
     </div>
     <div class="ui list">
       <div class="item">
-        <a href="/tags#Python">
+        <a href="/tags#tool">
           <div class="ui label">
-            Python<sup>1</sup>
+            tool<sup>1</sup>
           </div>
         </a>
       </div>
       <div class="item">
-        <a href="/tags#八皇后">
+        <a href="/tags#Evernote">
           <div class="ui label">
-            八皇后<sup>1</sup>
+            Evernote<sup>2</sup>
           </div>
         </a>
       </div>
@@ -179,7 +195,7 @@ f <span class="op">=</span> fab(<span class="dv">5</span>)
       Links
     </div>
     <div class="ui small two item menu">
-      <a class="item" title="写在毕业一周年之际" href="/posts/2014-07-01-graduate-one-year/">Prev</a><a class="item" title="习惯的力量——从evernote试用为知笔记" href="/posts/2014-08-31-evernote-wiz/">Next</a>
+      <a class="item" title="React-Native 播放 FMOD Studio 的 bank 音频" href="/posts/2018-11-11-react-native-fmod-studio/">Prev</a><a class="item" title="Archive" href="/archive">Archive</a>
     </div>
   </aside>
 </div>
